@@ -1,0 +1,904 @@
+///////////////////////////
+/ CHANGES FROM V6C TO V6D /
+///////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+None.
+
+STRONGHOLD REJUVENATED:
+
+None.
+
+BOTH:
+
+Added skyboxes for the software renderer. They look messy, but at least they don't look like checkerboards anymore!
+Added a stronghold_skipbriefings CVar. It prevents the mission briefings from triggering, allowing you to jump right into action. Defaults to false.
+In an attempt to lessen spam, when activating the CVar switches in multiplayer, there is now a cooldown (lasting one second) before you can use a particular switch again.
+Difficulty switches (and switches in SamsaraHold using a similar method) will only print a message to the activator instead of everyone if no change has happened. This doesn't count towards the aforementioned cooldown.
+Phase imps can no longer go invisible while they're already invisible.
+Added a stronghold_cl_berserkswitch CVar with three options. 0 prevents you from automatically switching to the fist when you pick up a berserk, 1 only switches when you aren't already under the effects of a berserk, and 2 always switches (original behaviour). Defaults to 2.
+Some minor map fixes.
+
+///////////////////////////
+/ CHANGES FROM V6B TO V6C /
+///////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Moved Stronghold entries in SNDINFO.txt over to SNDINFO.str.
+The super large zorcher's firing animation has been sped up (from 84 tics total to 78 if the primary fire button is held, and from 85 tics total to 82 if it is not). The spatter speed was also increased to 16 (from 15).
+The LAZ device (modern version) has been nerfed. The projectile's main explosion has had its damage reduced (from 512 to 448). Its radius has also been reduced (from 384 to 320).
+The friendly elite marines have been recoloured. The shotgun spread was adjusted (SSG changed from 22.5, 0 to 11.25, 7.125) as the old values were from back when they used projectiles.
+
+STRONGHOLD REJUVENATED:
+
+None.
+
+BOTH:
+
+Fixed the babes in Duke It Out not having +FRIENDLY.
+The BFG in Bipolar Bunker has been moved from wave 8 to wave 9. The amount of cell ammo that spawns in has also increased.
+The deployable sentry turret in Bipolar Bunker has been removed.
+In Three Ways To Die, the catharsi in wave 3 have been moved to wave 9.
+The familiar missions room now has even more detail.
+The objective indicators now turn black instead of staying red when their conditions are met.
+An Easter egg has been added! Will you be able to locate it? Let's find out!
+Some minor map fixes.
+
+//////////////////////////
+/ CHANGES FROM V6 TO V6B /
+//////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Fixed some incorrect bloodyhell handling and state jumps.
+Fixed some CVar switches not showing their descriptions. How did they even what?!
+
+STRONGHOLD REJUVENATED:
+
+None.
+
+BOTH:
+
+Fixed a slight inaccuracy with one of the tips.
+Fixed some missing textures in Tunnel and Frozen.
+Fixed force fields in Skyfire Research not fully turning off.
+Sentry plasma projectiles should no longer fly into skyboxes.
+
+//////////////////////////
+/ CHANGES FROM V5B TO V6 /
+//////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Reduced the Wraithverge's damage amount (from 5-40 to 3-24). It also no longer pushes enemies around.
+Added the tomed hellstaff rain effect's missing sound.
+Allies spawned by beacons (samsarahold_allymarines 0) should now track kills properly.
+Beacons now fade when depleted.
+Hades spheres can now be frozen.
+Added the dragon claw puff's Spawn (actor hit) sound.
+Both normal and elite beacons spawn an extra ally (bringing the total spawn amount for both beacons to 5).
+The Quake (Old) armour mode has been effectively phased out. The Quake armour mode now goes as follows: Green -> Yellow -> Red -> Silver.
+On that note, samsara_armormode 2 has been replaced with Heretic armour. It goes as follows: Silver (100 armour, 50% damage absorption) -> Yellow (150 armour, 67.5% damage absorption) -> Orange (200 armour, 75% damage absorption) -> Red (250 armour, 87.5% damage absorption, extra fire/explosive attack protection).
+Reworked unique start switches to prevent possible exploits. They also look less misaligned in netplay.
+The Indifferent (no uniques spawning), Hit Taker (no armour spawning), and Unlucky 7 (no slot 7 equipment spawning) bonuses now give 500/1000/1500 credits (increased from 250/500/750), respectively.
+
+STRONGHOLD REJUVENATED:
+
+The homing rocket launcher (powered version) has been nerfed. Direct damage has been reduced (from 93 to 80). Splash damage has also been reduced (from 96 to 80 on both explosions). The first explosion's radius is also decreased (from 320 to 240). Finally, only half of its splash damage is forced on enemies now.
+The land mines (powered version) have been buffed. Both fire modes now throw three land mines (with the middle one being more powerful). The mines thrown via primary fire also go faster.
+The BFG9000 (powered version) no longer damages the user (but they can still BFG jump with it), and it creates tracers on impact. It also takes 5 cells to fire again (increased from 3).
+The rocket launcher (powered version) now forces half of its splash damage on enemies. Direct damage is also increased (from 93 to 96).
+Made the marine spawns in The Final Stand and Fortress Of Damnation a little more consistent.
+
+BOTH:
+
+NPCs can no longer walk into the familiar missions room.
+Land mines no longer stop randomly in mid-air.
+Allies and cores can no longer be targeted with autoaim.
+The chaos cyberdemon now gives more of a cue before executing its bullet attack.
+Waves 3 and 4 in Frozen were switched around.
+Waves 8 to 10 in Black Gold are slightly harder. Wave 6 is also a little less crazy.
+Small balance changes regarding the Overmind's damage factors. The Overmind and cores also gain temporary damage resistance instead of temporary invulnerability now.
+The Overmind timer no longer glitches out if more waves start while it's still going.
+Tags have been added for keys and monsters.
+Touched up on some obituaries.
+Wave 5 in Slaughtered was changed.
+Fixed handling of best times. Best times will no longer exceed par times, and longer best times can no longer overwrite shorter ones.
+Added yellow armour throughout the maps.
+The repeater puff's explosion damage now triggers properly when time is frozen.
+The final boss has new sprites!
+The hellhound now resists (by 50%) all fire-based damage types instead of just the Fire damage type.
+Player-spawned barrels now explode after two minutes if enemies haven't attacked them. This is mainly meant to stop people from blocking the intermission map spawn.
+Powerups and health items should now always spawn on the pads.
+
+COLOURED OBITUARIES (V2):
+
+Changed/added some obituaries to match the new ones.
+
+//////////////////////////
+/ CHANGES FROM V5 TO V5B /
+//////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Reduced the Wraithverge's damage amount while under the effects of a doomsphere (from 4x to 2.5x).
+Possibly fixed equipment spawns randomly not showing up in netplay. Keeping a close eye on it, though.
+Implemented (and reworked) Security Officer's weapon skin code from Samsara v0.3 ZDoom. This means that any Security Officers dual wielding magnums or shotguns will actually be shown dual wielding (and even firing) them again. Hopefully, it shouldn't crash. No guarantees, though.
+Added bloodyhell stuff to the Duke It Out enemies, the City Of Silence enemies, the Moloch, the mini cyberdemon, the chaos cyberdemon, and the Inferno Demon.
+Touched up on some enemy blood colours.
+Timon's axe now spawns the axe blood again (since it now supports different blood colours).
+Fixed some sprite conflicts with bloodyhell level 1's effects.
+Hades spheres and the Inferno Demon can now be zorched.
+The friendly grunt now has a more proper translation.
+
+STRONGHOLD REJUVENATED:
+
+None.
+
+BOTH:
+
+Some map tweaks. Experimental at best.
+Added some missing sounds for the City Of Silence apprentice.
+Fixed some projectiles not having lights.
+The repeater puff now has a sound and a different decal.
+Duke It Out protector drones and enforcers no longer multi jump. No hacking for them tonight.
+Reduced the speed of pinky demons, spectres, blood demons, and nightmare demons on Nightmare difficulty. They also no longer recover from pain twice as fast, and nightmare demons no longer fire projectiles twice as fast.
+
+//////////////////////////
+/ CHANGES FROM V4D TO V5 /
+//////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Fixed an oversight where zorch propulsor shots (from players) would kill cyberdemons. They now zorch them properly.
+The Overmind (during invulnerability) can no longer be damaged by the Wraithverge's hardcoded trickery.
+Frozen nightmare cacodemons are no longer transparent.
+Fixed nightmare cacodemons, abaddons, archons of Hell, and diabolists spurting out the wrong blood colour on death while samsara_cl_bloodyhell is 2.
+Added missing bloodyhell stuff to Parias, chickens, and bruiser demons.
+Corvus' elven wand was dealing more damage than normal since the change to A_FireBullets due to miscalculations. Fixed.
+Corrected the amount of bullets Doomguy's shotgun (both classic and Stronghold versions) fires (changed from 8 to 7).
+Hopefully fixed the Wraithverge's damage issues.
+Weapon pickups spawned via scripts are no longer treated as if they were dropped by enemies, meaning they give the proper amount of ammo on pickup (instead of just half). They can still only be picked up one time.
+The weapon bobbing of Security Officer's and Ranger's weapons is now more accurate to their original games.
+Fixed some sprite conflicts with bloodyhell level -1's effects.
+When joining as random, the random character checker now forces you into spectator mode instead of killing you.
+Fixed players being temporarily unable to move when tomed phoenix rod flames went through them.
+Stronghold enemies now play sounds when zorched. Bosses now play sounds when frozen.
+Alternate uniques now play the weapon pickup sound for Doomguy.
+The Duke It Out and City Of Silence enemies can now be frozen.
+
+STRONGHOLD REJUVENATED:
+
+Picking up a berserk should now automatically switch to the fist again.
+The modified green armour in the shop is now a yellow armour.
+The modified blue armour in the shop is now a normal blue armour again.
+The super shield in the shop has been replaced with the red armour! It gives 250 points of armour and reduces damage by two thirds. It also gives extra protection against fire and explosive attacks.
+The shop prices for the armours now match SamsaraHold's prices.
+Changed the death sound of the BFG9000's powered projectile.
+The pyro cannon now does its full amount of damage to the user again.
+The HRL marine now uses the proper sprites.
+
+BOTH:
+
+The pickup messages for the weapons (in the Stronghold version) and the Stronghold-specific items, the obituary messages, the weapon/ammo/item tags, the locked door messages, and the map names are now in a LANGUAGE entry. As a result, the coloured obituary messages used in SamsaraHold are now an optional addon.
+Removed some leftover coloured lighting in Volcanic Installation.
+When switching weapons, the winding down sound of the chaingun (Stronghold version) no longer gets interrupted.
+Enemies should no longer get stuck in the spawn zone in Terrorforming.
+The marine in the small cave in the tunnel should no longer get randomly stuck when moving around in The Final Stand.
+The later waves of Terrorforming have been rebalanced.
+Implemented stronghold_cl_announcer. Exactly what it says on the tin. This does not affect the Zandronum announcer. Defaults to true.
+Implemented stronghold_cl_iwinbuttonmusic. It lets you turn the music that plays whenever someone uses an I Win button on or off. Defaults to true.
+Arch-viles can now resurrect non-boss enemies.
+Any extra lives that spawn in will now disappear properly when time is frozen, and infinite lives is on.
+Suicide bombers, Hades spheres, and Duke It Out sentry drones will now display their obituaries when killing players. Their explosions should show up in netplay as well.
+Blood demons and nightmare demons now move, attack, and recover from pain faster on Nightmare difficulty.
+Bipolar Bunker has had its equipment/enemy layout redone.
+Antlion Nebula's early waves have been changed around. It also has an actual hard mode now!
+Dusk (Old)'s waves have been changed. Also, enemies should no longer fail to spawn if the second spawn zone is blocked.
+Convulsion: Aftermath should be more balanced.
+The first release candidate version of Slaughtered has been added as a familiar mission!
+The charging sequence of the Cyberdemon Mk. II's super attack no longer damages nearby players.
+Activated spawn zones are now mentioned accordingly in Armageddon and Smoldering Caves.
+Locus Of Pestilence has been moved back to tier five, and Orbit has been moved back to tier three.
+Sentries now track kills properly.
+Health decay (caused by degeneration) should no longer count towards damage checks.
+The secret levels' hard modes have been rebalanced.
+Restored some missing GLDEFS entries and decals.
+When receiving bonuses, you are now shown the total amount of credits gained.
+Players should no longer lose everything upon exiting a map while on a death hazard.
+When a player starts a vote, the map name is now shown.
+Fixed a "quick map exit" exploit in Introduction.
+The BFG9000 (Stronghold version) makes a humming sound now.
+The Duke It Out overlord's death sound no longer conflicts with the City Of Silence fat zombie's death sound.
+You can now skip the ending sequence.
+When a map starts, an alarm will sound to indicate the invasion has started.
+The silent alarm CVar has new settings to accommodate the new alarm. 0 keeps both alarms enabled, 1 only prevents the warning alarm from sounding, 2 only prevents the starting alarm from sounding, and 3 prevents both alarms from playing.
+The silent alarm CVar now takes Overmind core deaths into account.
+A super max. armour enhancement item has been added to the shop. Much like its health counterpart, it instantly increases your maximum armour capacity by 100%.
+Added some new NPCs in the intermission map. They give you some tips and advice.
+
+COLOURED OBITUARIES (V1):
+
+Initial release.
+
+///////////////////////////
+/ CHANGES FROM V4C TO V4D /
+///////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+If you try to get armour from the shop while samsara_armormode is 4, it will now tell you it is currently out of stock. The price tags will also disappear as a result.
+When samsarahold_allymarines is enabled, the (elite) allied reinforcements' description will change accordingly.
+Same deal with the armours and samsara_armormode.
+The unique start switches should no longer look glitchy when players join.
+
+STRONGHOLD REJUVENATED:
+
+Gave the land mines ammo pickup the proper PickupSound entry.
+
+BOTH:
+
+Added a stronghold_effectiveplayercount CVar. If it's not 0, it will add to (or subtract from) the player amount checker (the checker cannot go below 1, though). Mainly a debug CVar, but, hey. Defaults to 0.
+Added a stronghold_effectiveplayercounttype CVar. If 0, it uses the aforementioned method. If 1, it replaces the checker's amount with stronghold_effectiveplayercount's value regardless of player count, and it does not check for jailed players. Defaults to 0.
+Added a stronghold_infinitelives CVar. If true, you simply don't lose any lives on death. You also won't be jailed if you're late to the game, and extra lives will not spawn (they also won't be in the shop). Defaults to false.
+When stronghold_bruisermorph is enabled, the morph device's description will change accordingly.
+Calling the debug mode script will now open the secret levels.
+Apparently, enemies wouldn't spawn on certain maps with almost thirty-two players. That's probably fixed. I think. No guarantees.
+When dune warriors enter their Pain state, they should now only uncloak while cloaked.
+Corrected the textures in Introduction.
+Brought back some coloured lighting (that accidentally got erased several versions ago) in various maps. Whoops.
+On that note, the intermission map's details have been restored.
+The trees no longer inexplicably fall from the sky when starting Aurora Emitter.
+The secret levels now have hard modes added to them.
+
+///////////////////////////////////
+/ CHANGES FROM V4B(-FIXED) TO V4C /
+///////////////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Incorporated the changes from v4b-fixed.
+The serpent staff gives 25 ammo instead of 50.
+The serpent staff should now only take 1 ammo for the drain attack. It also heals past 200 with max. health enhancements (which the original engine code didn't do for some reason).
+Nerfed Parias' resistance against hellion projectiles (from 50% to 25%).
+
+STRONGHOLD REJUVENATED:
+
+None.
+
+BOTH:
+
+The message that displays when the jail is opened now shows who opened it.
+Corrected a typo in the terminator morph description.
+
+/////////////////////////////////////////////////////////
+/ CHANGES FROM V4B TO V4B-FIXED (SAMSARAHOLD CORE ONLY) /
+/////////////////////////////////////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Doomguy's chainsaw (with berserk) has been slowed down to 3 tics (from 2). It could beat out the axe in some scenarios.
+Doomguy's railgun has had some damage numbers tweaked, mostly relating to scope usage.
+Corvus' hellstaff does slightly more damage (which is also more random).
+Corvus' tomed staff has had a significant damage buff. No one will use it, but it's there!
+Corvus' tomed ethereal crossbow is slightly nerfed.
+B.J.'s rocket launcher does a bit more damage to non-rippable enemies...and less to actual bosses.
+B.J.'s flamethrower does slightly more damage (increased from 5-40 to 8-64).
+Parias' sapphire wand does 1-8 damage (decreased from 2-16). That was too much.
+Parias' axe does slightly less damage.
+Parias' serpent staff, for some reason, had a shorter melee range than heal distance. Fixed.
+Parias' hammer of retribution does more damage.
+Parias' firestorm has been tweaked. It has a larger radius and longer range, but it does less damage.
+
+STRONGHOLD REJUVENATED:
+
+None.
+
+BOTH:
+
+None.
+
+//////////////////////////
+/ CHANGES FROM V4 TO V4B /
+//////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Assault troopers in Duke It Out now drop the correct amount of ammo.
+Doomguy's Gentleman mode unique should now trigger properly with unique start.
+Catharsi detonators should no longer be targeted by friendlies.
+The inventory counter in the full screen HUD now uses Samsara's font instead of Stronghold's.
+
+STRONGHOLD REJUVENATED:
+
+None.
+
+BOTH:
+
+Fixed the jail in Smoldering Caves not working on certain skill levels.
+Some minor map fixes.
+Some maps have had their par times changed.
+
+/////////////////////////
+/ CHANGES FROM V3 TO V4 /
+/////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Fixed the random weapon device not giving Ranger a rocket launcher at random times.
+Corvus no longer gets a redundant deathmatch version of the morph ovum from unique items in Gentleman mode.
+Certain friendly (elite) marines no longer randomly switch to the plasma gun/auto shotgun (they were still able to use their original weapons). That was odd.
+Fixed Corvus' tomed gauntlets not checking for max. health enhancements. Forgot to check the engine behaviour at the time.
+Duke's devastator weapon should now be taken away when ending a level.
+Security Officer now gets some reserve ammo from weapon pickups. Running over dropped weapons also no longer refills magazines.
+Black Gold should no longer cause obscene amounts of lag whenever a player gets killed because of overwritten scripts. Hopefully, hopefully.
+Ammo and dropped weapons will no longer spawn in Gentleman mode.
+Parias' mystic ambit incant sound now plays for every player affected by it.
+The MA-75B can be reloaded underwater now.
+The fusion pistol now takes ammo when you die while charging it.
+The Tech.50 Pacifier now plays its sound when stunning enemies.
+The random character checker now only kills you when you (re)spawn with random selected.
+Hopefully fixed the weapon pickup sounds randomly not triggering for others.
+When starting a map with Gentleman mode on and with unique start, Ranger's Mjolnir should no longer be taken away.
+The Talon Ceramic Combat Blade should now always play its actual impact sound when it stops bouncing.
+You should no longer get dummy weapons in Gentleman mode.
+The time bomb and remote of the Ancients should no longer break on map change.
+Enemies that cloak or otherwise go invisible (like the dune warrior and phase imp) or are normally translucent now lose their (near) invisibility when frozen.
+
+STRONGHOLD REJUVENATED:
+
+Corrected the pickup message for the shotgun shells (since dropped amounts give 2).
+Fixed some marines not leaving decals.
+The BFG9000 (powered version) now takes 3 cells to fire (decreased from 5).
+
+BOTH:
+
+Auto shotgun pickups no longer refill the clip if weapon stay is off.
+The homing rocket launcher, repeater, and pyro cannon now have +NOAUTOFIRE. This is so you don't blow yourself up unintentionally in case you run out of ammo.
+Fixed a strange hole in the tunnel floor in The Final Stand.
+You can now walk into the first enemy spawn zone in Emerald Skies. Kinda forgot about that one.
+It should no longer be possible for the bank to have a negative amount of money.
+Since Black Gold has become much more challenging (which is par for the course for tier six), its par time has been raised to 50:00 (from 26:00).
+Smoldering Caves' par time has been raised to 40:00 (from 30:00) for the same reason as Black Gold.
+Raised the deadline door in Tunnel a bit so cyberdemons and other big enemies can pass through.
+The land mines should now always play their sound on the final bounce.
+Since Convulsion Of Nature doesn't really have a hard mode (its value was originally 5, now N/A), the enemy limit is now increased based on player count.
+The release candidate version of Dusk has been added as a familiar mission!
+As a bonus, an alternate version of Convulsion Of Nature (named Convulsion: Aftermath) has been thrown in as well.
+Added the original implementation of the Dominator bonus (now called the Survivor bonus). It is given when you complete a deathless run of a level, and it gives 500 credits. Damage bonuses will take precedence over it.
+The phase imp's back sprite (during its Pain state) apparently had missing offsets. Fixed.
+All players should now properly receive their respective bonuses instead of reading off the first player's.
+
+/////////////////////////
+/ CHANGES FROM V2 TO V3 /
+/////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Since you get both WSTE-M5s on pickup, its pickup message was changed accordingly.
+The mace of contrition, Timon's axe, and the hammer of retribution (melee) have had their damage/range values increased.
+The sapphire wand has its original radius/height/damage values now (changed from 3/2/1-4, respectively).
+The serpent staff projectiles deal the original amount of 5-40 damage (changed from 5-30).
+The hammer of retribution projectiles deal 30-240 damage (changed from 20-160).
+The firestorm small flame explosion radius was increased to 80 (from 64).
+The Wraithverge is still as unpredictable as ever!
+The mystic ambit incant's radius was increased to 512 (from 255), and the armour it gives now has an absorption percentage of 75 (increased from 70). It also takes max. health enhancements into account.
+Enemies that float now remain in the air when zorched.
+All the SamsaraHold CVars have been removed (except for samsarahold_cl_strweapons and samsarahold_allymarines). Since the CVars were added in the Stronghold version (and function the same), there was simply no need to have duplicates.
+B.J.'s extra life will no longer take effect in the jail, meaning you can no longer exploit the jail system with it and keep fighting.
+Chexguy's different pain flash colour (when getting damaged by slime) is now handled by Player.DamageScreenColor in single player. It doesn't work in netplay, though, so the old behaviour is still used there.
+Parias' krater of might will now restore ammo 1 and 4 by half instead of a quarter if he got a backpack from samsara_backpackstart.
+Weapon pickups should now always show the pickup corresponding to the actual character.
+Marines no longer dance in place when they don't have a target. As funny as it was to see, it actually confused some people as to whether the marines were stuck or able to move.
+The time bomb/remote/eye of the Ancients, tome of power, and poison cloud flechette now play a sound when used.
+The random weapon device should now work much better than before.
+If Duke's jetpack is active when using an I Win button, the jetpack will automatically turn itself off to save fuel.
+Hexen marines now take quarter damage from explosions instead of every marine.
+The red armour spawned in the disco room should no longer respawn.
+Friendly elite marines (auto shotgun variant) should now reload properly.
+Gave the friendly bipedicus its active sound.
+The friendly vore's projectile now has the proper explosion on impact.
+Similar to Stronghold's marines, the friendly (elite) marine (with samsarahold_allymarines 0) now shows the weapon being used (except for the pistol, which is still shown as a rifle).
+The chainsaw/shotgun/unique start CVars should no longer take effect in the intermission map.
+samsara_uniquestart 1/3 will now give a random unique for characters with more than one unique.
+It should no longer be possible to pick up a unique to get a different unique if you were full on the expected one.
+
+STRONGHOLD REJUVENATED:
+
+The plasma and repeater puffs now leave decals.
+The plasma puff now shows regardless of cl_pufftype.
+The full screen HUD now shows if you have a berserk.
+The random weapon device triggers a pickup flash on successful use now.
+You should now always start with 50 bullets.
+
+BOTH:
+
+The enemy/item spawns and Overmind timer can no longer go below the initial values if everyone's in jail. A bit of forgetfulness on my part.
+Increased the amount of health, rockets, and cells given throughout the waves in Black Gold. Waves 7 and 8 were also switched around.
+When you join a game, the amount of credits you start with is now based on the tier you joined at instead of being a set value no matter what. You start with 800 credits with the amount increasing for each tier unlocked.
+A counter has been added on the HUD that shows the amount of jailed players (currently full screen only). It appears if at least one player is in jail. In SamsaraHold, this counter is identified by a red number over the credits amount. Doesn't work for spectators at the moment.
+A bank system has been implemented! You can bind a key to it using the controls menu (or just typing "str_bankmenu" in the console). It opens a menu where you can withdraw/deposit credits of your chosen amount. To prevent abuse, though, a fee (proportionate to the amount of credits you get on joining) must be paid before you can use the bank. The intermission map also displays the amount of credits in the bank as well.
+Added music aliases.
+Everyone is now notified when someone runs out of lives, is late to the game, or leaves the jail.
+You can now walk into the enemy spawn zones in the first side in Inferno, but they will deal 20 fire damage.
+You can now walk into the enemy spawn zones in Introduction and Tarstone Fortress.
+For some reason, land mine layers in Tarstone Fortress were spawned via map script. They are now spawned properly so more than one player can pick them up. Also, one of them was changed into a chainsaw.
+Enemies can no longer enter the elevator areas (and, by extension, the upper levels) or fly out of the map in Tarstone Fortress.
+Added some unused announcer sound files for the Limit, Overmind, and Goals game modes as well as successfully completing a level, beating the par time, and (getting close to) exceeding the par time.
+Slightly improved the charging sequence of the Cyberdemon Mk. II's super attack.
+Corrected some minor cosmetic anomalies.
+It is no longer possible to fly out of the map in Eye Of The Storm.
+Fixed an incorrect texture in Bipolar Bunker.
+Slaughtered mistook cybruisers for Hell warriors in wave 7's description. That has been corrected.
+Coins can no longer be dropped. The ability to store coins in the bank basically made dropping them obsolete.
+You can no longer jump into the other spawn zones by jumping over the sides of the barriers in Skyfire Research.
+Landing on rocks in Convulsion Of Nature will no longer mysteriously kill you.
+The teleporters in Three Ways To Die now teleport you to the correct teleporters.
+The backpack now prevents you from picking it up if you're full on all ammo (unless you didn't have a backpack to begin with).
+The backpack's cooldown timer will no longer trigger in single player.
+Since Terrorforming pretty much no longer takes forever to load in netplay, the delay until the first wave starts has been reduced.
+Zandronum announcer sounds now play whenever a vote to start a mission is called, failed, or passed. Everyone is also notified whenever someone votes.
+Fixed the level exit in the jails of certain maps. They should now be triggered repeatedly.
+Okay, now the autodrones should actually work properly. Completely. We can only hope.
+
+//////////////////////////////
+/ CHANGES FROM V2 BETA TO V2 /
+//////////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Max. armour bonuses now actually have a maximum of 100 instead of 50.
+The red armour now resists zorch propulsor explosions, phoenix rod explosions, hammer of retribution explosions, WMC explosions, and various fire/explosive enemy projectiles.
+Players can get burned by various enemy projectiles (where appropriate) now. They also no longer get burned by cybruiser rockets.
+Security Officer is now flung properly by arch-viles when samsara_nocustomgravity is true.
+Slot 3, 5, and 7 Duke marines now gib enemies properly.
+Arch-viles should now always burn players.
+Security Officer's armour should no longer get set to 1 upon picking up a megasphere while having max. armour.
+Megaspheres have their intended behaviour of giving you armour restored.
+You can now get the secret red card in single player.
+The supercharge breakfast (outside of Gentleman mode) is now troll-proof.
+When Ranger's quad damage recharges, the icon and sound should now always play.
+Medikits now respect max. health enhancements for all characters.
+Yellow armour now shows up in the shop if samsara_armormode is 2.
+
+STRONGHOLD REJUVENATED:
+
+Archons of Hell are now immune to non-forced splash damage.
+Some maps now use SamsaraHold's par times.
+The pyro cannon marines had a mass of 10 (instead of 100), causing them to get flung really high by explosions. Corrected.
+
+BOTH:
+
+Slaughtered now gives a rocket launcher (but even then, you're not gonna get much ammo for it). Wave 5 was also changed.
+Morphed players should now always go into their Pain states when hit.
+Since Black Gold's lag/crashing issues have been fixed (aside from taking several seconds to load in netplay), it has been moved back to tier six. Shell Shock is now a familiar mission.
+Maps with more than one (mini)boss now have their health indicators merged into one.
+The plasma rifle (Stronghold version), pyro cannon, and plasma repeater now have offsets in their firing animations to make them look a little nicer.
+Smoldering Caves now gives 3000 credits (same amount as Black Gold and Shell Shock) instead of 1700 (same amount as Delta Bunker). It has also had its equipment/enemy layout changed.
+Added more alarms in Terrorforming.
+Allies can no longer teleport away via the limit gateway in Tarstone Fortress.
+Players could fall behind a tree and get trapped in Dusk. Moved the tree to allow getting out without suiciding, flying, or rocket jumping.
+You can no longer fall into the little gap in the tunnel with lava in The Final Stand.
+You can no longer fly or rocket jump over walls and get stuck in Duke It Out and City Of Silence - Apocalypse. You're still given some freedom to explore, but not enough to break the maps.
+The snow in City Of Silence - Apocalypse's third enemy spawn zone no longer damages you.
+Fortress Of Damnation now has an alarm.
+The Override bonus (don't let the Overmind destroy any cores) now works.
+The par time bonuses (Timeslicer, Timesplitter, and Timestealer) are now handled properly. They are also no longer given outside of replay mode.
+The spider demolisher now uses the correct attack sound.
+Before you enter a map, you're now shown how many players it needs to trigger hard mode ("N/A" means the map doesn't have a hard mode). Likewise, before you play it in replay mode, you're shown the par time (as well as the best time if you beat the par time) instead.
+When playing a map after completing it for the second time, it now shows the par time. The best time is shown below the par time.
+The familiar missions room has some detail going for it now.
+Morphed players can no longer get stuck in the doorway to the familiar missions room.
+A super max. health enhancement item has been added to the shop. It instantly brings your health to 400% (credits are taken accordingly, so you don't need to worry about wasting credits in case you got normal max. health enhancement items). Just in case you get tired of cracking the Use button in half on your keyboard/mouse/controller/whatever.
+You can no longer waste credits if you have the maximum amount of max. health/armour enhancement items. You can also no longer waste credits if you're trying to buy armour, and your current armour is at or above the amount the armour gives.
+The berserk is now troll-proof.
+(Mini)bosses should now always spawn. No more standing over their spawn zones and preventing them from triggering.
+The sentry drones in Duke It Out should now work again.
+The pyro demon should now play its proper attack sound.
+Morphed players no longer have attack names shown twice in the console in netplay.
+Item/enemy spawns should no longer count jailed players! Yay!
+Readded the fade effect that happens when a vote is passed. It was removed when the vote system was implemented.
+
+///////////////////////////////
+/ CHANGES FROM V1B TO V2 BETA /
+///////////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Security Officer can now be damaged with the level 3 wave motion cannon shot. The explosion code originally got chewed up and spat out, apparently.
+The doomsphere powerup now plays its sound again. Guess I wasn't fully awake when I put the sound aliases together. As usual.
+Reworked Parias' mystic ambit incant to behave more like Hexen. Instead of healing and spraying armour shards, it now gives exactly 100 health and 50 armour (up to 300 with an absorption percentage of 70) for everyone in a radius of 255 map units.
+Because I'm extremely crazy, Duke now taunts no matter what weapon he's using. He also taunts when using Ranger's quad damage (but not getting it, the pickup code handles it), the I Win button, and team powerups.
+The mini cyberdemon and chaos cyberdemon can now be frozen.
+Duke now taunts when killing Hades spheres.
+Duke can now gib and taunt chickens.
+Doomguy's pistol now plays the reload animation whenever a level starts with samsarahold_cl_strweapons on.
+Marines now drop the proper yellow armour.
+Spear of Destiny shots should no longer explode twice on rare occurrences.
+
+STRONGHOLD REJUVENATED:
+
+Reworked the weapon powerup kit. The weapons still behave the same, but they should feel more responsive now.
+All weapons now have BRIGHT frames where appropriate.
+Just like in SamsaraHold, you are now given a green armour when you're below 50 armour on enter/respawn.
+
+BOTH:
+
+Mini cyberdemons can now be stunned.
+The bruiser demon and ethereal soul now have BRIGHT frames when stunned.
+The second (and possibly final) phase of bringing back Smoldering Caves and Black Gold has been completed. Mostly balance work was done (thanks, Untitled!).
+Slaughtered, Snake Corridors, and Orbit should be more balanced now.
+You can now walk into the first two enemy spawn zones in Deepspace 12.
+Marines now fade away when dead.
+The mission briefing in Tunnel should now end properly.
+It is now possible to walk into the first enemy spawn zone in Delta Bunker.
+The invuln timer in Overmind now fades in with everything else in the first wave.
+Using the secondary fire button while morphed now tells you what attack mode you are now using.
+The terminator's decimation missile now plays a sound when fired.
+The railgun's firing animation (level 3 charge) is extended by 2 tics to match the other charge levels.
+The auto shotgun can now be reloaded with the reload button, and you can zoom in with the railgun with the zoom button. The secondary fire button can still be used in case you're used to it.
+Fixed some missing textures in Armageddon and Antlion Nebula.
+Fixed a slope in Antlion Nebula.
+The land mine explosion now has BRIGHT frames in its Death state. It also no longer falls (that just looked weird!).
+Debug information is no longer shown when getting bonuses.
+Readded the bruiser demon morph! As a result, the stronghold_bruisermorph/samsarahold_bruisermorph CVar has been implemented. Setting it to true will make players morph into bruiser demons when using a morph device. False makes them morph into terminators instead. Defaults to false.
+
+//////////////////////////
+/ CHANGES FROM V1 TO V1B /
+//////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+Fixed Security Officer bringing up dual magnums while reloading and holding down the fire button.
+Security Officer's wave motion cannon now actually requires at least 5 cells/rockets to reload the primary/secondary, respectively.
+It is no longer possible to waste Hexen armour (that is, the 25 armour and 50 extra armour pickups).
+It is no longer possible to waste unbound megaspheres when you're at 200 health and armour.
+The Marathon 1 alien weapon can no longer be fired underwater.
+The dual WSTE-M5s no longer jitter when you try to fire underwater or without at least 2 shells.
+The doomsphere and time freeze powerups now have sound aliases.
+Made samsara_armormode 3 more fair in terms of getting damage bonuses. The reduced damage bonuses don't take effect until you lose at least 1 point of Marathon armour.
+Whenever a map starts with samsara_armormode 4 in effect, your armour won't be drained to nothing if you had less than 50 armour.
+The friendly slaughtaur now has its gibbed animation. It also plays its melee sound now.
+The Wolfenstein chicken leg and the various gib items that B.J. can drink from now respect samsara_nohealth.
+Chicken corpses are now removed after some time.
+The Moloch's lightning attack will no longer spawn the sapphire wand missile trail. It just looked weird (thanks, inheritance).
+
+STRONGHOLD REJUVENATED:
+
+You can no longer pick up health/armour bonuses when you're at full health/armour.
+
+BOTH:
+
+Added two new names to the radio (wave descriptions) in between the waves.
+Added separate voice clips for completing waves (thanks, Espio!).
+Fixed some missing/incorrect textures in Too Young To Defend and Slaughtered.
+Fixed a falling tree in Too Young To Defend.
+Placed an alarm at the base entrance in Smoldering Caves.
+The shops should be perfectly responsive now.
+Players can no longer lose lives in Introduction. It's meant to be a training map, after all.
+Enemies were getting stuck on a tree close to the second spawn zone in Swamp. Moved the tree so they shouldn't get stuck now.
+
+/////////////////////////////////////////////////////////////////////
+/ CHANGES FROM tv50patch2b TO STRONGHOLD/SAMSARAHOLD REJUVENATED V1 /
+/////////////////////////////////////////////////////////////////////
+
+SAMSARAHOLD REJUVENATED:
+
+It is no longer possible to save ammo by using the mighty foot at the same time as the primary fire.
+Security Officer's WMC now properly takes ammo when suiciding with the primary fire.
+Pipebombs should now always explode when hit instead of leaving a dud.
+Frozen enemies no longer drop items as soon as they're frozen. They should only drop items after they've shattered.
+Duke's Glock 17 now shows bullet ammo when samsara_pistolammo is on.
+Holograms in Introduction can no longer be frozen. They also take double damage from the fusion pistol.
+Mini cyberdemons now take double damage from the fusion pistol.
+The catharsi's detonator can now only be damaged by the fusion pistol.
+Duke's pipebombs should no longer damage cores and allies.
+The key bar has been disabled in the full screen HUD.
+Projectiles and effects that bounce no longer make their bounce sound on spawn.
+Dropped weapons and ammo no longer fade away.
+The rest of Doomguy's weapons (Stronghold versions) now use the proper sprites for puffs and projectiles.
+Fixed Doomguy's pistol (classic version) using the Stronghold puff.
+Unique start should no longer happen if samsara_nounique is on.
+samsara_armormode 4 should no longer leave dummy pickups.
+Running over health spawns while samsara_nohealth is active will no longer give you health. Same deal with slot 7 equipment (samsara_noult) and uniques (samsara_nounique).
+Fake hitscan bullets are now real hitscan bullets in netplay! Rejoice!
+Pipebombs no longer make their bounce sound when detonating in mid-air. They should also no longer explode twice randomly.
+Apparently, the thunderbolt could cause massive amounts of lag if shot into liquids. This should be fixed.
+samsarahold_cl_dukemusic now works for spectators.
+Doomguy's chaingun (classic version), Chexter's super large zorcher (projectile bounce) and rapid zorcher, and Duke's devastator weapon now have sound aliases.
+The terminator morph can no longer jump.
+Mini cyberdemons and the rest of the City Of Silence enemies can be zorched now.
+Duke now gibs enemies that can be gibbed. He also taunts when seeing/killing boss enemies properly.
+The friendly flemoidus maximus now has its proper sounds. It also has the proper blood colour (along with the friendly flemoidus bipedicus).
+The difficulty switches now show their Samsara names (along with the original names in case you get confused).
+It is no longer possible to carry duplicates of (elite) allied reinforcements. It also spawns a teleport fog when it fails to spawn allies.
+A magnum now appears along with the KKV-7 for Security Officer. Likewise, another WSTE-M5 combat shotgun will appear along with the first one. Once again, character-specific pickup sprites only.
+
+STRONGHOLD REJUVENATED:
+
+stronghold_cl_dukemusic now works for spectators.
+Cores are now immune to non-forced splash damage and can no longer be ripped through to match SamsaraHold.
+
+BOTH:
+
+Reworked the boss health indicators. They flickered like mad before in netplay. They should work properly now.
+Fixed some misaligned textures in Twilight, Inferno, Snake Corridors, and Eye Of The Storm.
+The vote counters now recognise if one player has voted instead of saying one player "have" voted.
+Began the first phase of bringing back Smoldering Caves and Black Gold. They are tucked away in a secret "Familiar Missions" room. I'll let you figure out how to unlock it. The maps are unmodified, though (with the exception of double par time and different music for Smoldering Caves. Its original track was used thrice already here!), so expect balance and/or stability issues.
+The flames from the Overmind's pyro shot attack are now unaffected by time freeze. Whoops!
+Players can be damaged by barrels (spawned from barrel items) again. In addition, both player barrels and map-spawned barrels take red armour into account in SamsaraHold.
+Imp holograms can be gibbed now.
+The I Win button's music will no longer take effect whenever a mission ends (either victory or defeat).
+The Overmind now has a timer that shows how long until it (and, by extension, the cores) loses its invulnerability. It's lazily done, but it works.
+The fat zombie's bile attack now actually has a chance to home in.
+Fixed the second jump pad in Antlion Nebula not making any sound. These bugs are getting more and more specific by the minute!
+Running up to the Nightmare difficulty switch now warns you (similar to selecting it in the main menu itself).
+Using the extra life or I Win button in the credits should no longer cause the server/console log to whine about nonexistent scripts.
+The disco room now spawns the proper items. (There's also an Easter egg with it in SamsaraHold.)
+The terminator morph's pain and footstep sounds now have sound aliases.
+When a vote fails, the mission description disappears as well.
+Voting devices should be taken away properly when a map starts. Hopefully.
+
+//////////////////////////////////////////
+/ CHANGES FROM tv50patch2 TO tv50patch2b /
+//////////////////////////////////////////
+
+SAMSARAHOLD:
+
+The cultists now drop the proper dropped ammo.
+The terminator morph can now be damaged by smart bombs again. For now.
+The cultists now play their attack sounds.
+Enemies in City Of Silence - Apocalypse now drop their items when zorched. Whoops.
+
+STRONGHOLD UNTITLED EDITION:
+
+The auto shotgun (unpowered version) now respects infinite ammo.
+Marines are now affected by time freeze.
+The random weapon device now has a 5/256 chance of giving you a superweapon to match SamsaraHold further. Turns out that superweapons became more common from the SamsaraHold-like A_Jump conversion due to miscalculations. That was ridiculous.
+The cacolantern/nightmare cacodemon projectile now has a speed of 20 to match SamsaraHold.
+The devastator's projectile debris should now track kills properly.
+The railgun (powered version) now has BRIGHT frames on the zoomed firing sprites.
+The terminator morph is no longer immune to enemy terminators' decimation missile attack. It is also now immune to sentry and autodrone shots (which go through anyway, but ya never know).
+The Thompson cultist now plays its proper attack sound.
+The babes in Duke It Out have their health changed to match SamsaraHold.
+
+BOTH:
+
+Pretty much every boss fight now has a health indicator.
+Everyone is now notified with a message if someone gets a superweapon from the random weapon device.
+When an important boss fight happens, the I Win button's music will no longer take effect.
+The Cyberdemon Mk. II's and final boss' effects are now unaffected by time freeze. Because why not?
+The terminator morph's decimation missile blast should now track kills properly.
+The catharsi's detonator now has an obituary message.
+The marine/allied reinforcements and elite marine/allied reinforcements now actually have a limit of 5 and 2, respectively.
+The terminator morph now has actual sounds.
+Corrected some typos in The Final Stand.
+The chaingun (Stronghold version) now performs its attack functions at the proper timing.
+The barrier item now plays the item pickup sound.
+Enemy projectiles that bounce no longer make their bounce sound on spawn.
+Smart bombs and autodrones were able to work on some bosses for some reason. This has been fixed.
+
+//////////////////////////////////////////
+/ CHANGES FROM tv50patch1c TO tv50patch2 /
+//////////////////////////////////////////
+
+SAMSARAHOLD:
+
+Actually fixed Security Officer wasting combined ammo.
+Ranger now properly picks up small rockets.
+Picking up slot 7 equipment as Ranger while under the effects of the I Win button will now give you the intended 60 seconds of quad damage.
+It is no longer possible to restart the tome of power's cooldown timer while its effects are active.
+Parias' frost shards now plays its firing sound again.
+Fixed B.J.'s ammo crate suddenly not making a sound on use in netplay.
+Duke's night vision goggles now have a tag.
+Ranger's thunderbolt discharge no longer damages cores and allies. If you survive it, the thunderbolt will also have a delay before you can fire it again (because an I Win button with that thing is ridiculous).
+Parias now respects the blursphere troll-proofing. Ranger properly respects the blursphere, invulnerability, and megasphere troll-proofing as well.
+Skill 0 now gives double ammo again.
+Ranger's invulnerability is now properly taken away on map change.
+samsarahold_cl_turnthatdamnalarmoff has been touched upon and readded. Hopefully, it works this time!
+Infinite ammo now actually works for Parias' axe and hammer. A bit messy, but it works. The axe puff also properly takes ammo when time is frozen.
+Doomguy's BFG9000 (classic version) and Chex Warrior's LAZ device (classic LAZ version) now animate properly.
+The marines should play their weapon sounds now.
+Everyone plays their quad damage sounds. Just in case someone triggers that certain Zandronum bug.
+Ranger now yelps when getting hit by the Inferno Demon's attacks.
+Enemies that drop ammo now drop ammo when zorched.
+
+STRONGHOLD UNTITLED EDITION:
+
+The random weapon device now tells you what weapon you got from it. The A_Jump calls were also changed to match SamsaraHold's chances.
+Added stronghold_cl_turnthatdamnalarmoff. It does what you'd expect.
+
+BOTH:
+
+The railgun (unpowered version) no longer has pseudo-fusion pistol syndrome. In other words, it will no longer charge to the next charge level until it has enough ammo.
+Fixed some incorrect/missing textures in the cave spawns in Swamp.
+Fixed some missing textures in Asteroid.
+Fixed a mysteriously scrolling floor under the left bridge path in Dusk (as well as the scrolling sides).
+Placed an alarm by the core area in Phobos Anomaly.
+The voting device now animates properly and "fires" instantly. It also has a tag now.
+Readded the blue particle generators at the spawn spot.
+Corrected a typo in Wave 7's description in Duke It Out.
+
+///////////////////////////////////////////
+/ CHANGES FROM tv50patch1b TO tv50patch1c /
+///////////////////////////////////////////
+
+SAMSARAHOLD:
+
+Removed the RenderStyle stuff from the doomsphere and time freeze pickups (likely a leftover from very early builds of SamsaraHold).
+The 1.5x damage and lesser tome powerups are now troll-proof.
+Allies and walls are now immune to samsara_peoplediewhentheyarekilled. You shouldn't be able to troll them period.
+
+STRONGHOLD UNTITLED EDITION:
+
+The elite marines' projectiles now go through players and allies.
+Players and allies can now move and shoot through the terminator player morph.
+If a vote for Deepspace 12 fails, you can now try to vote for it again.
+The auto shotgun (powered version) properly displays its ammo counter on the normal HUD.
+
+BOTH:
+
+The terminator weapon has a tag.
+Fixed some fences that weren't marked as blockable in Snake Corridors and Convulsion Of Nature.
+Barrels spawned by players can no longer hurt cores and allies.
+Added the unused LAX_STAR as a jukebox song.
+
+//////////////////////////////////////////
+/ CHANGES FROM tv50patch1 TO tv50patch1b /
+//////////////////////////////////////////
+
+SAMSARAHOLD:
+
+Gave the sentries the missing immunities.
+Doomguy's berserk sprite is now affected by samsarahold_cl_strweapons.
+
+STRONGHOLD UNTITLED EDITION:
+
+Gave the player BFG tracers +MTHRUSPECIES support. Just to be safe.
+
+BOTH:
+
+Fixed the autodrones telefragging the user. I somehow misread A_SpawnItemEx's flags and gave them the telefrag flag by accident. They're still not actually fixed despite all the SXF_NOCHECKPOSITION checks!
+The stats screen in replay mode should now actually play a sound when you get credits from meeting the par time.
+
+///////////////////////
+/ FIRST PATCH RELEASE /
+///////////////////////
+
+SAMSARAHOLD:
+
+Doomguy's fist (smooth animation) ends 1 tic slower to match the vanilla animation.
+Doomguy's chainsaw (Stronghold version) now plays its proper Select sound.
+Doomguy's chainsaw plays its Ready sound at the proper speed for both classic and Stronghold versions.
+Doomguy's automatic shotgun can no longer be reloaded if the clip is full.
+Doomguy's automatic shotgun now plays its firing sound in the correct sound channel (CHAN_WEAPON).
+Doomguy's flamethrower is tagged "Flamethrower" to match the original version.
+Doomguy's plasma rifle projectile (Stronghold version) uses its own sounds (which makes literally no difference, but it exists in case some sound replacer mod wants to replace those sounds).
+Doomguy's BFG projectile (Stronghold version) now plays its proper death sound.
+Doomguy's plasma repeater now plays its firing sound in the correct sound channel (CHAN_WEAPON).
+Chex Warrior's super bootspork plays its attack sounds at the proper speed.
+Corvus' gauntlets now plays its sounds in the correct sound channel (CHAN_AUTO). It also plays its hit sounds now (albeit sloppily done).
+Corvus' gauntlets perform its attack functions at the proper timing.
+B.J.'s ammo crate can no longer be used while you have full Ammo 1, preventing waste.
+Parias now respects the backpack pickup cooldown timer.
+Duke's taunt cooldown now works properly when picking up a medikit. (backported fix)
+Security Officer can no longer pick up combined ammo while you have full ammo, preventing waste.
+Ranger's rocket launcher DOE firing animation ends 1 tic slower to match the normal firing animation.
+Ranger should no longer have a dummy Wolfenstein rocket launcher when exiting a map.
+Ranger's weapons should now properly switch when out of ammo.
+Ranger's gauntlet and Doomguy's BFG9000 now properly check for PowerDoubleFiringSpeed.
+Duke's, Security Officer's, and Ranger's weapons now have their own weapon bobbing.
+Everyone that isn't B.J. actually gets yellow armour upon using a Wolfenstein extra life.
+Chex Warrior actually uses the Wolfenstein extra life when killed by slime.
+Duke uses the proper sprite when using a Wolfenstein extra life.
+Security Officer's Pain blend flashes actually trigger while holding a Wolfenstein extra life.
+Ranger uses the proper sounds when getting damaged while holding a Wolfenstein extra life.
+The unique team powerup device item now has the proper pickup message and tag.
+The allied reinforcements item now has the proper pickup message and tag.
+The elite allied reinforcements item now has the proper pickup message and tag.
+Added a coin counter to the full screen HUD.
+The following weapons now light up properly on the HUD when selected: Duke's riot shotgun, B.J.'s chaingun, Ranger's rocket launcher, Duke's devastator weapon, Security Officer's wave motion cannon (full screen).
+Doomguy's, Chexter's, Corvus', B.J.'s, and Ranger's pistol weapons now show ammo on the automap while samsara_pistolammo is on.
+The Ammo 1 number now lights up when using Security Officer's magnum(s) while samsara_pistolammo is on.
+The Marathon bullet puff sounds no longer conflict with the Stronghold bullet puff sounds.
+The CVar switches now tell you if a CVar is enabled or disabled. The chainsaw start option also recognises the second option that is automatically turned on when tier six is accessible.
+Readded the flying spaceships that show up every now and then.
+Doomguy's Stronghold weapons now have their respective puffs.
+If Stronghold weapons are enabled, marines that are spawned now have Stronghold's weapon sounds and puffs instead. Marines in The Final Stand and Fortress Of Damnation have a chance of spawning with these changes no matter what.
+Hell Warriors no longer get wiped out of existence when samsara_cl_bloodyhell is 2 or -1.
+The Azazel red projectile impact sound no longer conflicts with Ranger's explosion sound.
+The team power item now has its pickup sound.
+The unique start switches in the intermission map no longer look misaligned offline when the map is reset. Still broken in netplay for now.
+The chaingun (dropped by chaingunners) now has its proper Spawn sprite.
+Parias' Wraithverge now shows an Ammo 4 icon on the full screen HUD. Security Officer's MA-75B and WMC ammo icons in the full screen HUD are also adjusted properly.
+Players no longer leave standing dead bodies if they join in as random.
+The 1.5x damage powerup and lesser tome of power now expire properly.
+samsarahold_cl_dukemusic now works for every player that has it on. Still doesn't work for spectators. Setting it to 2 will also just play the music without displaying credits (in case you get tired of seeing it for the literal one thousandth time).
+The Hexen armour now has sprites.
+Added tags on inventory items.
+The random weapon item can now give alternate unique equipment.
+When samsarahold_cl_strweapons is on, Doomguy's weapon pickup sprites and sounds will change accordingly. Character-specific sprites only, though.
+Dropped ammo pickups now use their own sprites instead of the Samsara ammo pickup sprites.
+Doomguy's extra Stronghold weapons now appear on top of the weapon pickup the extra weapon occupies (railgun over plasma rifle, for example). Again, character-specific pickup sprites only.
+Enemy ammo drops now give the proper amount of ammo.
+Enemies that fire bullet puffs now use the proper bullet puffs.
+Slot 5 Chex marines now properly zorch enemies.
+Doomguy's pistol now properly loops to the Ready state if samsarahold_cl_strweapons is on.
+Doomguy's berserk (BFG replacement version) now has the proper sprite in Gentleman mode.
+Doomguy's plasma repeater shots now have the correct decal.
+Security Officer's player sprites are now scaled properly.
+B.J.'s ammo crate now has a character-specific pickup sprite.
+Updated bloodyhell levels -1, 1, and 2 to the latest code.
+Fixed pipebombs trying to point to M1911.
+Hopefully fixed Duke's fingers breaking when he kicks and runs out of ammo for the Glock 17.
+Marines now play their sounds properly again.
+Doomguy's Stronghold weapons now have GLDEFS entries.
+
+STRONGHOLD UNTITLED EDITION:
+
+The chainsaw (unpowered version) now has an actual tag.
+The weapon powerup kit can no longer be used while its effect is active, preventing waste.
+The automatic shotgun is tagged "Auto Shotgun".
+The healing stations now heal you at a rate of 1 tic to match the SamsaraHold version.
+Removed some DECORATE code that was only necessary for SamsaraHold.
+The planet name over the entrance to Delta Bunker now matches what the description says.
+Powerups now play their pickup sounds properly.
+The pyro cannon now bobs, but only vertically.
+The auto shotgun (powered version) has its proper reload speed when reloaded via primary fire button.
+The pistol's firing animation now has the proper timing. The powered version now animates properly.
+The nightmare cacodemon's and cacolantern's projectiles now have the proper sprites.
+The invulnerability powerup is now actually troll-proof.
+The plasma rifle no longer fires a conflicting PlasmaBall2 projectile.
+The radsuit is now troll-proof.
+The flamethrower/pyro cannon ammo now has a pickup sound.
+Added a stronghold_hardmode CVar.
+The fist, chainsaw, and railgun now use normal puffs.
+Added a stronghold_cl_dukemusic CVar.
+Made sure replaced actors are actually replaced in Zandronum...at the cost of breaking in ZDoom.
+Cores and goals can now be damaged and destroyed by demolisher BFG tracers again.
+Corrected the enhanced cacodemon obituaries to match SamsaraHold.
+The nightmare cacodemon has the correct blood colour now.
+Players and marines can shoot through each other with hitscan weapons.
+
+BOTH:
+
+The chainsaw now plays its attack sounds at the proper speed.
+The railgun (unpowered version) no longer skips its second level shot in skills 0 and 4.
+The announcer now has a "Twentieth wave!" sound entry. There's still no sound, but the entry is there for sound replacer mod purposes.
+Antlion Nebula's jump pad now plays a sound.
+Cyclone no longer has a win message trigger at the start of the final wave.
+The final boss' skeletons no longer play their hit sound when they don't actually hit anything.
+The stats "screen" in replay mode now shows how much credits you gain from the par time and plays a sound accordingly. The "Hard mode completed!" message is also no longer separate, halving the wait time.
+Fixed some typos in Deepspace 12.
+The powerups in Zandronum now have their announcer sounds play.
+Dangoo Desert, Bipolar Bunker, Duke It Out, and City Of Silence - Apocalypse no longer play another win message after the intended win message.
+The STR35 trigger now uses the vote system.
+The credits now takes you back to MAP99 when it's complete.
+The Cyberdemon Mk. II's and final boss' projectiles are now unaffected by time freeze.
+The land mines no longer make their bounce sound on spawn.
+Added a missing TimeAttackMode check for Antlion Nebula's hard mode.
+Switched the cybruiser's and archon of Hell's enemy types around in the enemy gallery.
+Marines, sentries, and mission-critical objectives can no longer be damaged by players.
+The weapon powerup kit/unique team powerup device now has a pickup sound.
+JUKE08 and JUKE09 now play from the jukebox. MR_FINAL also plays instead of D_INT if all the missions are complete. It also maintains its song order properly with multiple players.
+The difficulty setting room now tells you what difficulty is currently set when you enter the room.
+The railgun now plays its sounds properly (in both sound files and timing).
+The plasma repeater, railgun, and pyro cannon have sound aliases that point to the original sounds (again, sound replacer mod purposes).
+The autodrones should now spawn properly.
+Touched up on some enemy obituaries.
+The allmap is now actually troll-proof.
+Added a 1 tic delay to the final boss' Heal state (both phases) in an attempt to stop crashing.
+Fixed a typo in Tunnel's planet name in the description.
+The final boss' health display now shows throughout the whole fight instead of just the first half of the first phase.
+The smart bomb can now be thrown through players and barriers. It also now uses the proper damage type.
+City Of Silence - Apocalypse no longer triggers music twice on the third wave.
+The diabolist is now correctly referred to as such.
+Infinite ammo now works properly for all weapons.
+The Overmind's pyro shot debris is now unaffected by time freeze powerups. It can also actually hit players and cores again.
+It should no longer be possible to trigger votes again if a vote is already underway.
+You can no longer get stuck whenever MAP99 is refreshed during a vote.
+The pyro cannon no longer damages any teammate that didn't shoot it with the lingering flames. The owner can still get hurt by them, though.
+The limit on the amount of barrels you can hold is fixed. You can also buy the maximum of 50 barrels.
+Shops should be even more responsive now.

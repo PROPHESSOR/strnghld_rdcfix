@@ -1,13 +1,13 @@
 ACTOR NightmareDemon 10100 //NIGHTMARE DEMON
 {
 //$Category Stronghold_Monsters
-	painchance "Stunner", 128	
-
+    PainChance "Stunner", 128
 	SpawnID 233
 	Health 260
 	Radius 30
 	Height 56
 	Speed 16
+    FastSpeed 20
 	Mass 200
 	PainChance 200
 	RenderStyle TRANSLUCENT
@@ -20,7 +20,8 @@ ACTOR NightmareDemon 10100 //NIGHTMARE DEMON
 	PainSound "nightmareDemon/pain"
 	DeathSound "nightmareDemon/death"
 	ActiveSound "nightmareDemon/active"
-        Obituary "%o was spooked by a Nightmare Demon."
+    Obituary "$STR_OB_NIGHTMAREDEMON"
+    Tag "$STR_MONSTERTAG_NIGHTMAREDEMON"
         States
         {
         Spawn:
@@ -30,9 +31,8 @@ ACTOR NightmareDemon 10100 //NIGHTMARE DEMON
         	SAR2 AABBCCDD 2 A_Chase
         	Loop
         Melee:
-        	SAR2 E 6 A_FaceTarget
-        	SAR2 F 6 A_FaceTarget
-        	SAR2 G 6 A_SargAttack
+        	SAR2 EF 6 fast A_FaceTarget
+        	SAR2 G 6 fast A_SargAttack
         	Goto See
         Missile:
         	SAR2 O 6 A_FaceTarget
@@ -54,12 +54,12 @@ ACTOR NightmareDemon 10100 //NIGHTMARE DEMON
         	SAR2 K 5
         	SAR2 L 5 A_Fall
         	SAR2 M 5
-        	SAR2 N 3000
-                SAR2 NNNNNNNNNNNN 2 A_FadeOut(0.1)
-        	Stop
+        	SAR2 N 3000 CanRaise
+            SAR2 N 2 A_FadeOut(0.1)
+        	wait
         Raise:
         	SAR2 MLKJI 5
-        	Goto See
+        	goto See
         }
 }
 
@@ -72,6 +72,7 @@ ACTOR NDemonBall //NIGHTMARE DEMON - Fireball
     PROJECTILE
     SeeSound "64ball/shoot"
     DeathSound "64ball/explode"
+    Decal BaronScorch
     States
     {
     Spawn:
@@ -82,4 +83,3 @@ ACTOR NDemonBall //NIGHTMARE DEMON - Fireball
         Stop
     }
 }
-

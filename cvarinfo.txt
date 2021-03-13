@@ -1,0 +1,13 @@
+server bool stronghold_hardmode = false;
+server bool stronghold_bruisermorph = false;
+server int stronghold_effectiveplayercount = 0; // stronghold_screwthisweneedmoreplayers
+server int stronghold_effectiveplayercounttype = 0;
+server bool stronghold_infinitelives = false;
+server bool stronghold_skipbriefings = false;
+
+user int stronghold_cl_dukemusic = 0;
+user int stronghold_cl_turnthatdamnalarmoff = 0;
+user noarchive int stronghold_cl_bankcredits = 0;
+user bool stronghold_cl_announcer = true;
+user bool stronghold_cl_iwinbuttonmusic = true;
+user int stronghold_cl_berserkswitch = 2;

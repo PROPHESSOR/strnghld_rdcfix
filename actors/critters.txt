@@ -1,4 +1,3 @@
-
 // Crab
 actor Crab 8589
 {
@@ -10,12 +9,13 @@ actor Crab 8589
     Scale 0.7
     PainChance 0
     Mass 10
-    MONSTER 
+    MONSTER
     +FLOORCLIP
     +Friendly
     -COUNTKILL
     -ACTIVATEMCROSS
     -SOLID
+    +NOTAUTOAIMED
     States
     {
     Spawn:
@@ -42,6 +42,7 @@ actor Babycrab 8590
     -countkill
     -ACTIVATEMCROSS
     -SOLID
+    +NOTAUTOAIMED
     States
     {
     Spawn:
@@ -66,15 +67,16 @@ ACTOR FireFly 3100
     +NOGRAVITY
     +NOTARGET
     +FloatBob
-    +SPAWNFLOAT 
+    +SPAWNFLOAT
     +NOLIFTDROP
     +DONTOVERLAP
     +CANNOTPUSH
-    +RANDOMIZE 
-    +PUSHABLE 
+    +RANDOMIZE
+    +PUSHABLE
     +FRIENDLY
     -ACTIVATEMCROSS
     -SOLID
+    +NOTAUTOAIMED
     States
      {
     Spawn:
@@ -84,9 +86,7 @@ ACTOR FireFly 3100
     Death:
         FFLY A 2 A_Scream
         FFLY B 2 A_Fall
-       
         Stop
-    
     }
 }
 
@@ -103,15 +103,16 @@ ACTOR DragonFly 3103
     +NOGRAVITY
     +NOTARGET
     +FloatBob
-    +SPAWNFLOAT 
+    +SPAWNFLOAT
     +NOLIFTDROP
     +DONTOVERLAP
     +CANNOTPUSH
-    +RANDOMIZE 
-    -PUSHABLE 
+    +RANDOMIZE
+    -PUSHABLE
     +FRIENDLY
     -ACTIVATEMCROSS
     -SOLID
+    +NOTAUTOAIMED
    States
     {
     Spawn:
@@ -121,7 +122,6 @@ ACTOR DragonFly 3103
         DRAG A 2 A_Scream
         DRAG B 2 A_Fall
         Stop
-    
     }
 }
 
@@ -140,17 +140,18 @@ actor StrangeLight_Red 3104
     +NOGRAVITY
     +NOTARGET
     +FLOATBOB
-    +SPAWNFLOAT 
+    +SPAWNFLOAT
     +NOLIFTDROP
     +DONTOVERLAP
     +CANNOTPUSH
-    +RANDOMIZE 
-    -PUSHABLE 
+    +RANDOMIZE
+    -PUSHABLE
     -SHOOTABLE
-    +FRIENDLY    
+    +FRIENDLY
     -ACTIVATEMCROSS
     -SOLID
-    +ALLOWCLIENTSPAWN    
+    +ALLOWCLIENTSPAWN
+    +NOTAUTOAIMED
    States
     {
     Spawn:
@@ -174,17 +175,18 @@ actor StrangeLight_Blue 3105
     +NOGRAVITY
     +NOTARGET
     +FLOATBOB
-    +SPAWNFLOAT 
+    +SPAWNFLOAT
     +NOLIFTDROP
     +DONTOVERLAP
     +CANNOTPUSH
-    +RANDOMIZE 
-    -PUSHABLE 
+    +RANDOMIZE
+    -PUSHABLE
     -SHOOTABLE
     +FRIENDLY
     -ACTIVATEMCROSS
     -SOLID
-    +ALLOWCLIENTSPAWN    
+    +ALLOWCLIENTSPAWN
+    +NOTAUTOAIMED
    States
     {
     Spawn:
@@ -208,17 +210,18 @@ actor StrangeLight_White 3106
     +NOGRAVITY
     +NOTARGET
     +FLOATBOB
-    +SPAWNFLOAT 
+    +SPAWNFLOAT
     +NOLIFTDROP
     +DONTOVERLAP
     +CANNOTPUSH
-    +RANDOMIZE 
-    -PUSHABLE 
+    +RANDOMIZE
+    -PUSHABLE
     -SHOOTABLE
-    +FRIENDLY    
+    +FRIENDLY
     -ACTIVATEMCROSS
-    +ALLOWCLIENTSPAWN    
-    -SOLID    
+    +ALLOWCLIENTSPAWN
+    -SOLID
+    +NOTAUTOAIMED
    States
     {
     Spawn:
@@ -242,17 +245,18 @@ actor StrangeLight_Green 3107
     +NOGRAVITY
     +NOTARGET
     +FLOATBOB
-    +SPAWNFLOAT 
+    +SPAWNFLOAT
     +NOLIFTDROP
     +DONTOVERLAP
     +CANNOTPUSH
-    +RANDOMIZE 
-    -PUSHABLE 
+    +RANDOMIZE
+    -PUSHABLE
     -SHOOTABLE
     +FRIENDLY
     -ACTIVATEMCROSS
-    +ALLOWCLIENTSPAWN    
-    -SOLID    
+    +ALLOWCLIENTSPAWN
+    -SOLID
+    +NOTAUTOAIMED
    States
     {
     Spawn:
@@ -273,13 +277,14 @@ Actor Creep2 19251
 	maxdropoffheight 4
 	bloodcolor red
 	+SHOOTABLE
-	+RANDOMIZE 
+	+RANDOMIZE
 	-SOLID
 	+FRIENDLY
 	-ACTIVATEMCROSS
+    +NOTAUTOAIMED
 	States
 		{
-		Spawn:	
+		Spawn:
 		 CRIZ AAABBB 1 A_Wander
 		 CRIZ A 0 A_Jump(20,"Spawn2")
 		 loop
@@ -307,10 +312,11 @@ Actor Spiderbug_Brown 19252
 	maxdropoffheight 4
 	bloodcolor green
 	+SHOOTABLE
-	+RANDOMIZE 
+	+RANDOMIZE
 	-SOLID
 	+FRIENDLY
 	-ACTIVATEMCROSS
+    +NOTAUTOAIMED
 	States
 		{
 		Spawn:
@@ -340,10 +346,11 @@ Actor Spiderbug_Red 19253
 	maxdropoffheight 4
 	bloodcolor green
 	+SHOOTABLE
-	+RANDOMIZE 
+	+RANDOMIZE
 	-SOLID
 	+FRIENDLY
 	-ACTIVATEMCROSS
+    +NOTAUTOAIMED
 	States
 		{
 		Spawn:
@@ -360,4 +367,3 @@ Actor Spiderbug_Red 19253
 			stop
 		}
 }
-

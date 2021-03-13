@@ -4,8 +4,19 @@ monospacefonts true, "0";
 statusbar fullscreen, fullscreenoffsets
 {
 	drawimage "STBARFS", 0+center, -32, center; 
-	
-	drawimage "MEDIA0", -98+center, -28, centerbottom;
+
+	InInventory JailTrackerAllPlayers
+	{
+		DrawString SMALLFONT, Red, "Players in jail:", -17+center, -71;
+		DrawNumber 3, SMALLFONT, Red, JailTrackerAllPlayers, Alignment(Left), -9+center, -71;
+	}
+
+	InInventory PowerStrength
+	{
+		drawimage "PSTRA0", -98+center, -28, centerbottom;
+	} else {
+		drawimage "MEDIA0", -98+center, -28, centerbottom;
+	}
 	drawnumber 3, HUDFONT_DOOM, untranslated, health, -41+center, -42;
 	drawimage "WIPCNTSM", -38+center, -37;
 
@@ -18,19 +29,13 @@ statusbar fullscreen, fullscreenoffsets
 		drawimage ammoicon1, -6+center, -7;
 		drawnumber 3, HUDFONT_DOOM, untranslated, ammo1, 49+center, -21;
 	}
+
 	IsSelected AutoShotgun
 	{
-		drawimage ammoicon2, -6+center, -29;
-		drawnumber 3, HUDFONT_DOOM, untranslated, ammo2, 49+center, -42;
-		drawimage ammoicon1, -6+center, -7;
-		drawnumber 3, HUDFONT_DOOM, untranslated, ammo1, 49+center, -21;
-	}
-	IsSelected PowerAutoShotgun
-	{
-		drawimage ammoicon2, -6+center, -29;
-		drawnumber 3, HUDFONT_DOOM, untranslated, ammo2, 49+center, -42;
-		drawimage ammoicon1, -6+center, -7;
-		drawnumber 3, HUDFONT_DOOM, untranslated, ammo1, 49+center, -21;
+		drawimage ammoicon1, -6+center, -29;
+		drawnumber 3, HUDFONT_DOOM, untranslated, ammo1, 49+center, -42;
+		drawimage ammoicon2, -6+center, -7;
+		drawnumber 3, HUDFONT_DOOM, untranslated, ammo2, 49+center, -21;
 	}
 
 	drawnumber 3, HUDFONT_DOOM, untranslated, LifeItem, 85+center, -21;
@@ -61,7 +66,7 @@ statusbar normal
 	}
 	IsSelected AutoShotgun
 	{
-		drawnumber 3, HUDFONT_DOOM, gold, ammo2, 40, 172;
+		drawnumber 3, HUDFONT_DOOM, gold, ammo1, 40, 172;
 	}
 
 /*	//keys
@@ -121,4 +126,3 @@ statusbar inventoryfullscreen, fullscreenoffsets // ZDoom HUD overlay.
 {
 	drawinventorybar Doom, translucent, 7, INDEXFONT, -106+center, -31, -80+center, -9;
 }*/
-

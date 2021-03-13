@@ -1,0 +1,8 @@
+OptionMenu "StrongholdBankMenu"
+{
+    Title "$STR_MENU_TITLE_BANK"
+    TextField "$STR_MENU_BANKCREDITS", "stronghold_cl_bankcredits"
+    Command "$STR_MENU_BANKPAYFEE",    "str_bankpayfee"
+    Command "$STR_MENU_BANKWITHDRAW",  "str_bankwithdraw"
+    Command "$STR_MENU_BANKDEPOSIT",   "str_bankdeposit"
+}

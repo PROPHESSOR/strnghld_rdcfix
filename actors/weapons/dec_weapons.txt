@@ -1,84 +1,205 @@
-Actor StrongholdPlayer : DoomPlayer replaces DoomPlayer
+actor StrongholdPlayer : DoomPlayer replaces DoomPlayer
 {
+	Health 200
 	DamageFactor "MarineAlly", 0
-	Player.StartItem "LifeItem", 5   // starting lives
-	Player.StartItem "CoinItem", 1200 // starting money
-	Player.StartItem "DEPistol", 1
+	DamageFactor "MarineAllyRocket", 0
+	DamageFactor "MarineAllyPlasma", 0
+	DamageFactor "MarineAllyRailgun", 0
+	DamageFactor "MarineAllyRepeater", 0
+	DamageFactor "MarineAllyFire", 0
+	DamageFactor "MarineAllyBFG", 0
+	DamageFactor "MarineAllyBFGSplash", 0
+	DamageFactor "MarineAllyIce", 0
+	DamageFactor "BossFactor", 0
+	//Player.StartItem "GreenArmor" // handled in ACS now
+	Player.StartItem "LifeItem", 5    // starting lives
+	//Player.StartItem "CoinItem", 800 // starting money which is now handled in ACS
+	Player.StartItem "DEPistol"
 	Player.StartItem "DEFist"
 	Player.StartItem "Clip", 50
-	+GHOST			// Fixing the Coop-Mine Problem
-	-TELESTOMP		// No more telefrags in coop games
+	Species "Player"
+	+THRUSPECIES
+    +NOTAUTOAIMED
+    States
+    {
+      Melee:
+        PLAY F 6 bright light("ZOMBIEATK") // support this light for skins
+        goto Super::Missile
+    }
 }
+
+/*ACTOR GreenArmorModified : GreenArmor
+{
+    Armor.SavePercent 40
+    Armor.SaveAmount 150
+}
+
+ACTOR BlueArmorModified : BlueArmor
+{
+    Armor.SavePercent 60
+    Armor.SaveAmount 250
+}*/
 
 ////////////////////////////////////////////////////////
 ////////////////// CHAINSAW ////////////////////////////
 ////////////////////////////////////////////////////////
+actor StrMeleePuff : BulletPuff
+{
+    Mass 1
+    Alpha 1
+    DamageType "PlayerAlly"
+    Species "Player"
+    +MTHRUSPECIES
+	States
+	{
+	Spawn:
+        PUFF AB 4 bright
+        goto Super::Melee
+	}
+}
+
 actor DEChainsaw : Weapon replaces Chainsaw
 {
   spawnid 32
-  obituary "%o was mowed over by %k's chainsaw."
+  obituary "$OB_MPCHAINSAW"
   radius 20
   height 16
-  inventory.pickupmessage "A chainsaw! Find some meat!"
+  inventory.pickupmessage "$GOTCHAINSAW"
   weapon.selectionorder 2200
   weapon.upsound "weapons/sawup"
   weapon.readysound "weapons/sawidle"
-  Weapon.SisterWeapon "PowerChainsaw"
+  Tag "$TAG_CHAINSAW"
   Decal BulletChip
   +WEAPON.MELEEWEAPON
-  +GHOST
-  states
+  States
   {
   Ready:
     SAWG CD 4 A_WeaponReady
     loop
+
   Deselect:
-    SAWG C 0 A_Lower
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+    TNT1 A 0 A_Lower
     SAWG C 1 A_Lower
     loop
+
+  DeselectPowered:
+    TNT1 AA 0 A_Lower
+    SAWG C 1 A_Lower
+    goto Deselect
+
   Select:
-    SAWG C 0 A_Raise
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+    TNT1 A 0 A_Raise
     SAWG C 1 A_Raise
     loop
+
+  SelectPowered:
+    TNT1 AA 0 A_Raise
+    SAWG C 1 A_Raise
+    goto Select
+
   Fire:
-    SAWG AABB 2 A_Saw
-    SAWG B 0 A_ReFire
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+    SAWG A 1 A_Saw("weapons/sawfull","weapons/sawhit",2,"StrMeleePuff")
+    SAWG AAA 1 A_Saw("","",2,"StrMeleePuff")
+    SAWG B 1 A_Saw("weapons/sawfull","weapons/sawhit",2,"StrMeleePuff")
+    SAWG BBB 1 A_Saw("","",2,"StrMeleePuff")
+    TNT1 A 0 A_ReFire
     goto Ready
+
+  FirePowered:
+    TNT1 A 0 A_Saw("weapons/sawfull","weapons/sawhit",2,"StrMeleePuff")
+    TNT1 AA 0 A_Saw("","",2,"StrMeleePuff")
+    SAWG A 1 A_Saw("","",2,"StrMeleePuff")
+    TNT1 AAA 0 A_Saw("","",2,"StrMeleePuff")
+    SAWG A 1 A_Saw("","",2,"StrMeleePuff")
+    TNT1 A 0 A_Saw("weapons/sawfull","weapons/sawhit",2,"StrMeleePuff")
+    TNT1 AA 0 A_Saw("","",2,"StrMeleePuff")
+    SAWG B 1 A_Saw("","",2,"StrMeleePuff")
+    TNT1 AAA 0 A_Saw("","",2,"StrMeleePuff")
+    SAWG B 1 A_Saw("","",2,"StrMeleePuff")
+    TNT1 A 0 A_Saw("weapons/sawfull","weapons/sawhit",2,"StrMeleePuff")
+    TNT1 AA 0 A_Saw("","",2,"StrMeleePuff")
+    SAWG A 1 A_Saw("","",2,"StrMeleePuff")
+    TNT1 AAA 0 A_Saw("","",2,"StrMeleePuff")
+    SAWG A 1 A_Saw("","",2,"StrMeleePuff")
+    TNT1 A 0 A_Saw("weapons/sawfull","weapons/sawhit",2,"StrMeleePuff")
+    TNT1 AA 0 A_Saw("","",2,"StrMeleePuff")
+    SAWG B 1 A_Saw("","",2,"StrMeleePuff")
+    TNT1 AAA 0 A_Saw("","",2,"StrMeleePuff")
+    SAWG B 1 A_Saw("","",2,"StrMeleePuff")
+    TNT1 A 0 A_ReFire
+    goto Ready
+
   Spawn:
     CSAW A -1
     stop
   }
 }
 
-
 ////////////////////////////////////////////////////////
 /////////////////////////// FIST ///////////////////////
 ////////////////////////////////////////////////////////
 actor DEFist : Weapon replaces Fist
 {
-  obituary "%o chewed on %k's fist."
+  obituary "$OB_MPFIST"
   weapon.selectionorder 3700
   weapon.kickback 100
-  Weapon.SisterWeapon "PowerFist"
   +WEAPON.WIMPY_WEAPON
   +WEAPON.MELEEWEAPON
-  Tag "Fist"
-  states
+  +NOALERT
+  Tag "$TAG_FIST"
+  AttackSound "*fist"
+  States
   {
   Ready:
     PUNG A 1 A_WeaponReady
     loop
+
   Deselect:
-    PUNG A 0 A_Lower
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+    TNT1 A 0 A_Lower
     PUNG A 1 A_Lower
     loop
+
+  DeselectPowered:
+    TNT1 AA 0 A_Lower
+    PUNG A 1 A_Lower
+    goto Deselect
+
   Select:
-    PUNG A 0 A_Raise
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+    TNT1 A 0 A_Raise
     PUNG A 1 A_Raise
     loop
+
+  SelectPowered:
+    TNT1 AA 0 A_Raise
+    PUNG A 1 A_Raise
+    goto Select
+
   Fire:
     PUNG B 4
-    PUNG C 4 A_Punch
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+    TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"FireBerserk")
+    TNT1 A 0 A_CustomPunch(random(1, 10)*2, 1, 0, "StrMeleePuff")
+    goto FireFinish
+
+  FireBerserk:
+    TNT1 A 0 A_CustomPunch((random(1, 10)*2)*10, 1, 0, "StrMeleePuff")
+    goto FireFinish
+
+  FirePowered:
+    TNT1 A 0 A_JumpIfInventory("PowerStrength",1,"FirePoweredBerserk")
+    TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch(random(1, 10)*2, 1, 0, "StrMeleePuff")
+    goto FireFinish
+
+  FirePoweredBerserk:
+    TNT1 AAAAAAAAAAAAAAAA 0 A_CustomPunch((random(1, 10)*2)*10, 1, 0, "StrMeleePuff")
+
+  FireFinish:
+    PUNG C 4
     PUNG D 5
     PUNG C 4
     PUNG B 5 A_ReFire
@@ -86,12 +207,9 @@ actor DEFist : Weapon replaces Fist
   }
 }
 
-
-
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// DEVASTATOR ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-
 Actor DevPuff
 {
    Radius 3
@@ -101,14 +219,17 @@ Actor DevPuff
    +ALWAYSPUFF
    +PUFFONACTORS
    +NOGRAVITY
-   DeathSound "weapons/buzz"
+   +MTHRUSPECIES
+   Species "Player"
+   DamageType "PlayerAllyBFG"
+   SeeSound "weapons/buzz"
    States
    {
    Spawn:
       DLIT JKLJKLJKL 3 Bright
       stop
    Crash:
-      TNT1 A 1 Bright
+      TNT1 A 1
       stop
    }
 }
@@ -116,16 +237,14 @@ Actor DevPuff
 ACTOR Devastator : Weapon 20101
 {
 //$Category Stronghold_Weapons
-   spawnid 242
+   SpawnID 242
    Inventory.PickupSound "misc/w_pkup"
-   Inventory.PickupMessage "You got the devastator! Hell yeah!"
-   Obituary "%o was desintergrated by %k's Devastator."
+   Inventory.PickupMessage "$STR_GOTDEVASTATOR"
+   Obituary "$STR_OB_DEVASTATOR"
    Weapon.AmmoType "Cell"
    Weapon.AmmoGive 60
    Weapon.AmmoUse 60
-   Weapon.SisterWeapon "PowerDevastator"
-   Damagetype "Normal"
-   Tag "Devastator"
+   Tag "$STR_WEAPONTAG_DEVASTATOR"
    +WEAPON.EXPLOSIVE
    +WEAPON.BFG
    +WEAPON.NOAUTOFIRE
@@ -133,47 +252,82 @@ ACTOR Devastator : Weapon 20101
    {
    Spawn:
       WDEV A -1
-      Loop
+      stop
+
    Ready:
-      DEVG A 2 A_WeaponReady
-      Loop
+      DEVG A 1 A_WeaponReady
+      loop
+
    Deselect:
-      DEVG A 0 A_Lower
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
       DEVG A 1 A_Lower
-      Loop
+      loop
+
+   DeselectPowered:
+      TNT1 AA 0 A_Lower
+      DEVG A 1 A_Lower
+      goto Deselect
+
    Select:
-      DEVG A 0 A_Raise
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
       DEVG A 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      TNT1 AA 0 A_Raise
+      DEVG A 1 A_Raise
+      goto Select
+
    Fire:
-      DEVG B 10 A_PlayWeaponSound("weapons/devchr")
-      DEVG CDEF 10 Bright
-      DEVG A 0 A_Refire
-      DEVG J 4 Bright A_GunFlash
-      DEVG J 1 Bright A_Playsound("weapons/devfir")
-      DEVG K 10 Bright A_FireCustomMissile ("DevastatorBall",0,1,0,0)
-      DEVG L 7 Bright
-      Goto Ready
+      TNT1 A 0 A_PlayWeaponSound("weapons/devchr2")
+      DEVG BCDEF 10 bright
+      TNT1 A 0 A_ReFire
+      DEVG J 5 bright A_GunFlash
+      TNT1 A 0 A_PlaySound("weapons/devfir2")
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      TNT1 A 0 A_FireCustomMissile("DevastatorBall",0,1,0,0)
+      goto FireFinish
+
+   FirePowered:
+      TNT1 A 0 A_FireCustomMissile("DevastatorCannonProjectile",0,0,0,0)
+      TNT1 A 0 A_FireCustomMissile("DevastatorCannonProjectile2",0,1,0,0)
+      goto FireFinish
+
    Hold:
-      DEVG G 1 Bright A_PlayWeaponSound("weapons/devfch")
-      DEVG G 3 Bright A_FireBullets(4,4,2,6,"DevPuff",0,64)
-      DEVG H 4 Bright A_FireBullets(4,4,2,6,"DevPuff",0,64)
-      DEVG I 4 Bright A_FireBullets(4,4,2,6,"DevPuff",0,64)
-      DEVG G 4 Bright A_FireBullets(4,4,2,6,"DevPuff",0,64)
-      DEVG H 4 Bright A_FireBullets(4,4,2,6,"DevPuff",0,64)
-      DEVG I 4 Bright A_FireBullets(4,4,2,6,"DevPuff",0,64)
-      DEVG I 0 A_Refire
-      DEVG J 4 Bright A_GunFlash
-      DEVG J 1 Bright A_Playsound("weapons/devfir")
-      DEVG K 10 Bright A_FireCustomMissile ("DevastatorBall",0,1,0,0)
-      DEVG L 7 Bright
-      Goto Ready
+      TNT1 A 0 A_PlayWeaponSound("weapons/devfch2")
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"HoldPowered")
+      DEVG GHIGHI 4 bright A_FireBullets(4,4,4,4,"DevPuff",0,256)
+      TNT1 A 0 A_ReFire
+      goto HoldContinue
+
+   HoldPowered:
+      DEVG GHIGHI 4 bright A_FireBullets(4,4,4,4,"DevPuff",0,Random(256,512))
+      TNT1 A 0 A_ReFire
+
+   HoldContinue:
+      DEVG J 5 bright A_GunFlash
+      TNT1 A 0 A_PlaySound("weapons/devfir2")
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"HoldContinuePowered")
+      TNT1 A 0 A_FireCustomMissile("DevastatorBall1",0,1,0,0)
+      goto FireFinish
+
+   HoldContinuePowered:
+      TNT1 A 0 A_FireBullets(25,25,250,50,"DevPuff",0)
+      TNT1 A 0 A_FireCustomMissile("DevastatorCannonProjectile",0,0,0,0)
+      TNT1 A 0 A_FireCustomMissile("DevastatorCannonProjectile2",0,1,0,0)
+
+   FireFinish:
+      DEVG K 10 bright
+      DEVG L 7 bright
+      goto Ready
+
    Flash:
       TNT1 A 5 A_Light1
       TNT1 A 10 A_Light2
       TNT1 A 7 A_Light1
-      TNT1 A 5 A_Light0
-      stop
+      goto LightDone
    }
 }
 
@@ -184,109 +338,101 @@ ACTOR DevastatorBall
    Speed 30
    Damage 256
    PROJECTILE
-   ExplosionRadius 256
-   ExplosionDamage 320
    RENDERSTYLE ADD
-   ALPHA 0.90
-   Damagetype "Normal"
-   +THRUGHOST
-   DeathSound "weapons/devexp"
+   ALPHA 0.9
+   DamageType "PlayerAllyBFG"
+   Species "Player"
+   +THRUSPECIES
+   +FORCEXYBILLBOARD
+   DeathSound "weapons/devexp2"
    Decal DevastatorLightning
    States
    {
    Spawn:
-      DBAL AB 4 Bright
-      DBAL A 4 Bright A_Explode (128,128,1)
-      DBAL A 0 Bright A_Jump (160,3)
-      DBAL AAA 0 Bright A_CustomMissile("LiteShot",0,0,Random(0,360))
-      DBAL B 4 Bright A_Explode (128,128,1)
-      DBAL B 0 Bright A_Jump (160,3)
-      DBAL BBB 0 Bright A_CustomMissile("LiteShot",0,0,Random(0,360))
+      DBAL AB 4 Bright 
+      DBAL A 4 Bright
+      TNT1 AAA 0 A_CustomMissile("LiteShot",0,0,Random(0,360),4)
+      DBAL B 4 Bright
+      TNT1 AAA 0 A_CustomMissile("LiteShot",0,0,Random(0,360),4)
       Goto Spawn+2
    Death:
       DBAL C 5 Bright
-      DBAL D 5 Bright A_Explode
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,18,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,36,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,54,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,72,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,90,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,108,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,126,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,144,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,144,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,162,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,180,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,196,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,216,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,234,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,252,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,270,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,288,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,306,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,324,2)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,342,2)
-      DBAL EFG 5 Bright A_Explode
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,0,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,18,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,36,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,54,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,72,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,90,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,108,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,126,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,144,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,162,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,180,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,196,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,216,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,234,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,252,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,270,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,288,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,306,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,324,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,342,6)
+      TNT1 A 0 A_Explode(320,256,1)
+      DBAL D 5 Bright A_Explode(320,384,0)
+      TNT1 A 0 A_Explode(320,256,1)
+      TNT1 A 0 A_Explode(320,384,0)
+      DBAL EFG 5 Bright
+      DBAL HI 3 Bright
+      Stop
+   }
+}
+
+ACTOR DevastatorBall1 : DevastatorBall
+{
+   Damage 100
+   +FORCERADIUSDMG
+   States
+   {
+   Spawn:
+      DBAL AB 4 Bright
+      DBAL A 4 Bright A_Explode(128,128,1)
+      TNT1 A 0 A_Jump(160,3)
+      TNT1 AAA 0 A_SpawnItemEx("DevShooter",0,0,0,0,0,0,0,SXF_SETMASTER)
+      DBAL B 4 Bright A_Explode(128,128,1)
+      TNT1 A 0 A_Jump(160,3)
+      TNT1 AAA 0 A_SpawnItemEx("DevShooter",0,0,0,0,0,0,0,SXF_SETMASTER)
+      Goto Spawn+2
+   Death:
+      DBAL C 5 Bright
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,0,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,18,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,36,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,54,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,72,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,90,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,108,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,126,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,144,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,162,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,180,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,196,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,216,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,234,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,252,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,270,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,288,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,306,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,324,6)
+      TNT1 A 0 A_CustomMissile("DevastatorBall2",0,0,342,6)
+      TNT1 A 0 A_Explode(360,256,1)
+      DBAL D 5 Bright A_Explode(360,384,0)
+      TNT1 A 0 A_Explode(360,256,1)
+      TNT1 A 0 A_Explode(360,384,0)
+      DBAL EFG 5 Bright
       DBAL HI 3 Bright
       stop
    }
 }
-
-/* ACTOR DevastatorBall
-{
-   Radius 12
-   Height 8
-   Speed 30
-   Damage 100
-   PROJECTILE
-   ExplosionRadius 256
-   ExplosionDamage 360
-   RENDERSTYLE ADD
-   ALPHA 0.90
-   Damagetype lightning
-   +THRUGHOST
-   +FORCERADIUSDMG
-   +FORCEXYBILLBOARD
-   DeathSound "weapons/devexp"
-   States
-   {
-   Spawn:
-      DBAL AB 4 Bright 
-      DBAL A 4 Bright A_Explode (128,128,0)
-      DBAL A 0 Bright
-      DBAL AAA 0 Bright A_SpawnItem("DevShooter")
-      DBAL B 4 Bright A_Explode (128,128,0)
-      DBAL B 0 Bright
-      DBAL BBB 0 Bright A_SpawnItem("DevShooter")
-      Goto Spawn+2
-   Death:
-      DBAL C 5 Bright 
-      DBAL D 5 Bright A_Explode
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,18,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,36,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,54,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,72,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,90,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,108,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,126,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,144,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,144,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,162,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,180,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,196,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,216,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,234,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,252,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,270,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,288,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,306,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,324,6)
-      DBAL D 0 Bright A_CustomMissile("DevastatorBall2",0,0,342,6)
-      DBAL EFG 5 Bright A_Explode
-      DBAL HI 3 Bright
-      stop
-   }
-} */
 
 ACTOR DevastatorBall2
 {
@@ -296,22 +442,23 @@ ACTOR DevastatorBall2
    Damage 10
    PROJECTILE
    RENDERSTYLE ADD
-   ALPHA 0.90
-   Damagetype lightning
+   ALPHA 0.9
+   Damagetype "PlayerAllyBFG"
    Decal DoomImpScorch
-   +THRUGHOST
+   Species "Player"
+   +THRUSPECIES
    +FORCEXYBILLBOARD
-   SeeSound "weapons/devbal"
-   DeathSound "weapons/devex2" 
+   +FORCERADIUSDMG
+   SeeSound "weapons/devbal2"
+   DeathSound "weapons/devex2_2"
    States
    {
    Spawn:
       DBA2 AB 4 Bright
       Loop
    Death:
-      DBA2 C 1 Bright
-      DBA2 C 3 Bright A_Explode(64,64,0)
-      DBA2 DE 4 Bright
+      TNT1 A 0 A_Explode(64,64,0)
+      DBA2 CDE 4 Bright
       Stop
    }
 }
@@ -325,6 +472,19 @@ actor DevShooter
    +FRIENDLY
    +NOGRAVITY
    +NOCLIP
+   +NEVERTARGET
+   +NOBLOOD
+   +THRUACTORS
+   -SHOOTABLE
+   -SOLID
+   +NOTAUTOAIMED
+   +INVULNERABLE // precautionary
+   +NODAMAGE // ignore things like massacre. also precautionary
+   +DONTSPLASH
+   +DONTBLAST
+   +DONTREFLECT
+   +THRUSPECIES
+   Species "Player"
    States
    {
    Spawn:
@@ -333,7 +493,7 @@ actor DevShooter
       TNT1 A 0 A_Chase
    Missile:
       TNT1 A 0 A_FaceTarget
-      TNT1 A 0 A_CustomMissile("LiteShot",0,0,0,0)
+      TNT1 A 0 A_CustomMissile("LiteShot",0,0,0,4)
       Stop
     }
 }
@@ -347,12 +507,13 @@ ACTOR LiteShot
    PROJECTILE
    RENDERSTYLE ADD
    ALPHA 0.85
-   Damagetype lightning
-   +THRUGHOST
+   Damagetype "PlayerAllyBFG"
+   Species "Player"
+   +THRUSPECIES
    +RIPPER
    +FORCEXYBILLBOARD
-   SeeSound "weapons/devlit"
-   DeathSound "weapons/devzap" 
+   SeeSound "weapons/devlit2"
+   DeathSound "weapons/devzap2"
    States
    {
    Spawn:
@@ -380,225 +541,463 @@ ACTOR LiteTrail
    }
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////// RAILGUN    ///////////////////////////////////
+///////////////////////////////////////  RAILGUN   ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-
-ACTOR RailGun : Weapon 20102
+ACTOR Railgun : Weapon 20102
 {
 //$Category Stronghold_Weapons
-   spawnid 241
+   SpawnID 241
    Inventory.PickupSound "misc/w_pkup"
-   Inventory.PickupMessage "You got the railgun!"
-   Obituary "%o was railed by %k."
-   Damagetype "Normal"
+   Inventory.PickupMessage "$STR_GOTRAILGUN"
+   Obituary "$STR_OB_RAILGUN"
+   Weapon.SisterWeapon "RailgunPowered"
    Weapon.AmmoType "Cell"
    Weapon.AmmoGive 40
    Weapon.AmmoUse 5
    Decal RailScorch
-   Tag "Railgun"
+   Tag "$STR_WEAPONTAG_RAILGUN"
+   +NOALERT
    States
    {
    Spawn:
       WRAL A -1
-      Loop
+      stop
+
    Ready:
-	  RAIG A 2 A_WeaponReady
-	  Loop
-	  RSCP A 2 Bright A_WeaponReady(1)
-	  Goto Ready+1
+	  RAIG A 1 A_WeaponReady(WRF_ALLOWZOOM)
+	  loop
+
+   ReadyZoom:
+	  RSCP A 1 bright A_WeaponReady(WRF_NOBOB|WRF_ALLOWZOOM)
+	  loop
+
    Deselect:
-	  RAIG A 0 A_TakeInventory("RailgunScope",1)
-	  RAIG A 0 A_ZoomFactor(1)
-      RAIG A 0 A_Lower
+      TNT1 A 0 A_JumpIfInventory("RailgunScope",1,1)
+      goto Deselect+2
+      TNT1 A 0 A_PlaySound("weapons/railzoomout")
+	  TNT1 A 0 A_TakeInventory("RailgunScope",1)
+	  TNT1 A 0 A_TakeInventory("RailCharge",3)
+	  TNT1 A 0 A_ZoomFactor(1)
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
       RAIG A 1 A_Lower
-      Loop
+      goto Deselect+2
+
+   DeselectPowered:
+      TNT1 AA 0 A_Lower
+      RAIG A 1 A_Lower
+      goto Deselect+2
+
    Select:
-	  RAIG A 0 A_TakeInventory("RailgunScope",1)
-	  RAIG A 0 A_ZoomFactor(1,ZOOM_INSTANT)
-      RAIG A 0 A_Raise
+	  TNT1 A 0 A_TakeInventory("RailgunScope",1)
+	  TNT1 A 0 A_TakeInventory("RailCharge",3)
+	  TNT1 A 0 A_ZoomFactor(1,ZOOM_INSTANT)
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
       RAIG A 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      TNT1 AA 0 A_Raise
+      RAIG A 1 A_Raise
+      goto Select
+
    Fire:
-      RAIG A 0 A_JumpIfInventory("RailgunScope",1,"ZoomFire")
-      RAIG A 0 A_JumpIfInventory("RailCharge",2,22)
-      RAIG A 0 A_JumpIfInventory("RailCharge",1,10)
-      RAIG B 6 A_PlayWeaponSound("weapons/railch")
-      RAIG B 6 Bright A_GiveInventory("RailCharge",1)
-      RAIG B 0 A_Refire
-      RAIG E 3 Bright A_GunFlash
-      RAIG E 1 A_PlayWeaponSound("weapons/railf1")
-      RAIG F 6 Bright A_RailAttack(100,0,1,"FF 00 00","FF FF FF")
+      TNT1 A 0 A_JumpIfInventory("RailgunScope",1,"ZoomFire")
+      TNT1 A 0 A_JumpIfInventory("RailCharge",2,"Charge2")
+      TNT1 A 0 A_JumpIfInventory("RailCharge",1,"Charge1")
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered") // Intentional. For now, at least.
+      goto Charge0
+
+   FireNoSound:
+      TNT1 A 0 A_JumpIfInventory("RailgunScope",1,"ZoomFireNoSound")
+      TNT1 A 0 A_JumpIfInventory("RailCharge",2,"Charge2")
+      TNT1 A 0 A_JumpIfInventory("RailCharge",1,"Charge1")
+      goto Charge0NoSound
+
+   Charge0:
+      RAIG B 6 bright A_PlayWeaponSound("weapons/railch")
+      TNT1 A 0 A_JumpIfInventory("Cell",10,2)
+      TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, 1)
+      goto Charge0NoAmmo
+      RAIG B 6 bright A_GiveInventory("RailCharge",1)
+      goto Charge0Continue
+
+   Charge0NoSound:
+      RAIG B 6 bright
+      TNT1 A 0 A_JumpIfInventory("Cell",10,2)
+      TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, 1)
+      goto Charge0NoAmmo
+      RAIG B 6 bright A_GiveInventory("RailCharge",1)
+      goto Charge0Continue
+
+   Charge0NoAmmo:
+      RAIG B 6 bright
+      goto Charge0Continue
+
+   Charge0Continue:
+      TNT1 A 0 A_ReFire("FireNoSound")
+      RAIG E 4 bright A_GunFlash
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf1_2")
+      TNT1 A 0 A_TakeInventory("Cell",5,1)
+      TNT1 A 0 A_AlertMonsters
+      RAIG F 6 bright A_RailAttack(100,0,0,"FF 00 00","FF FF FF",1,0,"RailPuff")
       RAIG A 4
       RAIG K 15
-      RAIG A 0 A_TakeInventory("RailCharge",3)
-      Goto Ready
-      RAIG C 6 Bright
-      RAIG C 6 Bright A_GiveInventory("RailCharge",1)
-      RAIG C 0 A_Refire
-      RAIG G 3 Bright A_GunFlash
-      RAIG G 1 A_PlayWeaponSound("weapons/railf2")
-      RAIG H 0 Bright A_RailAttack(0,0,1,"FF FF 00","FF FF FF")
-      RAIG H 6 Bright A_RailAttack(200,0,1,"FF FF 00","FF 45 00")
+      TNT1 A 0 A_TakeInventory("RailCharge",3)
+      goto Ready
+
+   Charge1:
+      RAIG C 6 bright
+      TNT1 A 0 A_JumpIfInventory("Cell",15,2)
+      TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, 1)
+      goto Charge1NoAmmo
+      RAIG C 6 bright A_GiveInventory("RailCharge",1)
+      goto Charge1Continue
+
+   Charge1NoAmmo:
+      RAIG C 6 bright
+      goto Charge1Continue
+
+   Charge1Continue:
+      TNT1 A 0 A_ReFire
+      RAIG G 4 bright A_GunFlash
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf2_2")
+      TNT1 A 0 A_TakeInventory("Cell",10,1)
+      TNT1 A 0 A_AlertMonsters
+      TNT1 A 0 A_RailAttack(0,0,0,"FF FF 00","FF FF FF",1,0,"RailPuff")
+      RAIG H 6 bright A_RailAttack(150,0,0,"FF FF 00","FF 45 00",1,0,"RailPuff")
       RAIG A 4
       RAIG K 15
-      RAIG A 0 A_TakeInventory("RailCharge",3)
-      Goto Ready
-      RAIG D 6 Bright
-      RAIG D 6 Bright
-      RAIG D 0 A_Refire
-      RAIG I 3 Bright A_GunFlash
-      RAIG I 1 A_PlayWeaponSound("weapons/railf3")
-      RAIG J 0 Bright A_RailAttack(0,0,1,"00 00 FF","00 45 FF")
-      RAIG J 0 Bright A_RailAttack(0,0,1,"00 00 FF","FF FF FF")
-      RAIG J 4 Bright A_RailAttack(300,0,1,"00 00 FF","00 FF 00")
+      TNT1 A 0 A_TakeInventory("RailCharge",3)
+      goto Ready
+
+   Charge2:
+      RAIG D 12 bright
+      goto Charge2Continue
+
+   Charge2Continue:
+      TNT1 A 0 A_ReFire
+      RAIG I 4 bright A_GunFlash
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf3_2")
+      TNT1 A 0 A_TakeInventory("Cell",15,1)
+      TNT1 A 0 A_AlertMonsters
+      TNT1 A 0 A_RailAttack(0,0,0,"00 00 FF","00 45 FF",1,0,"RailPuff")
+      TNT1 A 0 A_RailAttack(0,0,0,"00 00 FF","FF FF FF",1,0,"RailPuff")
+      RAIG J 6 bright A_RailAttack(200,0,0,"00 00 FF","00 FF 00",1,0,"RailPuff")
       RAIG A 4
       RAIG K 15
-      RAIG A 0 A_TakeInventory("RailCharge",3)
-      Goto Ready
+      TNT1 A 0 A_TakeInventory("RailCharge",3)
+      goto Ready
+
    ZoomFire:
-	  RSCP A 0 Bright A_JumpIfInventory("RailCharge",2,19)
-      RSCP A 0 Bright A_JumpIfInventory("RailCharge",1,9)
-      RSCP A 6 Bright A_PlayWeaponSound("weapons/railch")
-      RSCP A 6 Bright A_GiveInventory("RailCharge",1)
-      RSCP A 0 Bright A_Refire
-      RSCP A 3 Bright A_GunFlash
-      RSCP A 1 Bright A_PlayWeaponSound("weapons/railf1")
-      RSCP A 6 Bright A_RailAttack(100,0,1,"FF 00 00","FF FF FF")
-      RSCP A 19 Bright
-      RSCP A 0 Bright A_TakeInventory("RailCharge",3)
-      Goto Ready+1
-      RSCP A 6 Bright
-      RSCP A 6 Bright A_GiveInventory("RailCharge",1)
-      RSCP A 0 Bright A_Refire
-      RSCP A 3 Bright A_GunFlash
-      RSCP A 1 Bright A_PlayWeaponSound("weapons/railf2")
-      RSCP A 0 Bright A_RailAttack(0,0,1,"FF FF 00","FF FF FF")
-      RSCP A 6 Bright A_RailAttack(200,0,1,"FF FF 00","FF 45 00")
-      RSCP A 19 Bright
-      RSCP A 0 Bright A_TakeInventory("RailCharge",3)
-      Goto Ready+1
-      RSCP A 12 Bright
-      RSCP A 0 Bright A_Refire
-      RSCP A 3 Bright A_GunFlash
-      RSCP A 1 Bright A_PlayWeaponSound("weapons/railf3")
-      RSCP A 0 Bright A_RailAttack(0,0,1,"00 00 FF","00 45 FF")
-      RSCP A 0 Bright A_RailAttack(0,0,1,"00 00 FF","FF FF FF")
-      RSCP A 4 Bright A_RailAttack(300,0,1,"00 00 FF","00 FF 00")
-      RSCP A 19 Bright
-      RSCP A 0 Bright A_TakeInventory("RailCharge",3)
-      Goto Ready+1
+	  TNT1 A 0 A_JumpIfInventory("RailCharge",2,"ZoomCharge2")
+      TNT1 A 0 A_JumpIfInventory("RailCharge",1,"ZoomCharge1")
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ZoomFirePowered") // Yep.
+      goto ZoomCharge0
+
+   ZoomFireNoSound:
+	  TNT1 A 0 A_JumpIfInventory("RailCharge",2,"ZoomCharge2")
+      TNT1 A 0 A_JumpIfInventory("RailCharge",1,"ZoomCharge1")
+      goto ZoomCharge0NoSound
+
+   ZoomCharge0:
+      RSCP A 6 bright A_PlayWeaponSound("weapons/railch")
+      TNT1 A 0 A_JumpIfInventory("Cell",10,2)
+      TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, 1)
+      goto ZoomCharge0NoAmmo
+      RSCP A 6 bright A_GiveInventory("RailCharge",1)
+      goto ZoomCharge0Continue
+
+   ZoomCharge0NoSound:
+      TNT1 A 0 A_JumpIfInventory("Cell",10,2)
+      TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, 1)
+      goto ZoomCharge0NoAmmo
+      RSCP A 6 bright A_GiveInventory("RailCharge",1)
+      goto ZoomCharge0Continue
+
+   ZoomCharge0NoAmmo:
+      RSCP A 6 bright
+      goto ZoomCharge0Continue
+
+   ZoomCharge0Continue:
+      TNT1 A 0 A_ReFire("FireNoSound")
+      RSCP A 4 bright A_GunFlash
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf1_2")
+      TNT1 A 0 A_TakeInventory("Cell",5,1)
+      TNT1 A 0 A_AlertMonsters
+      RSCP A 6 bright A_RailAttack(125,0,0,"FF 00 00","FF FF FF",1,0,"RailPuff")
+      RSCP A 4 bright
+      RSCP A 15 bright
+      TNT1 A 0 A_TakeInventory("RailCharge",3)
+      goto ReadyZoom
+
+   ZoomCharge1:
+      RSCP A 6 bright
+      TNT1 A 0 A_JumpIfInventory("Cell",15,2)
+      TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, 1)
+      goto ZoomCharge1NoAmmo
+      RSCP A 6 bright A_GiveInventory("RailCharge",1)
+      goto ZoomCharge1Continue
+
+   ZoomCharge1NoAmmo:
+      RSCP A 6 bright
+      goto ZoomCharge1Continue
+
+   ZoomCharge1Continue:
+      TNT1 A 0 A_ReFire
+      RSCP A 4 bright A_GunFlash
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf2_2")
+      TNT1 A 0 A_TakeInventory("Cell",10,1)
+      TNT1 A 0 A_AlertMonsters
+      TNT1 A 0 A_RailAttack(0,0,0,"FF FF 00","FF FF FF",1,0,"RailPuff")
+      RSCP A 6 bright A_RailAttack(175,0,0,"FF FF 00","FF 45 00",1,0,"RailPuff")
+      RSCP A 4 bright
+      RSCP A 15 bright
+      TNT1 A 0 A_TakeInventory("RailCharge",3)
+      goto ReadyZoom
+
+   ZoomCharge2:
+      RSCP A 12 bright
+      goto ZoomCharge2Continue
+
+   ZoomCharge2Continue:
+      TNT1 A 0 A_ReFire
+      RSCP A 4 bright A_GunFlash
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf3_2")
+      TNT1 A 0 A_TakeInventory("Cell",15,1)
+      TNT1 A 0 A_AlertMonsters
+      TNT1 A 0 A_RailAttack(0,0,0,"00 00 FF","00 45 FF",1,0,"RailPuff")
+      TNT1 A 0 A_RailAttack(0,0,0,"00 00 FF","FF FF FF",1,0,"RailPuff")
+      RSCP A 6 bright A_RailAttack(225,0,0,"00 00 FF","00 FF 00",1,0,"RailPuff")
+      RSCP A 4 bright
+      RSCP A 15 bright
+      TNT1 A 0 A_TakeInventory("RailCharge",3)
+      goto ReadyZoom
+
+   FirePowered:
+      RAIG A 1 A_TakeInventory("RailCharge",3)
+      TNT1 A 0 A_PlayWeaponSound("weapons/railch")
+      RAIG BCD 1 bright
+      RAIG I 1 bright A_GunFlash("FlashPowered")
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf2_2")
+   FirePoweredContinue:
+      TNT1 A 0 A_TakeInventory("Cell",2,1)
+      TNT1 A 0 A_AlertMonsters
+      TNT1 A 0 A_RailAttack(45,0,0,"00 00 FF","FF FF FF",1,0,"RailPuff")
+      RAIG J 1 bright A_RailAttack(45,0,0,"00 FF 00","FF FF FF",1,0,"RailPuff")
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,1)
+      goto FireEndPowered
+      TNT1 A 0 A_ReFire("HoldPowered")
+      goto FireEndPowered
+
+   HoldPowered:
+      RAIG A 1 A_TakeInventory("RailCharge",3)
+      RAIG BCD 1 bright
+      RAIG I 1 bright A_GunFlash("FlashPowered")
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf1_2")
+      goto FirePoweredContinue
+
+   FireEndPowered:
+      RAIG K 10
+      goto Ready
+
+   ZoomFirePowered:
+	  RSCP A 1 bright A_TakeInventory("RailCharge",3)
+      TNT1 A 0 A_PlayWeaponSound("weapons/railch")
+      RSCP A 7 bright
+      RSCP A 1 bright A_GunFlash("FlashPowered")
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf2_2")
+   ZoomFirePoweredContinue:
+      TNT1 A 0 A_TakeInventory("Cell",4,1)
+      TNT1 A 0 A_AlertMonsters
+      TNT1 AAAA 0 A_RailAttack(30,0,0,"00 FF FF","FF FF FF",1,0,"RailPuff") // total damage: 120
+      RSCP A 1 bright
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,1)
+      goto ZoomFireEndPowered
+      TNT1 A 0 A_ReFire("ZoomHoldPowered")
+      goto ZoomFireEndPowered
+
+   ZoomHoldPowered:
+	  RSCP A 1 bright A_TakeInventory("RailCharge",3)
+      RSCP A 7 bright
+      RSCP A 1 bright A_GunFlash("FlashPowered")
+      TNT1 A 0 A_PlayWeaponSound("weapons/railf3_2")
+      goto ZoomFirePoweredContinue
+
+   ZoomFireEndPowered:
+      RSCP A 10 bright
+      goto ReadyZoom
+
    AltFire:
-      RSCP A 0 Bright A_JumpIfInventory("RailgunScope",1,3)
-	  RSCP A 0 Bright A_GiveInventory("RailgunScope",1)
-	  RSCP A 8 Bright A_ZoomFactor(3)
-	  Goto Ready+1
-	  RAIG A 0 A_TakeInventory("RailgunScope",1)
+   Zoom:
+      TNT1 A 0 A_JumpIfInventory("RailgunScope",1,4)
+      TNT1 A 0 A_PlaySound("weapons/railzoomin")
+	  TNT1 A 0 A_GiveInventory("RailgunScope",1)
+	  RSCP A 8 bright A_ZoomFactor(3)
+	  goto ReadyZoom
+      TNT1 A 0 A_PlaySound("weapons/railzoomout")
+	  TNT1 A 0 A_TakeInventory("RailgunScope",1)
 	  RAIG A 8 A_ZoomFactor(1)
-	  Goto Ready
+	  goto Ready
+
    Flash:
       TNT1 A 4 A_Light1
-      TNT1 A 4 A_Light2
+      TNT1 A 6 A_Light2
+      goto LightDone
+
+   FlashPowered:
       TNT1 A 1 A_Light1
-      TNT1 A 0 A_Light0
-      Stop
+      TNT1 A 1 A_Light2
+      goto LightDone
    }
 }
 
-ACTOR RailCharge : Ammo
+actor RailgunPowered : Railgun { Weapon.SisterWeapon "Railgun" Weapon.AmmoUse 2 +POWERED_UP }
+
+actor RailPuff : BulletPuff
 {
-   Inventory.MaxAmount 3
-   Ammo.BackpackAmount 0
-   Ammo.BackpackMaxAmount 3
+    Mass 1
+    Alpha 1
+    DamageType "PlayerAllyRailgun"
+    Species "Player"
+    +MTHRUSPECIES
+	States
+	{
+	Spawn:
+        PUFF AB 4 bright
+        goto Super::Melee
+	}
 }
 
-ACTOR RailgunScope : Ammo
-{
-   Inventory.MaxAmount 1
-   Ammo.BackpackAmount 0
-   Ammo.BackpackMaxAmount 1
-}
+actor RailCharge : Inventory { Inventory.MaxAmount 3 +UNDROPPABLE -INVBAR }
+actor RailgunScope : Inventory { Inventory.MaxAmount 1 +UNDROPPABLE -INVBAR }
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// HOMING ROCKET LAUNCHER ///////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-
 ACTOR HRL : Weapon 20103
 {
 //$Category Stronghold_Weapons
    spawnid 240
    Inventory.PickupSound "misc/w_pkup"
-   Inventory.PickupMessage "You got the homing rocket launcher!"
-   Obituary "%o couldn't dodge %k's homing rockets."
+   Inventory.PickupMessage "$STR_GOTHRL"
+   Obituary "$STR_OB_HRL"
    Weapon.AmmoType "RocketAmmo"
    Weapon.AmmoGive 4
    Weapon.AmmoUse 1
-   Weapon.SisterWeapon "PowerHRL"
-   Tag "Homing Rocket Launcher"
+   +ALT_USES_BOTH // only one ammo type, so this makes alt fire behave as intended
+   +NOAUTOFIRE
+   Tag "$STR_WEAPONTAG_HRL"
    States
    {
    Spawn:
       WHRL A -1
-      Loop
+      stop
+
    Ready:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      HRLG A 1 A_WeaponReady(WRF_NOSECONDARY)
+      loop
       HRLG A 1 A_WeaponReady
-      Loop
+      loop
+
    Deselect:
-      HRLG A 0 A_Lower
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
       HRLG A 1 A_Lower
-      Loop
+      loop
+
+   DeselectPowered:
+      TNT1 AA 0 A_Lower
+      HRLG A 1 A_Lower
+      goto Deselect
+
    Select:
-      HRLG A 0 A_Raise
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
       HRLG A 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      TNT1 AA 0 A_Raise
+      HRLG A 1 A_Raise
+      goto Select
+
    Fire:
       HRLG A 4
-      HRLG C 0 Bright A_GunFlash
-      HRLG C 5 Bright
-      HRLG D 0 Bright A_FireCustomMissile ("HomRocket1",-4,1,0,0)
-      HRLG D 6 Bright A_FireCustomMissile ("HomRocket1",4,1,0,0)
-      HRLG E 5 Bright
-      HRLG F 4 Bright
-      HRLG B 3 A_Refire
-      Goto Ready
+      TNT1 A 0 A_GunFlash
+      HRLG C 5 bright
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      TNT1 A 0 A_FireCustomMissile("HomRocket1",-4,1,0,0)
+      TNT1 A 0 A_FireCustomMissile("HomRocket1",4,1,0,0)
+      goto FireFinish
+
+   FirePowered:
+      TNT1 A 0 A_FireCustomMissile("PowerHomRocket1",-4,1,0,4.5)
+      TNT1 A 0 A_FireCustomMissile("PowerHomRocket1",4,1,0,4.5)
+
+   FireFinish:
+      HRLG D 6 bright
+      HRLG E 5 bright
+      HRLG F 4 bright
+      HRLG B 3 A_ReFire
+      goto Ready
+
+   AltFire: // powered only
+      HRLG A 4
+      TNT1 A 0 A_GunFlash
+      HRLG C 5 bright
+      HRLG DDDD 4 bright A_FireCustomMissile("PowerHomRocket1",Random(600,-600)/100.0,1,0,4.5,0,Random(150,-150)/100.0)
+      HRLG E 5 bright
+      HRLG F 4 bright
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2) // so you can't exploit it
+      TNT1 A 0 A_CheckReload
+      goto AltFireFinish
+      TNT1 A 0 A_ReFire
+
+   AltFireFinish:
+      HRLG B 3
+      goto Ready
+
    Flash:
       TNT1 A 5 A_Light1
       TNT1 A 6 A_Light2
+      goto FlashFinish
+
+   AltFlash:
       TNT1 A 5 A_Light1
-      TNT1 A 0 A_Light0
-      stop
+      TNT1 AAAA 4 A_Light2
+
+   FlashFinish:
+      TNT1 A 5 A_Light1
+      goto LightDone
    }
 }
 
-ACTOR HomRocket1
+actor HomRocket1 : Rocket
 {
-   Radius 8
-   Height 11
    Speed 30
    Damage 15
-   PROJECTILE
-   DeathSound "weapons/hrlexp"
-   ExplosionDamage 128
-   ExplosionRadius 128
-   Damagetype "Normal"
-   +SeekerMissile
-   +Rockettrail
-   +THRUGHOST
-   SeeSound "weapons/hrlfir"
+   SeeSound "weapons/hrlfir2"
+   DeathSound "weapons/hrlexp2"
+   DamageType "PlayerAllyRocket"
    Decal Scorch
+   Species "Player"
+   +THRUSPECIES
+   +SEEKERMISSILE
+   -DEHEXPLOSION
    States
    {
    Spawn:
-      HMIS A 4 Bright A_SeekerMissile (25,35)
-      HMIS A 4 Bright
-      HMIS A 2 Bright A_SeekerMissile (10,25)
-      HMIS A 2 Bright
-      goto Spawn+2
+      HMIS A 4 bright A_SeekerMissile(10,25,SMF_LOOK)
+      loop
    Death:
-      MISL B 0 Bright A_SetTranslucent (0.67,1)
-      MISL C 8 Bright A_Explode
-      MISL D 5 Bright
+      TNT1 A 0 A_SetTranslucent(0.67,1)
+      MISL B 8 bright A_Explode
+      MISL C 6 bright
+      MISL D 4 bright
       stop
    }
 }
@@ -609,71 +1008,104 @@ ACTOR HomRocket1
 
 ACTOR DERLauncher : RocketLauncher replaces RocketLauncher
 {
-   Weapon.SisterWeapon "PowerRLauncher"
-   Tag "Rocket Launcher"
+   +ALT_USES_BOTH
    States
    {
-   Spawn:
-      LAUN A -1
-      Loop
    Ready:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      MISG A 1 A_WeaponReady(WRF_NOSECONDARY)
+      loop
       MISG A 1 A_WeaponReady
-      Loop
+      loop
+
    Deselect:
-      MISG A 0 A_Lower
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
       MISG A 1 A_Lower
-      Loop
+      loop
+
+   DeselectPowered:
+      TNT1 AA 0 A_Lower
+      MISG A 1 A_Lower
+      goto Deselect
+
    Select:
-      MISG A 0 A_Raise
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
       MISG A 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      TNT1 AA 0 A_Raise
+      MISG A 1 A_Raise
+      goto Select
+
    Fire:
-      MISF A 4 Bright A_GunFlash
-      MISF B 5 Bright A_FireCustomMissile("Rocket2",0,1,0,0)
-      MISF CD 5 Bright
-      MISG A 0 A_Refire
-      Goto Ready
-   Hold:
-      MISF A 4 Bright A_GunFlash
-      MISF B 5 Bright A_FireCustomMissile("Rocket2",0,1,0,0)
-      MISF CD 5 Bright
-      MISG A 0 A_Refire
-      Goto Ready
+      MISF A 4 bright A_GunFlash
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      TNT1 A 0 A_FireCustomMissile("Rocket2",0,1,0,0)
+      MISF BCD 5 bright
+      TNT1 A 0 A_ReFire
+      goto Ready
+
+   FirePowered:
+      TNT1 A 0 A_GunFlash("FlashPowered")
+      MISF B 2 bright A_FireCustomMissile("PowerRocket2",0,1,0,0)
+      MISF CD 4 bright
+      TNT1 A 0 A_ReFire
+      goto Ready
+
+   AltFire:
+      MISF A 4 bright A_GunFlash
+      MISF B 2 bright A_FireCustomMissile("PowerRocket2",Random(5,-5)/10.0,1,0,0,0,Random(6,-6)/10.0)
+      MISF A 4 bright A_GunFlash("AltFlash2")
+      MISF B 2 bright A_FireCustomMissile("PowerRocket2",Random(10,-10)/10.0,1,0,0,0,Random(8,-8)/10.0)
+      MISF A 4 bright A_GunFlash("AltFlash3")
+      MISF B 2 bright A_FireCustomMissile("PowerRocket2",Random(15,-15)/10.0,1,0,0,0,Random(10,-10)/10.0)
+      MISF CD 4 bright
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      TNT1 A 0 A_CheckReload
+      goto Ready
+      TNT1 A 0 A_ReFire
+      goto Ready
+
    Flash:
       TNT1 A 4 A_Light1
       TNT1 A 5 A_Light2
       TNT1 A 5 A_Light1
-      TNT1 A 5 A_Light0
-      stop
+      goto LightDone
+
+   FlashPowered:
+      TNT1 A 2 A_Light2
+
+   FlashPoweredFinish:
+      TNT1 A 4 A_Light1
+      goto LightDone
+
+   AltFlash:
+      TNT1 A 4 A_Light1
+      TNT1 A 2 A_Light2
+   AltFlash2:
+      TNT1 A 4 A_Light1
+      TNT1 A 2 A_Light2
+   AltFlash3:
+      TNT1 A 4 A_Light1
+      goto FlashPowered
    }
 }
 
-actor Rocket2 replaces Rocket
+actor Rocket2 : Rocket
 {
-  obituary "%o rode %k's rocket."
-  radius 11
-  height 8
-  speed 20
-  damage 20
-  seesound "weapons/rocklf"
-  deathsound "weapons/rocklx"
   Decal Scorch
-  PROJECTILE
-  Damagetype "Normal"
-  +RANDOMIZE
-  +ROCKETTRAIL
-  -THRUGHOST
+  Damagetype "PlayerAllyRocket"
+  Species "Player"
+  +THRUSPECIES
+  -DEHEXPLOSION
   states
   {
-  Spawn:
-    MISL A 1 bright
-    loop
   Death:
-    MISL B 0 bright A_SetTranslucent (0.67,1)
-    MISL B 8 bright A_Explode
-    MISL C 6 bright
-    MISL D 4 bright
-    stop
+    TNT1 A 0 A_SetTranslucent(0.67,1)
+    goto Super::Death
   }
 }
 
@@ -683,161 +1115,311 @@ actor Rocket2 replaces Rocket
 
 ACTOR DEPlasmaRifle : PlasmaRifle replaces PlasmaRifle
 {
-   Weapon.SisterWeapon "PowerPlasmaRifle"
-   Tag "Plasma Rifle"
+   +ALT_USES_BOTH
    States
    {
-   Spawn:
-      PLAS A -1
-      Loop
-   Ready:
-      PLSG ABC 3 Bright A_WeaponReady
-      Loop
+   Ready: // This is messy, but it must be done.
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      PLSG A 1 bright A_WeaponReady(WRF_NOSECONDARY)
+      goto Ready2
+      PLSG A 1 bright A_WeaponReady
+   Ready2:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      PLSG A 1 bright A_WeaponReady(WRF_NOSECONDARY)
+      goto Ready3
+      PLSG A 1 bright A_WeaponReady
+   Ready3:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      PLSG A 1 bright A_WeaponReady(WRF_NOSECONDARY)
+      goto Ready4
+      PLSG A 1 bright A_WeaponReady
+   Ready4:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      PLSG B 1 bright A_WeaponReady(WRF_NOSECONDARY)
+      goto Ready5
+      PLSG B 1 bright A_WeaponReady
+   Ready5:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      PLSG B 1 bright A_WeaponReady(WRF_NOSECONDARY)
+      goto Ready6
+      PLSG B 1 bright A_WeaponReady
+   Ready6:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      PLSG B 1 bright A_WeaponReady(WRF_NOSECONDARY)
+      goto Ready7
+      PLSG B 1 bright A_WeaponReady
+   Ready7:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      PLSG C 1 bright A_WeaponReady(WRF_NOSECONDARY)
+      goto Ready8
+      PLSG C 1 bright A_WeaponReady
+   Ready8:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      PLSG C 1 bright A_WeaponReady(WRF_NOSECONDARY)
+      goto Ready9
+      PLSG C 1 bright A_WeaponReady
+   Ready9:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      PLSG C 1 bright A_WeaponReady(WRF_NOSECONDARY)
+      goto Ready
+      PLSG C 1 bright A_WeaponReady
+      goto Ready
+
    Deselect:
-      PLSG E 0 A_Lower
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
       PLSG E 1 A_Lower
-      Loop
+      loop
+
+   DeselectPowered:
+      TNT1 AA 0 A_Lower
+      PLSG E 1 A_Lower
+      goto Deselect
+
    Select:
-      PLSG E 0 A_Raise
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
       PLSG E 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      TNT1 AA 0 A_Raise
+      PLSG E 1 A_Raise
+      goto Select
+
    Fire:
-      PLSG F 0 Bright A_GunFlash
-      PLSG F 1 Bright A_FireCustomMissile("PlasmaBall",0,1,0,0)
-      PLSG G 1 Bright
-      PLSG H 1 Bright
-      PLSG D 20 A_Refire
-      Goto Ready
-   Hold:
-      PLSG F 0 Bright A_GunFlash
-      PLSG F 1 Bright A_FireCustomMissile("PlasmaBall",0,1,0,0)
-      PLSG G 1 Bright
-      PLSG H 1 Bright
-      PLSG D 20 A_Refire
-      Goto Ready
+      TNT1 A 0 A_GunFlash
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      TNT1 A 0 A_FireCustomMissile("StrPlasmaBall",0,1,0,0)
+      goto FireFinish
+
+   FirePowered:
+      TNT1 A 0 A_FireCustomMissile("PowerPlasmaBall",0,1,0,0)
+
+   FireFinish:
+      PLSG FGH 1 bright
+      PLSG D 20 bright A_ReFire
+      goto Ready
+
+   AltFire:
+      TNT1 A 0 A_FireCustomMissile("PowerPlasmaBall2",Random(150,-150)/100.0,1,0,0,0,Random(150,-150)/100.0)
+      PLSG FGH 1 bright
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+      TNT1 A 0 A_CheckReload
+      goto AltFireFinish
+      TNT1 A 0 A_ReFire
+
+   AltFireFinish:
+      PLSG D 20 bright
+      goto Ready
+
    Flash:
       TNT1 A 1 A_Light1
       TNT1 A 1 A_Light2
       TNT1 A 1 A_Light1
-      TNT1 A 1 A_Light0
-      stop
+      goto LightDone
    }
+}
+
+ACTOR StrPlasmaBall : PlasmaBall
+{
+    Species "Player"
+    +THRUSPECIES
+    DamageType "PlayerAllyPlasma"
+    Decal PlasmaScorch
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////  BFG9000   ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
+actor StrBFGReadySoundCheck : Inventory { Inventory.MaxAmount 1 +UNDROPPABLE -INVBAR }
+
 actor DEBFG9000 : BFG9000 Replaces BFG9000
 {
-  Weapon.SisterWeapon "PowerBFG9000"
-  Tag "BFG 9000"
+  Weapon.SisterWeapon "DEBFG9000Powered"
+  States
+  {
+  Ready:
+      TNT1 A 0 A_PlaySound("weapons/bfg_hum",6,1,1)
+      TNT1 A 0 A_GiveInventory("StrBFGReadySoundCheck")
+      BFGG ABCD 3 bright A_WeaponReady
+      loop
+
+  Deselect:
+      TNT1 A 0 A_JumpIfInventory("StrBFGReadySoundCheck",1,1)
+      goto Deselect+3
+      TNT1 A 0 A_StopSound(6)
+      TNT1 A 0 A_TakeInventory("StrBFGReadySoundCheck")
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
+      BFGG E 1 A_Lower
+      goto Deselect+3
+
+  DeselectPowered:
+      TNT1 AA 0 A_Lower
+      BFGG E 1 A_Lower
+      goto Deselect+3
+
+  Select:
+      TNT1 A 0 A_TakeInventory("StrBFGReadySoundCheck")
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
+      BFGG E 1 A_Raise
+      loop
+
+  SelectPowered:
+      TNT1 AA 0 A_Raise
+      BFGG E 1 A_Raise
+      goto Select
+
+  Fire:
+      TNT1 A 0 A_JumpIfInventory("StrBFGReadySoundCheck",1,1)
+      goto Fire+3
+      TNT1 A 0 A_StopSound(6)
+      TNT1 A 0 A_TakeInventory("StrBFGReadySoundCheck")
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      TNT1 A 0 A_PlayWeaponSound("weapons/bfgf")
+      BFGG FGHIJ 5 bright
+      BFGG K 5 bright A_GunFlash
+      TNT1 A 0 A_JumpIfInventory("Cell",40,2)
+      TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, 1)
+      goto FireFinish
+      TNT1 A 0 A_TakeInventory("Cell",40,1)
+      TNT1 A 0 A_FireCustomMissile("StrBFGBall",0,0,0,0)
+
+  FireFinish:
+      BFGG LM 5 bright
+      BFGG NEEE 5 bright A_ReFire
+      goto Ready
+
+  FirePowered:
+      BFGG FHJ 1 bright
+      BFGG K 1 bright A_GunFlash("FlashPowered")
+      TNT1 A 0 A_JumpIfInventory("Cell",5,2)
+      TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, 1)
+      goto FirePoweredFinish
+      TNT1 A 0 A_TakeInventory("Cell",5,1)
+      TNT1 A 0 A_FireCustomMissile("PowerBFGBall",0,0,0,0)
+
+  FirePoweredFinish:
+      BFGG LN 1 bright
+      BFGG E 7 bright A_ReFire
+      goto Ready
+
+  Flash:
+      TNT1 A 5 A_Light1
+      TNT1 A 5 A_Light2
+      TNT1 A 5 A_Light1
+      goto LightDone
+
+  FlashPowered:
+      TNT1 A 1 A_Light1
+      TNT1 A 1 A_Light2
+      TNT1 A 1 A_Light1
+      goto LightDone
+  }
+}
+
+actor DEBFG9000Powered : DEBFG9000 { Weapon.SisterWeapon "DEBFG9000" Weapon.AmmoUse 5 +POWERED_UP }
+
+ACTOR StrBFGBall : BFGBall
+{
+Decal BFGLightning
+//Damage 100
+DamageType "PlayerAllyBFG"
+Species "Player"
++THRUSPECIES
++FORCERADIUSDMG
   States
   {
   Spawn:
-    BFUG A -1
-    stop
-  Ready:
-      BFGG ABCD 3 Bright A_WeaponReady
-      loop
-  Deselect:
-      BFGG E 0 A_Lower
-      BFGG E 1 A_Lower
-      loop
-  Select:
-      BFGG E 0 A_Raise
-      BFGG E 1 A_Raise
-      loop
-  Fire:
-      BFGG F 5 Bright A_PlayWeaponSound ("weapons/bfgf")
-      BFGG G 5 Bright
-      BFGG H 5 Bright
-      BFGG I 5 Bright
-      BFGG J 4 Bright
-      BFGG K 7 Bright A_GunFlash
-      BFGG L 8 Bright A_FireCustomMissile ("BFGBall",0,1,0,0)
-      BFGG M 8 Bright
-      BFGG N 7 Bright
-      BFGG E 20 Bright A_ReFire
-      goto Ready
-  Hold:
-      BFGG F 5 Bright A_PlayWeaponSound ("weapons/bfgf")
-      BFGG G 5 Bright
-      BFGG H 5 Bright
-      BFGG I 5 Bright
-      BFGG J 4 Bright
-      BFGG K 7 Bright A_GunFlash
-      BFGG L 8 Bright A_FireCustomMissile ("BFGBall",0,1,0,0)
-      BFGG M 8 Bright
-      BFGG N 7 Bright
-      BFGG E 20 Bright A_ReFire
-      goto Ready
-   Flash:
-      TNT1 A 7 A_Light1
-      TNT1 A 8 A_Light2
-      TNT1 A 8 A_Light1
-      TNT1 A 0 A_Light1
-      TNT1 A 0 A_Light0
-    stop
+    BFS1 AB 4 Bright
+    Loop
+  Death:
+    BFE1 A 8 bright A_BFGSpray("StrBFGExtra",40,8)
+    BFE1 B 8 bright A_Explode(128,256,0)
+    TNT1 A 0 A_BFGSpray("StrBFGExtra",40,16)
+    BFE1 CDEF 8 bright
+    Stop
   }
 }
+
+ACTOR StrBFGExtra : BFGExtra { DamageType "PlayerAllyBFGSplash" Species "Player" +MTHRUSPECIES }
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// PYRO CANNON //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-
 ACTOR PyroCannon : Weapon 20107
 {
 //$Category Stronghold_Weapons
    spawnid 239
    Inventory.PickupSound "misc/w_pkup"
-   Inventory.PickupMessage "You got the pyro cannon prototype!"
-   Obituary "%o was incinerated by %k's pyro cannon."
+   Inventory.PickupMessage "$STR_GOTPYROCANNON"
+   Obituary "$STR_OB_PYROCANNON"
    Weapon.AmmoType "Gas"
    Weapon.AmmoGive 48
    Weapon.AmmoUse 48
-   Weapon.SisterWeapon "PowerPyroCannon"
-   Tag "Pyro Cannon"
+   Weapon.BobRangeX 0
+   Tag "$STR_WEAPONTAG_PYROCANNON"
    +WEAPON.EXPLOSIVE
    +WEAPON.BFG
-   +WEAPON.DONTBOB
+   //+WEAPON.DONTBOB
    +WEAPON.STAFF2_KICKBACK
+   +NOAUTOFIRE
    States
    {
    Spawn:
       WPYR A -1
-      Loop
+      stop
+
    Ready:
       PYRG A 1 A_WeaponReady
-      Loop
+      loop
+
    Deselect:
-      PYRG A 0 A_Lower
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
       PYRG A 1 A_Lower
-      Loop
+      loop
+
+   DeselectPowered:
+      TNT1 AA 0 A_Lower
+      PYRG A 1 A_Lower
+      goto Deselect
+
    Select:
-      PYRG A 0 A_Raise
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
       PYRG A 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      TNT1 AA 0 A_Raise
+      PYRG A 1 A_Raise
+      goto Select
+
    Fire:
       PYRG A 5
-      PYRG B 8 Bright A_GunFlash
-      PYRG C 10 Bright A_FireCustomMissile("PyroShot",0,1,0,0)
-      PYRG DEFG 5 Bright
-      PYRG A 5 A_Refire
-      Goto Ready
-   Hold:
-      PYRG A 5
-      PYRG B 8 Bright A_GunFlash
-      PYRG C 10 Bright A_FireCustomMissile("PyroShot",0,1,0,0)
-      PYRG DEFG 5 Bright
-      PYRG A 5 A_Refire
-      Goto Ready
+      PYRG B 8 bright A_GunFlash
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      TNT1 A 0 A_FireCustomMissile("PyroShot",0,1,0,0)
+      goto FireFinish
+
+   FirePowered:
+      TNT1 A 0 A_FireCustomMissile("ClusterPyroShot",0,1,0,0)
+
+   FireFinish:
+      PYRG C 10 bright
+      PYRG DEFG 5 bright
+      PYRG A 5 A_ReFire
+      goto Ready
+
    Flash:
       TNT1 A 8 A_Light1
       TNT1 A 10 A_Light2
       TNT1 A 15 A_Light1
-      TNT1 A 1 A_Light0
-      stop
+      goto LightDone
    }
 }
 
@@ -851,13 +1433,14 @@ ACTOR Gas : Ammo 22106
    Inventory.MaxAmount 240
    Ammo.BackpackAmount 24
    Ammo.BackpackMaxAmount 480
-   Inventory.PickupMessage "Picked up a gas canister."
+   Inventory.PickupMessage "$STR_GOTGAS"
    Inventory.Icon AGASA0
+   Tag "$STR_AMMOTAG_GAS"
    States
    {
    Spawn:
-      AGAS A 1
-      Loop
+      AGAS A -1
+      stop
    }
 }
 
@@ -866,12 +1449,12 @@ ACTOR Fuel : Gas 22107
 //$Category Stronghold_Weapons
    SpawnID 221
    Inventory.Amount 96
-   Inventory.PickupMessage "Picked up a gas pack."
+   Inventory.PickupMessage "$STR_GOTFUEL"
    States
    {
    Spawn:
-      AGAS B 1
-      Loop
+      AGAS B -1
+      stop
    }
 }
 
@@ -883,31 +1466,37 @@ ACTOR PyroShot
    Damage 180
    PROJECTILE
    RENDERSTYLE ADD
-   DamageType Fire
+   DamageType "PlayerAllyFire"
    ALPHA 0.95
    Scale 0.75
-   +THRUGHOST
-   SeeSound "weapons/hellfi"
-   DeathSound "weapons/hellex"
+   Species "Player"
+   +THRUSPECIES
+   SeeSound "weapons/hellfi2"
+   DeathSound "weapons/hellex2"
    Decal BigScorch
    States
    {
    Spawn:
       PBAL ABA 4 Bright
-      PBAL BA 4 Bright A_Explode(128,128)
+      PBAL BBAA 2 Bright A_Explode(128,128)
       goto Spawn+3
    Death:
+      TNT1 A 0 A_NoGravity
       PYXP AB 2 Bright
       PYXP C 2 Bright A_Explode(192,128)
-      PYXP C 0 Bright A_CustomMissile("PyroSpawner",0,0,0,4)
-      PYXP C 0 Bright A_CustomMissile("PyroSpawner",0,0,45,4)
-      PYXP C 0 Bright A_CustomMissile("PyroSpawner",0,0,90,4)
-      PYXP C 0 Bright A_CustomMissile("PyroSpawner",0,0,135,4)
-      PYXP C 0 Bright A_CustomMissile("PyroSpawner",0,0,180,4)
-      PYXP C 0 Bright A_CustomMissile("PyroSpawner",0,0,225,4)
-      PYXP C 0 Bright A_CustomMissile("PyroSpawner",0,0,270,4)
-      PYXP C 0 Bright A_CustomMissile("PyroSpawner",0,0,315,4)
-      PYXP C 0 Bright A_Mushroom("PyroFlare",16)
+      TNT1 A 0 A_CustomMissile("PyroSpawner",0,0,0,4)
+      TNT1 A 0 A_CustomMissile("PyroSpawner",0,0,45,4)
+      TNT1 A 0 A_CustomMissile("PyroSpawner",0,0,90,4)
+      TNT1 A 0 A_CustomMissile("PyroSpawner",0,0,135,4)
+      TNT1 A 0 A_CustomMissile("PyroSpawner",0,0,180,4)
+      TNT1 A 0 A_CustomMissile("PyroSpawner",0,0,225,4)
+      TNT1 A 0 A_CustomMissile("PyroSpawner",0,0,270,4)
+      TNT1 A 0 A_CustomMissile("PyroSpawner",0,0,315,4)
+      TNT1 A 0 A_GiveInventory("StrAMushroomBypassOn") // here is a hack that "nullifies" the hardcoded (and unchangeable) A_Explode effect that A_Mushroom is unfortunate to have
+      TNT1 A 0 A_Mushroom("PyroFlare",16,MSF_DontHurt) // MSF_DontHurt tracks kills, but it doesn't hurt the owner at the same time. can't have one or the other. lame.
+      TNT1 A 0 A_GiveInventory("StrAMushroomBypassOff") // stupid hackaround for hardcoded stuff argh why zdoom
+      TNT1 A 0 A_SetDamageType("PlayerAllyFire")
+      TNT1 A 0 A_Explode(128,128) // ensure everything (including the owner) takes the same amount of damage by this, as per A_Mushroom without MSF_DontHurt
       PYXP DEFGHIJKLMNOPQRSTU 2 Bright
       stop
    }
@@ -917,16 +1506,16 @@ ACTOR PyroSpawner
 {
    Radius 1
    Height 1
-   Damage 10
+   Damage (0)
    PROJECTILE
    Speed 15
    RENDERSTYLE NONE
-   +RIPPER
+   +THRUACTORS
    +BLOODLESSIMPACT
    States
    {
    Spawn:
-      TNT1 AAAAA 5 Bright A_CustomMissile("PyroBoom",0,0,0,4)
+      TNT1 AAAAA 5 A_CustomMissile("PyroBoom",0,0,0,4)
       stop
    }
 }
@@ -937,17 +1526,19 @@ ACTOR PyroBoom
    Height 1
    PROJECTILE
    RENDERSTYLE ADD
-   DamageType Fire
+   DamageType "PlayerAllyFire"
    ALPHA 0.95
    Scale 0.67
-   +THRUGHOST
-   SeeSound "weapons/boom1"
+   Species "Player"
+   +THRUSPECIES
+   +FORCERADIUSDMG
+   SeeSound "weapons/boom1_2"
    States
    {
    Spawn:
       PYXP AB 2 Bright
-      PYXP C 2 Bright A_Explode(192,128)
-      PYXP DEFGHIJKLMNOPQRSTU 2 Bright
+      TNT1 A 0 A_Explode(192,128)
+      PYXP CDEFGHIJKLMNOPQRSTU 2 Bright
       stop
    }
 }
@@ -960,21 +1551,23 @@ ACTOR PyroFlare
    Damage 10
    PROJECTILE
    RENDERSTYLE ADD
-   DamageType Fire
+   DamageType "PlayerAllyFire"
    Decal DoomImpScorch
    ALPHA 0.95
+   Species "Player"
+   +THRUSPECIES
    -NOGRAVITY
-   +THRUGHOST
-   DeathSound "weapons/bang1"
+   DeathSound "weapons/bang1_2"
    States
    {
    Spawn:
-      TNT1 A 1 Bright A_SpawnItemEx("PyroFX",0,0,0,0,0,0,0,128)
+      TNT1 A 1 A_SpawnItemEx("PyroFX",0,0,0,0,0,0,0,128)
       loop
    Death:
+      TNT1 A 0 A_NoGravity
       FRFX HIJ 2 Bright
       FRFX J 0 A_Explode(64,64)
-      FRFX J 0 A_SpawnItem("DropFire",0,0)
+      FRFX J 0 A_SpawnItemEx("PyroDropFire",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
       FRFX KLMNO 2 Bright
       stop
    }
@@ -991,13 +1584,69 @@ ACTOR PyroFX
    States
    {
    Spawn:
-      TNT1 A 3 Bright
+      TNT1 A 3
       PYFX ABCDE 3 Bright
       Stop
    }
 }
 
+ACTOR PyroDropFire
+{
+   Radius 8
+   Height 40
+   PROJECTILE
+   RENDERSTYLE ADD
+   DamageType "PlayerAllyFire"
+   ALPHA 0.9
+   //DONTHURTSHOOTER // No feeling safe for you today.
+   Species "Player"
+   +THRUSPECIES
+   -NOGRAVITY
+   +LOWGRAVITY
+   +NOEXPLODEFLOOR
+   +NODAMAGETHRUST
+   +DONTSPLASH
+   States
+   {
+   Spawn:
+      FLME A 0 Bright
+      FLME A 0 Bright A_Playsound("weapons/onfire2")
+      FLME A 2 Bright A_Explode(5,32)
+      FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16)
+      TNT1 A 0 A_Playsound("weapons/onfire2")
+      FLME A 2 Bright A_Explode(5,32)
+      FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16)
+      TNT1 A 0 A_Playsound("weapons/onfire2")
+      FLME A 2 Bright A_Explode(5,32)
+      FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16)
+      TNT1 A 0 A_Playsound("weapons/onfire2")
+      FLME A 2 Bright A_Explode(5,32)
+      FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16)
+      TNT1 A 0 A_Playsound("weapons/onfire2")
+      FLME A 2 Bright A_Explode(5,32)
+      FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16)
+      FLME A 0 A_Jump(192,1)
+      loop
+   Death:
+      TNT1 A 0
+      stop
+   }
+}
 
+ACTOR ClusterPyroShot : PyroShot
+{
+	States
+	{
+	Death:
+    TNT1 A 0 A_GiveInventory("StrAMushroomBypassOn")
+	TNT1 A 0 A_Mushroom("PyroShot",4,MSF_DontHurt)
+	TNT1 A 0 A_Mushroom("PyroFlare",32,MSF_DontHurt)
+    TNT1 A 0 A_GiveInventory("StrAMushroomBypassOff")
+    TNT1 A 0 A_SetDamageType("PlayerAllyFire")
+    TNT1 A 0 A_Explode(256,128)
+	Stop
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// SHOTGUN //////////////////////////////////////
@@ -1005,137 +1654,190 @@ ACTOR PyroFX
 
 actor DEShotgun : Shotgun replaces Shotgun
 {
-  Weapon.SisterWeapon "PowerShotgun"
-  obituary "%o got pummeled by %k's shotgun."
-  radius 20
-  height 16
-  attacksound "weapons/shotgf"
-  inventory.pickupmessage "You got the shotgun!"
-  Tag "Shotgun"
-  weapon.selectionorder 1300
-  weapon.kickback 100
-  weapon.ammotype "Shell"
-  weapon.ammouse 1
-  weapon.ammogive 8
-  decal bulletchip
-  states
+  AttackSound "weapons/shotgf"
+  +ALT_USES_BOTH
+  States
   {
-  Spawn:
-    SHOT A -1
-    stop
   Ready:
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+    SHTG A 1 A_WeaponReady(WRF_NOSECONDARY)
+    loop
     SHTG A 1 A_WeaponReady
     loop
+
   Deselect:
-    SHTG A 0 A_Lower
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+    TNT1 A 0 A_Lower
     SHTG A 1 A_Lower
     loop
+
+  DeselectPowered:
+    TNT1 AA 0 A_Lower
+    SHTG A 1 A_Lower
+    goto Deselect
+
   Select:
-    SHTG A 0 A_Raise
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+    TNT1 A 0 A_Raise
     SHTG A 1 A_Raise
     loop
+
+  SelectPowered:
+    TNT1 AA 0 A_Raise
+    SHTG A 1 A_Raise
+    goto Select
+
   Fire:
+    SHTG A 3 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+    TNT1 A 0 A_GunFlash
+    TNT1 A 0 A_FireBullets(4,3,8,5,"NewPuffPlayer")
+    SHTG EFG 2 bright
+    SHTG BCDCB 4
     SHTG A 3
-    SHTG E 0 A_GunFlash
-    SHTG E 2 A_FireBullets (4, 3, 7, 5, "BulletPuff")
-    SHTG F 3
-    SHTG G 2
-    SHTG BC 5
-    SHTG D 4
-    SHTG CB 5
-    SHTG A 3
-    SHTG A 7 A_ReFire
+    SHTG A 5 A_ReFire
     goto Ready
-  Hold:
-    SHTG A 3
-    SHTG E 0 A_GunFlash
-    SHTG E 2 A_FireBullets (4, 3, 7, 5, "BulletPuff")
-    SHTG F 3
-    SHTG G 2
-    SHTG BC 5
-    SHTG D 4
-    SHTG CB 5
-    SHTG A 3
-    SHTG A 7 A_ReFire
+
+  FirePowered:
+    SHTG A 2
+    TNT1 A 0 A_GunFlash
+    TNT1 A 0 A_FireBullets(3,2.5,10,12,"ElectricalPuff")
+    SHTG EFG 2 bright
+    SHTG BCDCB 2
+    SHTG A 1 A_ReFire
     goto Ready
+
+  AltFire:
+    SHTG A 3
+    TNT1 A 0 A_GunFlash
+    TNT1 A 0 A_FireBullets(12,10,8,9,"RepPuffNoDamage")
+    SHTG EFG 3 bright
+    SHTG BCDCB 3
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+    TNT1 A 0 A_CheckReload
+    goto AltFireFinish
+    TNT1 A 0 A_ReFire
+
+  AltFireFinish:
+    SHTG A 1
+    goto Ready
+
   Flash:
-    TNT1 A 4 bright A_Light1
-    TNT1 A 3 bright A_Light2
-    TNT1 A 0 bright A_Light0
-    stop
+    TNT1 A 3 A_Light1
+    TNT1 A 3 A_Light2
+    goto LightDone
+
+  AltFlash:
+    TNT1 A 4 A_Light1
+    TNT1 A 5 A_Light2
+    goto LightDone
   }
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// FLAMER ///////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-
 ACTOR Flamer : Weapon 20105
 {
 //$Category Stronghold_Weapons
    spawnid 238
    Inventory.PickupSound "misc/w_pkup"
-   Inventory.PickupMessage "You got the flamethrower! Time for a BBQ!"
-   Obituary "%o was BBQed by %k's flamethrower."
+   Inventory.PickupMessage "$STR_GOTFLAMER"
+   Obituary "$STR_OB_FLAMER"
    Weapon.AmmoType "Gas"
    Weapon.AmmoGive 48
    Weapon.AmmoUse 1
-   Weapon.SisterWeapon "PowerFlamer"
-   Tag "Flamethrower"
+   Tag "$STR_WEAPONTAG_FLAMER"
    +WEAPON.EXPLOSIVE
    States
    {
    Spawn:
       WFLM A -1
-      Loop
-   Ready:
-      FLMG BCD 3 A_WeaponReady
-      Loop
+      stop
+
+   Ready: // Not as messy as the plasma rifle.
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReadyPowered")
+      FLMG B 1 A_WeaponReady
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReadyPowered")
+      FLMG B 1 A_WeaponReady
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReadyPowered")
+      FLMG B 1 A_WeaponReady
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReadyPowered")
+      FLMG C 1 A_WeaponReady
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReadyPowered")
+      FLMG C 1 A_WeaponReady
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReadyPowered")
+      FLMG C 1 A_WeaponReady
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReadyPowered")
+      FLMG D 1 A_WeaponReady
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReadyPowered")
+      FLMG D 1 A_WeaponReady
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReadyPowered")
+      FLMG D 1 A_WeaponReady
+      loop
+
+   ReadyPowered:
+      FLMG A 1 A_WeaponReady
+      goto Ready
+
    Deselect:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
       FLMG A 0 A_Lower
       FLMG A 1 A_Lower
-      Loop
+      loop
+
+   DeselectPowered:
+      FLMG AA 0 A_Lower
+      FLMG A 1 A_Lower
+      goto Deselect
+
    Select:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
       FLMG A 0 A_Raise
       FLMG A 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      FLMG AA 0 A_Raise
+      FLMG A 1 A_Raise
+      goto Select
+
    Fire:
-      FLMG E 0 Bright A_GunFlash
-      FLMG E 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG F 1 Bright A_FireCustomMissile("FTFire",0,0,random(-4,4),0)
-      FLMG G 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG E 0 Bright A_GunFlash
-      FLMG E 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG F 1 Bright A_FireCustomMissile("FTFire",0,0,random(-4,4),0)
-      FLMG G 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG E 0 Bright A_GunFlash
-      FLMG E 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG F 1 Bright A_FireCustomMissile("FTFire",0,0,random(-4,4),0)
-      FLMG G 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG H 2 Bright A_Refire
-      Goto Ready
-   Hold:
-      FLMG E 0 Bright A_GunFlash
-      FLMG E 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG F 1 Bright A_FireCustomMissile("FTFire",0,0,random(-4,4),0)
-      FLMG G 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG E 0 Bright A_GunFlash
-      FLMG E 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG F 1 Bright A_FireCustomMissile("FTFire",0,0,random(-4,4),0)
-      FLMG G 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG E 0 Bright A_GunFlash
-      FLMG E 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG F 1 Bright A_FireCustomMissile("FTFire",0,0,random(-4,4),0)
-      FLMG G 1 Bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
-      FLMG H 2 Bright A_Refire
-      Goto Ready
+      TNT1 A 0 A_GunFlash
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      FLMG E 1 bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
+      FLMG F 1 bright A_FireCustomMissile("FTFire",0,0,random(-4,4),0)
+      FLMG G 1 bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
+      TNT1 A 0 A_GunFlash
+      FLMG E 1 bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
+      FLMG F 1 bright A_FireCustomMissile("FTFire",0,0,random(-4,4),0)
+      FLMG G 1 bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
+      TNT1 A 0 A_GunFlash
+      FLMG E 1 bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
+      FLMG F 1 bright A_FireCustomMissile("FTFire",0,0,random(-4,4),0)
+      FLMG G 1 bright A_FireCustomMissile("FTFire",0,1,random(-4,4),0)
+      FLMG H 2 bright A_ReFire
+      goto Ready
+
+   FirePowered:
+      FLMG A 1 A_FireCustomMissile("PowerFTFire",0,1,random(-4,4),0)
+      FLMG A 1 A_FireCustomMissile("PowerFTFire",0,0,random(-4,4),0)
+      FLMG A 1 A_FireCustomMissile("PowerFTFire",0,1,random(-4,4),0)
+      TNT1 A 0 A_GunFlash
+      FLMG A 1 A_FireCustomMissile("PowerFTFire",0,1,random(-4,4),0)
+      FLMG A 1 A_FireCustomMissile("PowerFTFire",0,0,random(-4,4),0)
+      FLMG A 1 A_FireCustomMissile("PowerFTFire",0,1,random(-4,4),0)
+      TNT1 A 0 A_GunFlash
+      FLMG A 1 A_FireCustomMissile("PowerFTFire",0,1,random(-4,4),0)
+      FLMG A 1 A_FireCustomMissile("PowerFTFire",0,0,random(-4,4),0)
+      FLMG A 1 A_FireCustomMissile("PowerFTFire",0,1,random(-4,4),0)
+      FLMG A 2 A_ReFire
+      goto Ready
+
    Flash:
       TNT1 A 2 A_Light1
       TNT1 A 2 A_Light2
       TNT1 A 1 A_Light1
-      TNT1 A 1 A_Light0
-      stop
+      goto LightDone
    }
 }
 
@@ -1147,28 +1849,30 @@ ACTOR FTFire
    Damage 1
    PROJECTILE
    RENDERSTYLE ADD
-   DamageType Fire
+   DamageType "PlayerAllyFire"
    ALPHA 0.67
    Scale 0.67
-   SeeSound "weapons/flamer"
-   DeathSound "weapons/scorch"
+   SeeSound "weapons/flamer2"
+   DeathSound "weapons/scorch2"
    DONTHURTSHOOTER
-   +THRUGHOST
+   Species "Player"
+   +THRUSPECIES
    +DONTSPLASH
    States
    {
    Spawn:
-      TNT1 A 2 Bright
+      TNT1 A 2
       FRFX ABCD 2 Bright A_Explode(5,8,0)
-      FRFX D 0 Bright A_Lowgravity
+      TNT1 A 0 A_LowGravity
       FRFX EFG 2 Bright A_Explode(5,16,0)
       FRFX HIJ 2 Bright A_Explode(5,32,0)
       FRFX KLM 2 Bright A_Explode(5,64,0)
       FRFX NO 2 Bright
       stop
    Death:
+      TNT1 A 0 A_NoGravity
       FRFX HIJ 2 Bright A_Explode(5,32,0)
-      FRFX J 0 A_CustomMissile ("DropFire",0,0,0,4)
+      TNT1 A 0 A_CustomMissile("DropFire",0,0,0,4)
       FRFX KLM 2 Bright A_Explode(5,64,0)
       FRFX NO 2 Bright
       stop
@@ -1181,102 +1885,153 @@ ACTOR DropFire
    Height 40
    PROJECTILE
    RENDERSTYLE ADD
-   DamageType Fire
-   ALPHA 0.90
+   DamageType "PlayerAllyFire"
+   ALPHA 0.9
    DONTHURTSHOOTER
+   Species "Player"
+   +THRUSPECIES
    -NOGRAVITY
    +LOWGRAVITY
    +NOEXPLODEFLOOR
    +NODAMAGETHRUST
-   +THRUGHOST
    +DONTSPLASH
    States
    {
    Spawn:
-      FLME A 1 Bright A_Playsound("weapons/onfire")
-      FLME A 1 Bright A_Explode(5,16,0)
+      FLME A 0 Bright
+      FLME A 0 Bright A_Playsound("weapons/onfire3")
+      FLME A 2 Bright A_Explode(5,32,0)
       FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16,0)
-      FLME A 1 Bright A_Playsound("weapons/onfire")
-      FLME A 1 Bright A_Explode(5,32,0)
+      TNT1 A 0 A_Playsound("weapons/onfire3")
+      FLME A 2 Bright A_Explode(5,32,0)
       FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16,0)
-      FLME A 1 Bright A_Playsound("weapons/onfire")
-      FLME A 1 Bright A_Explode(5,32,0)
+      TNT1 A 0 A_Playsound("weapons/onfire3")
+      FLME A 2 Bright A_Explode(5,32,0)
       FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16,0)
-      FLME A 1 Bright A_Playsound("weapons/onfire")
-      FLME A 1 Bright A_Explode(5,32,0)
+      TNT1 A 0 A_Playsound("weapons/onfire3")
+      FLME A 2 Bright A_Explode(5,32,0)
       FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16,0)
-      FLME A 1 Bright A_Playsound("weapons/onfire")
-      FLME A 1 Bright A_Explode(5,32,0)
+      TNT1 A 0 A_Playsound("weapons/onfire3")
+      FLME A 2 Bright A_Explode(5,32,0)
       FLME BCDEFGHIJKLMN 2 Bright A_Explode(5,16,0)
       FLME A 0 A_Jump(192,1)
       loop
-      TNT1 A 0
-      goto death
    Death:
-      TNT1 A 1 Bright
+      TNT1 A 0
       stop
    }
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// CHAINGUN /////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
+actor StrChaingunFiringSoundCheck : Inventory { Inventory.MaxAmount 1 +UNDROPPABLE -INVBAR }
+
 actor DEChaingun : Chaingun replaces Chaingun
 {
-  spawnid 28
-  Weapon.SisterWeapon "PowerChaingun"
-  obituary "%o was mowed down by %k's chaingun."
-  radius 20
-  height 16
-  inventory.pickupmessage "You got the chaingun!"
-  Tag "Chaingun"
-  weapon.selectionorder 700
-  weapon.kickback 100
-  weapon.ammotype "Clip"
-  weapon.ammouse 1
-  weapon.ammogive 20
-  Damagetype "Normal"
-  decal bulletchip
-  states
+  +ALT_USES_BOTH
+  States
   {
   Ready:
+    TNT1 A 0 A_TakeInventory("StrChaingunFiringSoundCheck")
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+    CHGG A 1 A_WeaponReady(WRF_NOSECONDARY)
+    loop
     CHGG A 1 A_WeaponReady
     loop
+
   Deselect:
-    CHGG A 0 A_StopSoundEx("Weapon")
-    CHGG A 0 A_Lower
+    TNT1 A 0 A_JumpIfInventory("StrChaingunFiringSoundCheck",1,1)
+    goto Deselect+3
+    TNT1 A 0 A_StopSoundEx("Weapon")
+    TNT1 A 0 A_TakeInventory("StrChaingunFiringSoundCheck")
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+    TNT1 A 0 A_Lower
     CHGG A 1 A_Lower
-    goto Deselect+1
+    goto Deselect+3
+
+  DeselectPowered:
+    TNT1 AA 0 A_Lower
+    CHGG A 1 A_Lower
+    goto Deselect+3
+
   Select:
-    CHGG A 0 A_Raise
+    TNT1 A 0 A_TakeInventory("StrChaingunFiringSoundCheck")
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+    TNT1 A 0 A_Raise
     CHGG A 1 A_Raise
     loop
+
+  SelectPowered:
+    TNT1 AA 0 A_Raise
+    CHGG A 1 A_Raise
+    goto Select
+
   Fire:
-  	CHGG C 0 A_PlaySoundEx("weapons/chnglp","Weapon",1)
-    CHGG C 2 Bright A_GunFlash
-    CHGG D 2 Bright A_FireBullets (4,2.3,1,5,"BulletPuff")
-    CHGG E 2 Bright A_GunFlash
-    CHGG F 2 Bright A_FireBullets (4,2.3,1,5,"BulletPuff")
-    CHGG A 0 A_Refire
-	CHGG A 0 A_StopSoundEx("Weapon")
-	CHGG A 0 A_PlaySoundEx("weapons/chngdn","Weapon",0)
+    TNT1 A 0 A_PlaySoundEx("weapons/chnglp","Weapon",1)
+    TNT1 A 0 A_GiveInventory("StrChaingunFiringSoundCheck")
+    TNT1 A 0 A_GunFlash
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+    CHGG C 2 bright A_FireBullets (4,2.3,1,5,"NewPuffPlayer")
+    CHGG D 1 bright
+    TNT1 A 0 A_GunFlash
+    CHGG E 2 bright A_FireBullets (4,2.3,1,5,"NewPuffPlayer")
+    CHGG F 1 bright
+    goto FireFinish
+
+  FirePowered:
+    CHGG C 2 bright A_FireBullets (0.75,0.75,-1,20,"ElectricalPuff",0)
+    CHGG D 1 bright
+    TNT1 A 0 A_GunFlash
+    CHGG E 2 bright A_FireBullets (0.75,0.75,-1,20,"ElectricalPuff",1)
+    CHGG F 1 bright
+    TNT1 A 0 A_GunFlash
+    CHGG C 2 bright A_FireBullets (0.75,0.75,-1,20,"ElectricalPuff",0)
+    CHGG D 1 bright
+    TNT1 A 0 A_GunFlash
+    CHGG E 2 bright A_FireBullets (0.75,0.75,-1,20,"ElectricalPuff",1)
+    CHGG F 1 bright
+
+  FireFinish:
+    CHGG A 0 A_ReFire
+    CHGG A 0 A_StopSoundEx("Weapon")
+    CHGG A 0 A_PlaySoundEx("weapons/chngdn","Weapon",0)
+    TNT1 A 0 A_TakeInventory("StrChaingunFiringSoundCheck")
     goto Ready
-  Hold:
-    CHGG C 2 Bright A_GunFlash
-    CHGG D 2 Bright A_FireBullets (4,2.3,1,5,"BulletPuff")
-    CHGG E 2 Bright A_GunFlash
-    CHGG F 2 Bright A_FireBullets (4,2.3,1,5,"BulletPuff")
-    CHGG A 0 A_Refire
-	CHGG A 0 A_StopSoundEx("Weapon")
-	CHGG A 0 A_PlaySoundEx("weapons/chngdn","Weapon",0)
+
+  AltFire:
+    TNT1 A 0 A_PlaySoundEx("weapons/chnglp","Weapon",1)
+    TNT1 A 0 A_GiveInventory("StrChaingunFiringSoundCheck")
+    TNT1 A 0 A_GunFlash
+    CHGG C 2 bright A_FireBullets (7.5,3,-1,16,"RepPuffNoDamage",1)
+    CHGG D 1 bright
+    TNT1 A 0 A_GunFlash
+    CHGG E 2 bright A_FireBullets (7.5,3,-1,16,"RepPuffNoDamage",1)
+    CHGG F 1 bright
+    TNT1 A 0 A_GunFlash
+    CHGG C 2 bright A_FireBullets (7.5,3,-1,16,"RepPuffNoDamage",1)
+    CHGG D 1 bright
+    TNT1 A 0 A_GunFlash
+    CHGG E 2 bright A_FireBullets (7.5,3,-1,16,"RepPuffNoDamage",1)
+    CHGG F 1 bright
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+    TNT1 A 0 A_CheckReload
+    goto AltFireFinish
+    TNT1 A 0 A_ReFire
+
+  AltFireFinish:
+    TNT1 A 0 A_StopSoundEx("Weapon")
+    TNT1 A 0 A_PlaySoundEx("weapons/chngdn","Weapon",0)
+    TNT1 A 0 A_TakeInventory("StrChaingunFiringSoundCheck")
     goto Ready
+
   Flash:
-    TNT1 A 2 bright A_Light1
-    TNT1 A 2 bright A_Light2
-    TNT1 A 0 bright A_Light0
-    stop
+    TNT1 A 1 A_Light1
+    TNT1 A 1 A_Light2
+    TNT1 A 1 A_Light1
+    goto LightDone
+
   Spawn:
     CHNG A -1
     stop
@@ -1289,67 +2044,108 @@ actor DEChaingun : Chaingun replaces Chaingun
 
 actor DEPistol : Weapon replaces Pistol 
 {
-  obituary "%o was tickled by %k's pea shooter."
-  attacksound "weapons/pistol"
-  weapon.selectionorder 1900
-  weapon.kickback 100
-  weapon.ammotype "Clip"
-  weapon.ammouse 1
-  weapon.ammogive 20
-  Weapon.SisterWeapon "PowerPistol"
-  Tag "Pistol"
+  Obituary "$OB_MPPISTOL"
+  AttackSound "weapons/pistol"
+  Weapon.SelectionOrder 1900
+  Weapon.KickBack 100
+  Weapon.AmmoType1 "Clip"
+  Weapon.AmmoType2 "Clip"
+  Weapon.AmmoUse1 1
+  Weapon.AmmoUse2 8
+  Weapon.AmmoGive 20
+  Tag "$TAG_PISTOL"
+  Inventory.PickupMessage "$PICKUP_PISTOL_DROPPED" // "Picked up a pistol."
   +WEAPON.WIMPY_WEAPON
-  decal bulletchip
-  states
+  States
   {
   Spawn:
     PISW A -1
     stop
+
   Ready:
-    PISG A 0 A_JumpIfInventory("PCount",1,2)
-    PISG A 1
-    Goto Reload
+    PISG A 1 A_JumpIfInventory("PCount",1,1)
+    goto ReloadAnim
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+    PISG A 1 A_WeaponReady(WRF_NOSECONDARY)
+    loop
     PISG A 1 A_WeaponReady
-    Goto Ready
+    loop
+
   Deselect:
-    PISG A 0 A_Lower
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+    TNT1 A 0 A_Lower
     PISG A 1 A_Lower
     loop
+
+  DeselectPowered:
+    TNT1 AA 0 A_Lower
+    PISG A 1 A_Lower
+    goto Deselect
+
   Select:
-    PISG A 0 A_Raise
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+    TNT1 A 0 A_Raise
     PISG A 1 A_Raise
     loop
+
+  SelectPowered:
+    TNT1 AA 0 A_Raise
+    PISG A 1 A_Raise
+    goto Select
+
   Fire:
-    PISG A 4
-    PISG B 0 A_FireBullets (5.6, 0, 1, 5, "BulletPuff")
-    PISF A 6 A_GunFlash
-    PISG C 4
-    PISG B 5 A_ReFire
+    PISG A 3 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+    TNT1 A 0 A_FireBullets(5.6,0,1,5,"NewPuffPlayer")
+    PISF A 3 bright A_GunFlash
+    PISG C 3
+    PISG B 3 A_ReFire
     goto Ready
-  Reload:
+
+  FirePowered:
+    PISG A 0 A_FireBullets(4,2.5,-1,12,"ElectricalPuff")
+    PISG B 3 A_GunFlash("FlashPowered")
+    PISG CBA 3 A_ReFire
+    goto Ready
+
+  AltFire:
+    PISG A 4
+    TNT1 A 0 A_FireBullets(10,7,8,12,"ElectricalPuff")
+    PISF A 4 bright A_GunFlash
+    PISG CB 4
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+    TNT1 A 0 A_CheckReload
+    goto AltFireFinish
+    TNT1 A 0 A_ReFire
+
+  AltFireFinish:
+    PISG A 4
+    goto Ready
+
+  ReloadAnim:
     PISG D 5 A_PlaySound("weapons/clipou")
     PISG EFGHIJK 4
-    PISG L 4 A_Playsound("weapons/clipin")
+    PISG L 4 A_PlaySound("weapons/clipin")
     PISG MNO 4
-    PISG P 4 A_Playsound("weapons/clipre")
+    PISG P 4 A_PlaySound("weapons/clipre")
     PISG QR 4
     PISG S 4 A_GiveInventory("PCount",1)
-    Goto Ready
+    goto Ready
+
   Flash:
-    PISF A 7 bright A_Light1
-    PISF A 0 bright A_Light0
-    stop
+    TNT1 A 4 A_Light1
+    goto LightDone
+
+  FlashPowered:
+    PISF A 2 bright A_Light1
+    goto LightDone
+
+  AltFlash:
+    TNT1 A 5 A_Light1
+    goto LightDone
   }
 }
 
-ACTOR PCount : Ammo
-{
-     Inventory.Amount 1
-     Inventory.MaxAmount 1
-     Ammo.BackpackAmount 0
-     Ammo.BackpackMaxAmount 1
-}
-
+actor PCount : Inventory { Inventory.MaxAmount 1 +UNDROPPABLE -INVBAR }
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// SUPER SHOTGUN ////////////////////////////////
@@ -1357,199 +2153,274 @@ ACTOR PCount : Ammo
 
 actor DESuperShotgun : SuperShotgun replaces SuperShotgun
 {
-  spawnid 33
-  obituary "%o was splattered by %k's super shotgun."
-  radius 20
-  height 16
-  attacksound "weapons/sshotf"
-  inventory.pickupmessage "You got the super shotgun!"
-  weapon.selectionorder 400
-  weapon.kickback 100
-  weapon.ammotype "Shell"
-  weapon.ammouse 2
-  weapon.ammogive 8
-  Weapon.SisterWeapon "PowerSuperShotgun"
-  Tag "Super Shotgun"
-  Damagetype "Normal"
-  decal bulletchip
-  states
+  AttackSound "weapons/sshotf"
+  Weapon.AmmoType2 "Shell"
+  Weapon.AmmoUse2 4
+  States
   {
   Ready:
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+    SHT2 A 1 A_WeaponReady(WRF_NOSECONDARY)
+    loop
     SHT2 A 1 A_WeaponReady
     loop
+
   Deselect:
-    SHT2 A 0 A_Lower
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+    TNT1 A 0 A_Lower
     SHT2 A 1 A_Lower
     loop
+
+  DeselectPowered:
+    TNT1 AA 0 A_Lower
+    SHT2 A 1 A_Lower
+    goto Deselect
+
   Select:
-    SHT2 A 0 A_Raise
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+    TNT1 A 0 A_Raise
     SHT2 A 1 A_Raise
     loop
+
+  SelectPowered:
+    TNT1 AA 0 A_Raise
+    SHT2 A 1 A_Raise
+    goto Select
+
   Fire:
-    SHT2 A 3
-    SHT2 A 0 A_GunFlash
-    SHT2 M 2 Bright A_FireBullets (11.2,7.1,20,5,"BulletPuff")
-    SHT2 N 3 Bright
-    SHT2 O 2 Bright
+    SHT2 A 3 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+    TNT1 A 0 A_GunFlash
+    SHT2 M 2 bright A_FireBullets (11.2,7.1,20,5,"NewPuffPlayer")
+    SHT2 N 3 bright
+    SHT2 O 2 bright
     SHT2 B 3
     SHT2 C 4
     SHT2 D 4 A_CheckReload
     SHT2 C 3
-    SHT2 E 3 A_PlayWeaponSound ("weapons/sshoto")
+    SHT2 E 3 A_PlayWeaponSound("weapons/sshoto")
     SHT2 F 3
-    SHT2 G 4
-    SHT2 H 4
-    SHT2 I 3 A_PlayWeaponSound ("weapons/sshotl")
-    SHT2 J 3
-    SHT2 K 3
+    SHT2 GH 4
+    SHT2 I 3 A_PlayWeaponSound("weapons/sshotl")
+    SHT2 JK 3
     SHT2 L 4
-    SHT2 E 0 A_PlayWeaponSound ("weapons/sshotc")
+    TNT1 A 0 A_PlayWeaponSound("weapons/sshotc")
     SHT2 E 6 A_ReFire
     SHT2 A 5 A_ReFire
     goto Ready
-  Hold:
-    SHT2 A 3
-    SHT2 A 0 A_GunFlash
-    SHT2 M 2 Bright A_FireBullets (11.2,7.1,20,5,"BulletPuff")
-    SHT2 N 3 Bright
-    SHT2 O 2 Bright
-    SHT2 B 3
-    SHT2 C 4
-    SHT2 D 4 A_CheckReload
-    SHT2 C 3
-    SHT2 E 3 A_PlayWeaponSound ("weapons/sshoto")
-    SHT2 F 3
-    SHT2 G 4
-    SHT2 H 4
-    SHT2 I 3 A_PlayWeaponSound ("weapons/sshotl")
-    SHT2 J 3
-    SHT2 K 3
-    SHT2 L 4
-    SHT2 E 0 A_PlayWeaponSound ("weapons/sshotc")
-    SHT2 E 6 A_ReFire
-    SHT2 A 5 A_ReFire
+
+  FirePowered:
+    SHT2 A 2
+    TNT1 A 0 A_GunFlash("AltFlash")
+    TNT1 A 0 A_FireBullets(14.6,9.4,20,12,"ElectricalPuff")
+    SHT2 MNO 2 bright
+    SHT2 A 2
+    TNT1 A 0 A_GunFlash("AltFlash")
+    TNT1 A 0 A_FireBullets(14.6,9.4,20,12,"ElectricalPuff")
+    SHT2 MNO 2 Bright
+    SHT2 BC 2
+    SHT2 D 2 A_CheckReload
+    SHT2 C 2
+    SHT2 E 2 A_PlayWeaponSound("weapons/sshoto")
+    SHT2 FGH 2
+    SHT2 I 2 A_PlayWeaponSound("weapons/sshotl")
+    SHT2 JKL 2
+    TNT1 A 0 A_PlayWeaponSound("weapons/sshotc")
+    SHT2 EA 2 A_ReFire
     goto Ready
+
+  AltFire:
+    SHT2 A 2
+    TNT1 A 0 A_GunFlash
+    TNT1 A 0 A_FireBullets(14.6,9.4,20,3,"RepPuffNoDamage")
+    SHT2 MNO 2 Bright
+    SHT2 A 2
+    TNT1 A 0 A_GunFlash
+    TNT1 A 0 A_FireBullets(14.6,9.4,20,3,"RepPuffNoDamage")
+
+  FirePoweredFinish:
+    SHT2 MNO 2 Bright
+    SHT2 BC 2
+    SHT2 D 2 A_CheckReload
+    SHT2 C 2
+    SHT2 E 2 A_PlayWeaponSound("weapons/sshoto")
+    SHT2 FGH 2
+    SHT2 I 2 A_PlayWeaponSound("weapons/sshotl")
+    SHT2 JKL 2
+    TNT1 A 0 A_PlayWeaponSound("weapons/sshotc")
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+    TNT1 A 0 A_CheckReload
+    goto AltFireFinish
+    TNT1 A 0 A_ReFire
+
+  AltFireFinish:
+    SHT2 E 2
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,2)
+    TNT1 A 0 A_CheckReload
+    goto AltFireFinish2
+    TNT1 A 0 A_ReFire
+
+  AltFireFinish2:
+    SHT2 A 2
+    goto Ready
+
   Flash:
-    TNT1 A 2 bright A_Light1
-    TNT1 A 3 bright A_Light2
-    TNT1 A 2 bright A_Light1
-    TNT1 A 0 bright A_Light0
-    stop
-  Spawn:
-    SGN2 A -1
-    stop
+    TNT1 A 2 A_Light1
+    TNT1 A 3 A_Light2
+    goto FlashFinish
+
+  AltFlash:
+    TNT1 A 2 A_Light1
+    TNT1 A 2 A_Light2
+
+  FlashFinish:
+    TNT1 A 2 A_Light1
+    goto LightDone
   }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// AUTO SHOTGUN /////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-
 actor AutoShotgun : Weapon 5118
 {
 //$Category Stronghold_Weapons
-  +AMMO_OPTIONAL
-  spawnid 237
-  obituary "%o got blasted away by %k's autoshotgun."
-  radius 20
-  height 16
-  Inventory.PickupMessage "You got the automatic shotgun!"
-  Tag "Autoshotgun"
-  weapon.selectionorder 700
-  Weapon.AmmoType1 "Shell"
-  Weapon.AmmoType2 "ASGClip"
-  //Weapon.AmmoGive1 20
-  Weapon.AmmoGive2 20
-  Weapon.AmmoUse 1
-  Weapon.SisterWeapon "PowerAutoShotgun"
+  SpawnID 237
+  Obituary "$STR_OB_AUTOSHOTGUN"
+  Inventory.PickupMessage "$STR_GOTAUTOSHOTGUN"
+  Tag "$STR_WEAPONTAG_AUTOSHOTGUN"
+  Weapon.SelectionOrder 700
+  Weapon.AmmoType1 "ASGClip"
+  Weapon.AmmoType2 "Shell"
+  Weapon.AmmoGive1 0
+  Weapon.AmmoGive2 20 // 8
+  Weapon.AmmoUse1 1
   AttackSound "weapons/asgfir"
-  DamageType "Normal"
-  decal bulletchip
+  +AMMO_OPTIONAL
+  +NOALERT
   states
   {
   Spawn:
     WASG A -1
     stop
+
   Ready:
-  	ASGG A 0 A_JumpIfInventory("ASGClip",20,2)
-	ASGG A 0 A_JumpIfInventory("Shell",1,2)
-	ASGG A 1 A_WeaponReady(8)
-	Loop
-    ASGG A 1 A_WeaponReady
-    Loop
+  	TNT1 A 0 A_JumpIfInventory("ASGClip",0,2)
+	TNT1 A 0 A_JumpIfInventory("Shell",1,2)
+	ASGG A 1 A_WeaponReady(WRF_NOSECONDARY)
+	loop
+    ASGG A 1 A_WeaponReady(WRF_ALLOWRELOAD)
+    loop
+
   Deselect:
-    ASGG A 0 A_Lower
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+    TNT1 A 0 A_Lower
     ASGG A 1 A_Lower
-    Loop
+    loop
+
+  DeselectPowered:
+    TNT1 AA 0 A_Lower
+    ASGG A 1 A_Lower
+    goto Deselect
+
   Select:
-    ASGG A 0 A_Raise
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+    TNT1 A 0 A_Raise
     ASGG A 1 A_Raise
-    Loop
+    loop
+
+  SelectPowered:
+    TNT1 AA 0 A_Raise
+    ASGG A 1 A_Raise
+    goto Select
+
   Fire:
-  Hold:
-    ASGG A 0 A_JumpIfInventory("ASGClip",1,29)
-    ASGG A 0 A_JumpIfInventory("Shell",1,2)
-    ASGG A 2 A_PlayWeaponSound("Weapons/asgout")
-    Goto Ready
-    ASGG BCDEF 3
-    ASGG G 3 A_PlayWeaponSound("Weapons/asgout")
-    ASGG HIJ 3
-    ASGG K 15
-    ASGG JIH 3
-    ASGG G 0 A_TakeInventory("Shell",1)
-    ASGG G 0 A_GiveInventory("ASGClip",1)
-    ASGG G 0 A_JumpIfInventory("ASGClip",20,2)
-    ASGG G 0 A_JumpIfInventory("Shell",1,2)
-    ASGG G 0
-    Goto Fire+22
-    ASGG G 0
-    Goto Fire+16
-    ASGG G 3 A_PlayWeaponSound("Weapons/asgin")
-    ASGG FEDCB 3
-    ASGG A 8 A_PlaySoundEX("weapons/asgld1","auto",0)
+    TNT1 A 0 A_JumpIfInventory("ASGClip",1,"FireActual")
+    TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, "FireActual")
+    TNT1 A 0 A_JumpIfInventory("Shell",1,"Reload")
+    ASGG A 2 A_PlayWeaponSound("weapons/asgout")
     goto Ready
-    ASGG A 1
-    ASGG L 0 A_GunFlash
-    ASGG A 0 A_TakeInventory("ASGClip",1)
-    ASGG L 2 A_FireBullets(5,4,7,5,"BulletPuff",0)
-    ASGG M 3
-    ASGG N 2
-    ASGG A 5 A_PlaySoundEX("weapons/asgld1","auto",0)
-    ASGG A 3
-    ASGG A 0 A_ReFire
+
+  FireActual:
+    TNT1 A 0 A_AlertMonsters
+    ASGG A 1 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+    TNT1 A 0 A_GunFlash
+    ASGG L 2 bright A_FireBullets(3.1,2.6,7,5,"NewPuffPlayer")
+    ASGG M 3 bright
+    ASGG N 2 bright
+    ASGG A 7 A_PlaySoundEx("weapons/asgld1","auto",0)
+    TNT1 A 0 A_ReFire
     goto Ready
+
+  FirePowered:
+    TNT1 A 0 A_GunFlash("FlashPowered")
+    TNT1 A 0 A_FireBullets(8.6,5.1,8,5,"ElectricalPuff",0) //Yes, I nerfed its accuracy. However, you get a chain-shotgun.
+    ASGG LMN 1 bright
+    ASGG A 1 A_PlaySoundEx("weapons/asgld1","auto",0)
+    TNT1 A 0 A_GunFlash("FlashPowered")
+    TNT1 A 0 A_FireBullets(8.6,5.1,8,5,"ElectricalPuff",0)
+    ASGG LMN 1 bright
+    ASGG A 1 A_PlaySoundEx("weapons/asgld1","auto",0)
+    TNT1 A 0 A_GunFlash("FlashPowered")
+    TNT1 A 0 A_FireBullets(8.6,5.1,8,5,"ElectricalPuff",0)
+    ASGG LMN 1 bright
+    ASGG A 1 A_PlaySoundEx("weapons/asgld1","auto",0)
+    TNT1 A 0 A_GunFlash("FlashPowered")
+    TNT1 A 0 A_FireBullets(8.6,5.1,8,5,"ElectricalPuff")
+    ASGG LMN 1 bright
+    ASGG A 1 A_PlaySoundEx("weapons/asgld1","auto",0)
+    TNT1 A 0 A_ReFire
+    goto Ready
+
   AltFire:
+  Reload:
+    TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"ReloadPowered")
     ASGG BCDEF 3
-    ASGG G 3 A_PlayWeaponSound("Weapons/asgout")
+    ASGG G 3 A_PlayWeaponSound("weapons/asgout")
     ASGG HIJ 3
     ASGG K 15
     ASGG JIH 3
-    ASGG G 0 A_TakeInventory("Shell",1)
-    ASGG G 0 A_GiveInventory("ASGClip",1)
-    ASGG G 0 A_JumpIfInventory("ASGClip",20,2)
-    ASGG G 0 A_JumpIfInventory("Shell",1,2)
-    ASGG G 0
-    Goto AltFire+19
-    ASGG G 0
-    Goto AltFire+13
-    ASGG G 3 A_PlayWeaponSound("Weapons/asgin")
+
+  Reloading:
+    TNT1 A 0 A_JumpIfInventory("ASGClip",0,"ReloadFinish")
+    TNT1 A 0 A_JumpIfInventory("Shell",1,1)
+    goto ReloadFinish
+    TNT1 A 0 A_TakeInventory("Shell",1)
+    TNT1 A 0 A_GiveInventory("ASGClip",1)
+    loop
+
+  ReloadFinish:
+    ASGG G 3 A_PlayWeaponSound("weapons/asgin")
     ASGG FEDCB 3
     ASGG A 8 A_PlaySoundEX("weapons/asgld1","auto",0)
-    Goto Ready
+    goto Ready
+
+  ReloadPowered:
+    ASGG BCDEF 2
+    ASGG G 3 A_PlayWeaponSound("weapons/asgout")
+    ASGG HIJ 2
+    ASGG K 10
+    ASGG JIH 2
+    goto Reloading
+
   Flash:
-    TNT1 A 4 bright A_Light1
-    TNT1 A 3 bright A_Light2
-    TNT1 A 0 bright A_Light0
-    stop
+    TNT1 A 4 A_Light1
+    TNT1 A 3 A_Light2
+    goto LightDone
+
+  FlashPowered:
+    TNT1 A 2 A_Light1
+    TNT1 A 2 A_Light2
+    goto LightDone
   }
 }
 
 ACTOR ASGClip: Ammo
 {
-     Inventory.MaxAmount 20
-     Ammo.BackpackAmount 0
-     Ammo.BackpackMaxAmount 20
-     +Inventory.IgnoreSkill
+    Inventory.Amount 1
+    Inventory.MaxAmount 20
+    Ammo.BackpackAmount 0
+    Ammo.BackpackMaxAmount 20
+    +IGNORESKILL
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -1559,68 +2430,124 @@ ACTOR ASGClip: Ammo
 ACTOR Repeater : Weapon 20100
 {
 //$Category Stronghold_Weapons
-   spawnid 236
+   SpawnID 236
    Inventory.PickupSound "misc/w_pkup"
-   Inventory.PickupMessage "You got the plasma repeater!"
-   Obituary "%o was disintegrated by %k's repeater."
+   Inventory.PickupMessage "$STR_GOTREPEATER"
+   Obituary "$STR_OB_REPEATER"
    Weapon.AmmoType1 "Cell"
    Weapon.AmmoGive 20
    Weapon.AmmoUse 1
-   Weapon.SisterWeapon "PowerRepeater"
+   AttackSound "weapons/repfir2"
+   Tag "$STR_WEAPONTAG_REPEATER"
    +WEAPON.EXPLOSIVE
-   AttackSound "weapons/repfir"
-   Decal FireDemonScorch
-   Tag "Plasma Repeater"
+   +NOAUTOFIRE
    States
    {
    Spawn:
       WREP A -1
-      Loop
+      stop
+
    Ready:
       REPG A 1 A_WeaponReady
-      Loop
+      loop
+
    Deselect:
-      REPG A 0 A_Lower
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
       REPG A 1 A_Lower
-      Loop
+      loop
+
+   DeselectPowered:
+      TNT1 AA 0 A_Lower
+      REPG A 1 A_Lower
+      goto Deselect
+
    Select:
-      REPG A 0 A_Raise
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
       REPG A 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      TNT1 AA 0 A_Raise
+      REPG A 1 A_Raise
+      goto Select
+
    Fire:
       REPG A 4 A_PlaySound("weapons/repidl")
       REPG BCD 4
       REPG ABCD 3
       REPG ABCD 2
-      REPG E 0 Bright A_Gunflash
-      REPG E 2 Bright A_FireBullets(4,4,2,9,RepPuff,1,10240)
-      REPG F 2 Bright
-      REPG G 2 Bright A_FireBullets(4,4,2,9,RepPuff,1,10240)
-      REPG H 2 Bright
-      REPG A 0 A_Refire
-      REPG A 2 A_PlaySound("weapons/repstp")
-      REPG BCD 2
-      REPG ABCD 3
-      REPG ABCD 4
-      Goto Ready
    Hold:
-      REPG E 0 Bright A_Gunflash
-      REPG E 2 Bright A_FireBullets(4,4,2,9,RepPuff,1,10240)
-      REPG F 2 Bright
-      REPG G 2 Bright A_FireBullets(4,4,2,9,RepPuff,1,10240)
-      REPG H 2 Bright
-      REPG A 0 A_Refire
+      TNT1 A 0 A_GunFlash
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      TNT1 A 0 A_FireBullets(4,4,2,9,"RepPuff",1,10240)
+      REPG EF 2 bright
+      TNT1 A 0 A_GunFlash
+      TNT1 A 0 A_FireBullets(4,4,2,9,"RepPuff",1,10240)
+      REPG GH 2 bright
+      goto HoldContinue
+
+   FirePowered:
+      REPG EFG 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",0,10240)
+      REPG H 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",1,10240)
+      TNT1 A 0 A_GunFlash
+      REPG EFG 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",0,10240)
+      REPG H 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",1,10240)
+      TNT1 A 0 A_GunFlash
+      REPG EFG 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",0,10240)
+      REPG H 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",1,10240)
+      TNT1 A 0 A_GunFlash
+      REPG EFG 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",0,10240)
+      REPG H 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",1,10240)
+      TNT1 A 0 A_GunFlash
+      REPG EFG 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",0,10240)
+      REPG H 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",1,10240)
+      TNT1 A 0 A_GunFlash
+      REPG EFG 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",0,10240)
+      REPG H 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",1,10240)
+      TNT1 A 0 A_GunFlash
+      REPG EFG 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",0,10240)
+      REPG H 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",1,10240)
+      TNT1 A 0 A_GunFlash
+      REPG EFG 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",0,10240)
+      REPG H 1 bright A_FireBullets(10,6,-1,20,"RepPuffNoDamage",1,10240)
+      goto HoldPoweredContinue
+
+   HoldPowered:
+      TNT1 A 0 A_GunFlash
+      REPG EFG 1 bright A_FireBullets(20,10,2,10,"RepPuffNoDamage",0,10240)
+      REPG H 1 bright A_FireBullets(20,10,2,10,"RepPuffNoDamage",1,10240)
+      goto HoldPoweredContinue
+
+   HoldContinue:
+      TNT1 A 0 A_ReFire
+   HoldFinish:
       REPG A 2 A_PlaySound("weapons/repstp")
       REPG BCD 2
       REPG ABCD 3
       REPG ABCD 4
       REPG ABCD 5
-      Goto Ready
+      TNT1 A 0 A_JumpIfInventory("Cell",1,2)
+      TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrInfiniteAmmoChecker") == 1, 1)
+      goto HoldFinishNoAmmo
+      TNT1 A 0 A_ReFire("Fire") // needed because of +NOAUTOFIRE
+      goto Ready
+
+   HoldFinishNoAmmo: // if there's no ammo, don't switch weapon to retain original behaviour
+      TNT1 A 0 A_ClearReFire
+      goto Ready
+
+   HoldPoweredContinue:
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,1)
+      goto HoldContinue
+      TNT1 A 0 A_ReFire("HoldPowered")
+      goto HoldFinish
+
    Flash:
       TNT1 A 2 A_Light2
       TNT1 A 2 A_Light1
-      TNT1 A 0 A_Light0
-      stop
+      goto LightDone
    }
 }
 
@@ -1630,34 +2557,43 @@ Actor RepPuff
    Height 3
    RENDERSTYLE ADD
    ALPHA 0.75
-   Damagetype normal
+   DamageType "PlayerAllyRepeater"
    ExplosionDamage 32
    ExplosionRadius 88
+   Species "Player"
+   +MTHRUSPECIES
    +ALWAYSPUFF
    +PUFFONACTORS
    +NOGRAVITY
    +NOBLOCKMAP
    +PUFFGETSOWNER
-   DeathSound "weapons/buzz"
+   +NOTIMEFREEZE
+   AttackSound "weapons/rephit"
+   SeeSound "weapons/rephit"
+   Decal MummyScorch
    States
    {
    Spawn:
-      BLAS A 1 Bright
-      BLAS A 2 Bright A_Explode
+      BLAS A 0 Bright
+      BLAS A 0 Bright A_Explode
+      BLAS A 3 Bright A_ChangeFlag("NOTIMEFREEZE",0)
       BLAS BCDEFG 3 Bright
       stop
    }
 }
 
+actor RepPuffNoDamage : RepPuff { DamageType "MarineAllyRepeater" }
+
 ACTOR Heat : Ammo
 {
-     Inventory.MaxAmount 100
-     Ammo.BackpackAmount 0
-     Ammo.BackpackMaxAmount 100
-     Inventory.Icon STTPRCNT
+    Inventory.MaxAmount 100
+    Ammo.BackpackAmount 0
+    Ammo.BackpackMaxAmount 100
+    Inventory.Icon STTPRCNT
+    +IGNORESKILL
 }
 
-Actor RepSteam
+actor RepSteam
 {
    Radius 0
    Height 1
@@ -1666,6 +2602,8 @@ Actor RepSteam
    RENDERSTYLE TRANSLUCENT
    ALPHA 0.35
    SeeSound "weapons/repstm"
+   +DONTSPLASH
+   +CLIENTSIDEONLY
    States
    {
    Spawn:
@@ -1678,56 +2616,93 @@ Actor RepSteam
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// MINE LAYER ///////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-
 ACTOR LandMineLayer : Weapon 25084
 {
 //$Category Stronghold_Weapons
    SpawnId 200
-   Inventory.PickupMessage "You got some land mines!"
+   Inventory.PickupMessage "$STR_GOTLANDMINELAYER"
    Inventory.PickupSound "misc/w_pkup"
    Weapon.AmmoType "Mines"
    Weapon.AmmoGive 5
    Weapon.AmmoUse 1
-   Weapon.AmmoType2 "Mines"
-   Weapon.AmmoUse2 1
-   Weapon.SisterWeapon "PowerLandMineLayer"
-   Tag "Land Mines"
+   Tag "$STR_WEAPONTAG_LANDMINELAYER"
+   +ALT_USES_BOTH
+   +NOALERT
    States
    {
    Spawn:
       MINE A -1
-      Loop
+      stop
+
    Ready:
       LAYR A 1 A_WeaponReady
-      Loop
+      loop
+
    Deselect:
-      LAYR A 0 A_Lower
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
       LAYR A 1 A_Lower
-      Loop
+      loop
+
+   DeselectPowered:
+      TNT1 AA 0 A_Lower
+      LAYR A 1 A_Lower
+      goto Deselect
+
    Select:
-      LAYR A 0 A_Raise
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
       LAYR A 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      TNT1 AA 0 A_Raise
+      LAYR A 1 A_Raise
+      goto Select
+
+   Fire:
+      LAYR B 8 A_PlaySound("weapons/minebeep")
+      LAYD ABCDE 1
+      TNT1 A 5 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      TNT1 A 9 A_FireCustomMissile("Landmine3",0,1,0,0)
+      LAYU ABCDE 1
+      LAYR A 4
+      goto Ready
+
+   FirePowered:
+      TNT1 A 3
+      TNT1 A 0 A_FireCustomMissile("PowerLandmine3B",-7,0,0,0)
+      TNT1 A 0 A_FireCustomMissile("PowerLandmine3B",7,0,0,0)
+      TNT1 A 6 A_FireCustomMissile("PowerLandmine3A",0,1,0,0)
+      LAYU ABCDE 1
+      LAYR A 2
+      goto Ready
+
    AltFire:
       LAYR B 8 A_PlaySound("weapons/minebeep")
       LAYD ABCDE 1
-      TNT1 A 10
+      TNT1 A 10 A_JumpIfInventory("PowerWeaponLevel2",1,"AltFirePowered")
       LAYT A 1 A_PlaySound("weapons/minethrow")
       LAYT BCDEFGH 1
       LAYT I 1 A_FireCustomMissile("Landmine2",0,1,0,8)
       LAYT JKLMNOPQR 1
       TNT1 A 10
+      goto AltFireFinish
+
+   AltFirePowered:
+      TNT1 A 5
+      LAYT A 1 A_PlaySound("weapons/minethrow")
+      LAYT BCDEFGH 1
+      TNT1 A 0 A_FireCustomMissile("PowerLandmine2B",-7,0,0,8)
+      TNT1 A 0 A_FireCustomMissile("PowerLandmine2B",7,0,0,8)
+      LAYT I 1 A_FireCustomMissile("PowerLandmine2A",0,1,0,8)
+      LAYT JKLMNOPQR 1
+      TNT1 A 5
+
+   AltFireFinish:
       LAYU ABCDE 1
       LAYR A 6
-      Goto Ready
-   Fire:
-      LAYR B 8 A_PlaySound("weapons/minebeep")
-      LAYD ABCDE 1
-      TNT1 A 5
-      TNT1 A 9 A_FireCustomMissile("Landmine3",0,1,0,0)
-      LAYU ABCDE 1
-      LAYR A 4
-      Goto Ready
+      goto Ready
    }
 }
 
@@ -1738,30 +2713,36 @@ ACTOR Landmine
    Mass 1000000
    Health 20
    Damage 10
-   SeeSound "weapons/tink"
+   //SeeSound "weapons/tink"
+   DamageType "MarineAllyRocket"
    ExplosionDamage 384
    ExplosionRadius 160
    DONTHURTSHOOTER
    Speed 0
+   Projectile
+   Species "Player"
+   +THRUSPECIES
    +NOBLOOD
    -SHOOTABLE
-   +MISSILE
-   +THRUGHOST
+   -NOGRAVITY
+   +MOVEWITHSECTOR
    States
    {
    Spawn:
-      MINE A 0 A_Gravity
+      MINE A 0
+      MINE A 0 A_PlaySound("weapons/tink",2)
       MINE AB 5
-      Loop
+      goto Spawn+2
    Death:
-      MISL B 0 A_PlaySound("weapons/mineexpl")
-      MISL B 8 A_Explode
-      MISL C 6
-      MISL D 4
-      Stop
+      TNT1 A 0 A_PlaySound("weapons/mineexpl",2)
+      TNT1 A 0 A_AlertMonsters
+      TNT1 A 0 A_NoGravity
+      MISL B 8 bright A_Explode
+      MISL C 6 bright
+      MISL D 4 bright
+      stop
    }
 }
-
 
 ACTOR Landmine2
 {
@@ -1770,30 +2751,31 @@ ACTOR Landmine2
    Mass 1000000
    Health 20
    Damage 10
-   SeeSound "weapons/tink"
+   BounceSound "weapons/tink"
+   DamageType "MarineAllyRocket"
    DONTHURTSHOOTER
    Speed 15
+   Projectile
+   BounceType "Doom"
+   Species "Player"
+   +THRUSPECIES
    +NOBLOOD
    -SHOOTABLE
-   +MISSILE
-   +DOOMBOUNCE
-   +THRUGHOST
+   -NOGRAVITY
+   +MOVEWITHSECTOR
    States
    {
    Spawn:
-      MINE A 0 A_Gravity
       MINE AB 5
-      Loop
+      loop
    Death:
-      MINE A 0 A_SpawnItem("Landmine")
-      Stop
+      MINE A 0 A_StopSound(2)
+      MINE A 0 A_SpawnItemEx("Landmine",0,0,0,0,0,0,0,SXF_TRANSFERPOINTERS)
+      stop
    }
 }
 
-ACTOR Landmine3 : Landmine2
-{
-   Speed 2
-}
+ACTOR Landmine3 : Landmine2 { Speed 2 }
 
 ACTOR Mines : Ammo 25085
 {
@@ -1803,59 +2785,82 @@ ACTOR Mines : Ammo 25085
    Inventory.MaxAmount 20
    Ammo.BackpackAmount 5
    Ammo.BackpackMaxAmount 40
-   Inventory.PickupMessage "Picked up some additional landmines."
-   Inventory.PickupSound "misc/i_pkup"
+   Inventory.PickupMessage "$STR_GOTMINES"
+   Inventory.PickupSound "misc/ammo_pkup"
    Inventory.Icon MINEA0
+   Tag "$STR_AMMOTAG_MINES"
    States
    {
    Spawn:
-      MINE B -1
-      Stop
+      MINE A -1
+      stop
    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////// STUNNER RIFLE ////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
-
 ACTOR StunnerRifle : PlasmaRifle 23099
 {
 //$Category Stronghold_Weapons
    SpawnID 202
    Weapon.AmmoUse 5
-   Weapon.SisterWeapon "PowerStunnerRifle"
-   Inventory.PickupMessage "You got the stunner rifle!"
-   Tag "Stunner Rifle"
+   Inventory.PickupMessage "$STR_GOTSTUNNERRIFLE"
+   Tag "$STR_WEAPONTAG_STUNNERRIFLE"
    States
    {
    Spawn:
       STPP A -1
-      Loop
+      stop
+
    Ready:
-      STPO ABC 3 Bright A_WeaponReady
-      Loop
+      STPO ABC 3 bright A_WeaponReady
+      loop
+
    Deselect:
-      STPO E 0 A_Lower
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"DeselectPowered")
+      TNT1 A 0 A_Lower
       STPO E 1 A_Lower
-      Loop
+      loop
+
+   DeselectPowered:
+      TNT1 AA 0 A_Lower
+      STPO E 1 A_Lower
+      goto Deselect
+
    Select:
-      STPO E 0 A_Raise
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"SelectPowered")
+      TNT1 A 0 A_Raise
       STPO E 1 A_Raise
-      Loop
+      loop
+
+   SelectPowered:
+      TNT1 AA 0 A_Raise
+      STPO E 1 A_Raise
+      goto Select
+
    Fire:
-   Hold:
-      STPO F 0 Bright A_GunFlash
-      STPO F 3 Bright A_FireCustomMissile("StunnerBall",0,1,0,0)
-      STPO GH 3 Bright
-      STPO E 4
-      STPO D 6 A_ReFire
-      Goto Ready
+      TNT1 A 0 A_GunFlash
+      TNT1 A 0 A_JumpIfInventory("PowerWeaponLevel2",1,"FirePowered")
+      TNT1 A 0 A_FireCustomMissile("StunnerBall",0,1,0,0)
+      STPO FGH 3 bright
+      STPO D 4 bright
+      goto FireFinish
+
+   FirePowered:
+      TNT1 A 0 A_FireCustomMissile("PowerStunnerBall",0,1,0,0)
+      STPO FGH 3 bright
+      STPO D 16 bright
+
+   FireFinish:
+      STPO D 6 bright A_ReFire
+      goto Ready
+
    Flash:
       TNT1 A 1 A_Light1
       TNT1 A 1 A_Light2
       TNT1 A 1 A_Light1
-      TNT1 A 1 A_Light0
-      stop
+      goto LightDone
    }
 }
 
@@ -1866,7 +2871,7 @@ actor StunnerBall
   height 8
   speed 20
   scale 0.45
-  damagetype Stunner
+  DamageType "Stunner"
   damage 1
   decal StunnerScorch
   renderstyle Add
@@ -1874,8 +2879,11 @@ actor StunnerBall
   deathsound "weapons/stunner/hit"
   translation "192:207=250:254"
   PROJECTILE
+  Species "Player"
+  +THRUSPECIES
   +RANDOMIZE
   +RIPPER
+  +STRIFEDAMAGE
   states
   {
   Spawn:
@@ -1903,38 +2911,400 @@ actor StunnerBallFX
   }
 }
 
-
 /////////////////////
 // NEW BULLET PUFF //
 /////////////////////
 
 ACTOR NewPuff : BulletPuff replaces BulletPuff
 {
-	Alpha 1.0
+	DamageType "Bullet"
+	Alpha 1
 	Mass 1
+	Decal BulletChip
 	States
 	{
 	Spawn:
 	Melee:
-	    PUFF A 2
-	    PUFF A 0 A_Jump(128,2)
-	    PUFF A 2 A_SpawnItemEx("Puff2",0,0,0,0,0,0,0,128)
-	    PUFF BCD 4
-	    Stop
+	    PUFF A 0 bright
+	    PUFF A 0 bright A_SpawnItemEx("Puff2",0,0,0,0,0,0,0,32)
+	    PUFF AB 4 bright
+	    goto Super::Melee
 	}
+}
+
+ACTOR NewPuffPlayer : NewPuff
+{
+    DamageType "PlayerAlly"
+    Species "Player"
+    +MTHRUSPECIES
 }
 
 ACTOR Puff2
 {
 	PROJECTILE
 	+NOCLIP
+    +CLIENTSIDEONLY
 	Mass 1
 	States
 	{
 	Spawn:
-		PUFF E 2
-		PUFF E 2 A_PlaySound("puff/ric")
-		PUFF FGH 4
+        TNT1 A 0
+        TNT1 A 0 A_Jump(128,1)
+        stop
+		TNT1 A 0 A_PlaySound("puff/ric")
+		PUFF EFGH 4 bright
 		Stop
+	}
+}
+
+actor StrFakeGoalBase : FakeGoalBase replaces FakeGoalBase
+{
+    Tag "$STR_MONSTERTAG_GOAL"
+    DamageFactor "Massacre", 0
+    DamageFactor "MarineAlly", 0
+    DamageFactor "MarineAllyRocket", 0
+    DamageFactor "MarineAllyPlasma", 0
+    DamageFactor "MarineAllyRailgun", 0
+    DamageFactor "MarineAllyRepeater", 0
+    DamageFactor "MarineAllyFire", 0
+    DamageFactor "MarineAllyBFG", 0
+    DamageFactor "MarineAllyBFGSplash", 0
+    DamageFactor "MarineAllyIce", 0
+    DamageFactor "SmartBomb", 0
+    DamageFactor "CoreFriendly", 0
+    DamageFactor "CoreFriendlyFire", 0
+    DamageFactor "BossFactor", 0
+    DamageFactor "PlayerAlly", 0
+    DamageFactor "PlayerAllyRocket", 0
+    DamageFactor "PlayerAllyPlasma", 0
+    DamageFactor "PlayerAllyRailgun", 0
+    DamageFactor "PlayerAllyRepeater", 0
+    DamageFactor "PlayerAllyFire", 0
+    DamageFactor "PlayerAllyBFG", 0
+    DamageFactor "PlayerAllyBFGSplash", 0
+    DamageFactor "PlayerAllyIce", 0
+    DamageFactor "Stunner", 0
+    DamageFactor "Cyber2Factor", 0.5
+    DamageFactor "Cyber2FactorExplosive", 0.5
+    DamageFactor "Cyber2FactorFire", 0.5
+    DamageFactor "STBoss", 0.02
+    DamageFactor "STBossFactor", 0.25
+    DamageFactor "SpiritBoss", 0.02
+    DamageFactor "SpiritBossFactor", 0.25
+    DamageFactor "Animate", 0.1
+    DamageFactor "Bullet", 0.8
+    DamageFactor "Melee", 0.8
+    Species "Player"
+    +THRUSPECIES
+    +DONTMORPH
+    +DONTRIP
+    +NORADIUSDMG
+    +ISMONSTER
+    +NOTAUTOAIMED
+    States
+    {
+      Death:
+        TNT1 A 1 A_Scream
+        stop
+    }
+}
+
+actor StrFakeGoalSparks : FakeGoalSparks replaces FakeGoalSparks { +DONTSPLASH }
+
+actor StrGoal_Red : StrFakeGoalBase replaces Goal_Red
+{
+    Tag "$STR_MONSTERTAG_GOAL_RED"
+	Translation "80:111=170:191"
+	States
+	{
+	Death:
+		TNT1 A 0 ACS_ExecuteWithResult(926, 1)
+		goto Super::Death
+	}
+}
+
+actor StrGoal_Orange : StrFakeGoalBase replaces Goal_Orange
+{
+    Tag "$STR_MONSTERTAG_GOAL_ORANGE"
+	Translation "80:111=209:223"
+	States
+	{
+	Death:
+		TNT1 A 0 ACS_ExecuteWithResult(926, 2)
+		goto Super::Death
+	}
+}
+
+actor StrGoal_Blue : StrFakeGoalBase replaces Goal_Blue
+{
+    Tag "$STR_MONSTERTAG_GOAL_BLUE"
+	Translation "80:111=192:207"
+	States
+	{
+	Death:
+		TNT1 A 0 ACS_ExecuteWithResult(926, 3)
+		goto Super::Death
+	}
+}
+
+actor StrGoal_Green : StrFakeGoalBase replaces Goal_Green
+{
+    Tag "$STR_MONSTERTAG_GOAL_GREEN"
+	Translation "80:111=112:127"
+	States
+	{
+	Death:
+		TNT1 A 0 ACS_ExecuteWithResult(926, 4)
+		goto Super::Death
+	}
+}
+
+actor StrGoal_White : StrFakeGoalBase replaces Goal_White
+{
+    Tag "$STR_MONSTERTAG_GOAL_WHITE"
+	States
+	{
+	Death:
+		TNT1 A 0 ACS_ExecuteWithResult(926, 5)
+		goto Super::Death
+	}
+}
+
+ACTOR StrPowerCore : PowerCore replaces PowerCore
+{
+    Tag "$STR_MONSTERTAG_POWERCORE"
+    DamageFactor "Massacre", 0
+    DamageFactor "MarineAlly", 0
+    DamageFactor "MarineAllyRocket", 0
+    DamageFactor "MarineAllyPlasma", 0
+    DamageFactor "MarineAllyRailgun", 0
+    DamageFactor "MarineAllyRepeater", 0
+    DamageFactor "MarineAllyFire", 0
+    DamageFactor "MarineAllyBFG", 0
+    DamageFactor "MarineAllyBFGSplash", 0
+    DamageFactor "MarineAllyIce", 0
+    DamageFactor "SmartBomb", 0
+    DamageFactor "CoreFriendly", 0
+    DamageFactor "CoreFriendlyFire", 0
+    DamageFactor "BossFactor", 0
+    DamageFactor "PlayerAlly", 0
+    DamageFactor "PlayerAllyRocket", 0
+    DamageFactor "PlayerAllyPlasma", 0
+    DamageFactor "PlayerAllyRailgun", 0
+    DamageFactor "PlayerAllyRepeater", 0
+    DamageFactor "PlayerAllyFire", 0
+    DamageFactor "PlayerAllyBFG", 0
+    DamageFactor "PlayerAllyBFGSplash", 0
+    DamageFactor "PlayerAllyIce", 0
+    DamageFactor "Stunner", 0
+    DamageFactor "STBoss", 0.015
+    DamageFactor "STBossFactor", 0.1
+    DamageFactor "SpiritBoss", 0.015
+    DamageFactor "SpiritBossFactor", 0.1
+    DamageFactor "Animate", 0
+    DamageFactor "Cyber2Factor", 0.25
+    DamageFactor "Cyber2FactorExplosive", 0.25
+    DamageFactor "Cyber2FactorFire", 0.25
+    DamageFactor "Normal", 0.5
+    DamageFactor "Bullet", 0.4
+    DamageFactor "Melee", 0.4
+    DamageFactor "OvermindFactor", 0.25
+    DamageFactor "OvermindFactorFire", 0.25
+    Species "Player"
+    +THRUSPECIES
+    +DONTRIP
+    +NORADIUSDMG
+    +DONTMORPH
+    +NOTAUTOAIMED
+    States
+    {
+      Spawn:
+        SECG ABCD 6
+        TNT1 A 0 A_JumpIfHealthLower(340, "Spawn_33Continue") // display according to the percentage
+        TNT1 A 0 A_JumpIfHealthLower(670, "Spawn_66Continue")
+        loop
+
+      Pain:
+        TNT1 A 0 A_JumpIfHealthLower(340, "Spawn_33")
+        TNT1 A 0 A_JumpIfHealthLower(670, "Spawn_66")
+        TNT1 A 0 ACS_Execute(929, 0, 1)
+        goto Spawn
+
+      Spawn_66:
+        TNT1 A 0 ACS_Execute(929, 0, 2)
+      Spawn_66Continue:
+        SECY ABCD 6
+        TNT1 A 0 A_JumpIfHealthLower(340, "Spawn_33Continue")
+        TNT1 A 0 A_JumpIfHealthLower(670, "Spawn_66Continue")
+        goto Spawn
+
+      Spawn_33:
+        TNT1 A 0 ACS_Execute(929, 0, 3)
+      Spawn_33Continue:
+        SECR ABCD 6
+        TNT1 A 0 A_JumpIfHealthLower(340, "Spawn_33Continue")
+        TNT1 A 0 A_JumpIfHealthLower(670, "Spawn_66Continue")
+        goto Spawn
+
+      Death:
+        TNT1 A 0 ACS_ExecuteWithResult(929, 4)
+        SECR E 6 A_Scream
+        SECR FGHJKLMNO 6
+        SECR P -1
+        stop
+    }
+}
+
+actor StrOvermindCore : OvermindCore replaces OvermindCore
+{
+    Health 50000
+    Tag "$STR_MONSTERTAG_OVERMINDCORE"
+    DamageFactor "Massacre", 0
+    DamageFactor "MarineAlly", 0
+    DamageFactor "MarineAllyRocket", 0
+    DamageFactor "MarineAllyPlasma", 0
+    DamageFactor "MarineAllyRailgun", 0
+    DamageFactor "MarineAllyRepeater", 0
+    DamageFactor "MarineAllyFire", 0
+    DamageFactor "MarineAllyBFG", 0
+    DamageFactor "MarineAllyBFGSplash", 0
+    DamageFactor "MarineAllyIce", 0
+    DamageFactor "SmartBomb", 0
+    DamageFactor "CoreFriendly", 0
+    DamageFactor "CoreFriendlyFire", 0
+    DamageFactor "BossFactor", 0
+    DamageFactor "PlayerAlly", 0
+    DamageFactor "PlayerAllyRocket", 0
+    DamageFactor "PlayerAllyPlasma", 0
+    DamageFactor "PlayerAllyRailgun", 0
+    DamageFactor "PlayerAllyRepeater", 0
+    DamageFactor "PlayerAllyFire", 0
+    DamageFactor "PlayerAllyBFG", 0
+    DamageFactor "PlayerAllyBFGSplash", 0
+    DamageFactor "PlayerAllyIce", 0
+    DamageFactor "Stunner", 0
+    DamageFactor "Normal", 5
+    DamageFactor "Bullet", 4
+    DamageFactor "Melee", 4
+    DamageFactor "Cyber2Factor", 9
+    DamageFactor "Cyber2FactorExplosive", 9
+    DamageFactor "Cyber2FactorFire", 9
+    DamageFactor "Animate", 8
+    DamageFactor "STBoss", 6
+    DamageFactor "STBossFactor", 7
+    DamageFactor "SpiritBoss", 6
+    DamageFactor "SpiritBossFactor", 7
+    DamageFactor "OvermindFactor", 10
+    DamageFactor "OvermindFactorFire", 10
+    Species "Player"
+    +THRUSPECIES
+    +NORADIUSDMG
+    +DONTRIP
+    +DONTMORPH
+    +NOTAUTOAIMED
+}
+
+///////////////////
+// VOTING PISTOL //
+///////////////////
+actor StrVotingDevice : Weapon
+{
+    Tag "$STR_WEAPONTAG_VOTINGDEVICE"
+    +UNDROPPABLE
+    +NOALERT
+    +CHEATNOTWEAPON
+    States
+    {
+      Ready:
+        PISG A 1 A_WeaponReady
+        loop
+
+      Deselect:
+        TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Lower
+        TNT1 A 1 A_Lower
+        loop
+
+      Select:
+        TNT1 AAAAAAAAAAAAAAAAAAAA 0 A_Raise
+        TNT1 A 1 A_Raise
+        loop
+
+      Fire:
+        TNT1 A 0 ACS_NamedExecuteWithResult("StrVotingPistol", 1)
+        goto FireFinish
+
+      AltFire:
+        TNT1 A 0 ACS_NamedExecuteWithResult("StrVotingPistol", 2)
+
+      FireFinish:
+        PISG BCB 3
+        TNT1 A 0 A_TakeInventory("StrVotingDevice")
+        goto Ready
+
+      Spawn:
+        PIST A -1
+        stop
+    }
+}
+
+///////////////////////////////////////
+// ALARM ACTOR ////////////////////////
+///////////////////////////////////////
+
+actor StrAlarmSounder replaces AlarmSounder 21235
+{
+//$Category Stronghold
+	RenderStyle none
+	-SOLID
+	-SHOOTABLE
+	+NOBLOCKMAP
+	+FRIENDLY
+    +NOTAUTOAIMED
+
+	states
+	{
+	Spawn:
+		TNT1 A 1 A_LookEx(LOF_NOSOUNDCHECK,0,192,0,360,"See")
+		Loop
+	See:
+		TNT1 A 0 A_SpawnItemEx("AlarmSounding",0,0,0,0,0,0,0,32)
+		TNT1 A 56 A_SpawnItemEx("AlarmSoundingAnnouncer",0,0,0,0,0,0,0,32) // the 56 is the delay
+		goto spawn
+	}
+}
+
+actor AlarmSounding
+{
+	-SOLID
+	-SHOOTABLE
+	+NOBLOCKMAP
+	+CLIENTSIDEONLY
+
+	States
+	{
+	Spawn:
+		TNT1 A 0
+	ScrewYouImMakingNoise: //Intentional Fallthrough
+		TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrSilentAlarmCVarChecker") == 1, "AlrightImShuttingUp")
+		TNT1 A 0 A_JumpIf(ACS_NamedExecuteWithResult("StrSilentAlarmCVarChecker") >= 3, "AlrightImShuttingUp")
+		TNT1 A 0 A_PlaySoundEx("alarm/sounding", "Auto", 0, 1)
+	AlrightImShuttingUp: // Another intentional fallthrough.
+		TNT1 A 1
+		stop
+	}
+}
+
+actor AlarmSoundingAnnouncer : AlarmSounding
+{
+	-CLIENTSIDEONLY // Turns out it results in garbage data somehow.
+
+	States
+	{
+	Spawn:
+		TNT1 A 0
+	ScrewYouImMakingNoise:
+	AlrightImShuttingUp:
+		TNT1 A 1 ACS_NamedExecute("StrAnnouncerDeadlineSoundPlayer")
+		stop
 	}
 }

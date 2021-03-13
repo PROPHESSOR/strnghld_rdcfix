@@ -1,319 +1,411 @@
+skill baby
+{
+	AutoUseHealth
+	AmmoFactor = 2
+	DamageFactor = 0.5
+	EasyBossBrain
+	SpawnFilter = Baby
+	PicName = "M_JKILL"
+	Name = "$SKILL_BABY"
+	Key = "i"
+	ACSReturn = 0
+}
+
+skill easy
+{
+	EasyBossBrain
+	SpawnFilter = Easy
+	PicName = "M_ROUGH"
+	Name = "$SKILL_EASY"
+	Key = "h"
+	ACSReturn = 1
+}
+
+skill normal
+{
+	SpawnFilter = Normal
+	PicName = "M_HURT"
+	Key = "h"
+	Name = "$SKILL_NORMAL"
+	ACSReturn = 2
+}
+
+skill hard
+{
+	SpawnFilter = Hard
+	PicName = "M_ULTRA"
+	Name = "$SKILL_HARD"
+	Key = "u"
+	ACSReturn = 3
+}
+
+skill nightmare
+{
+	AmmoFactor = 2
+	FastMonsters
+	DisableCheats
+	//RespawnTime = 12
+	SpawnFilter = Nightmare
+	PicName = "M_NMARE"
+	Name = "$SKILL_NIGHTMARE"
+	MustConfirm
+	Key = "n"
+	ACSReturn = 4
+}
+
 clearepisodes
 episode "STR01"
 {
-	name = "Stronghold"
+	name = "$STR_EPISODE"
 }
 
 defaultmap
 {
-	nointermission 
-	keepfullinventory 
-	allowrespawn 
-	noinfighting 
+	nointermission
+	keepfullinventory
+	allowrespawn
+	noinfighting
 	next = MAP99
 	secretnext = MAP99
 }
 
-map STR01 "Introduction"
+map STR01 lookup "STR_MAP_STR01"
 {
 	levelnum = 1
 	sky1 = BROM, 0.0
-	music = "TBM_ERIN"
+	music = "D_STR01"
 }
 
-map STR02 "Too Young to Defend"
+map STR02 lookup "STR_MAP_STR02"
 {
 	levelnum = 2
 	sky1 = BROM, 0.0
-	music = "LAM_LOST"
+	music = "D_STR02"
 }
 
-map STR03 "Swamp"
+map STR03 lookup "STR_MAP_STR03"
 {
 	levelnum = 3
 	sky1 = SWAMP, 0.0
-	music = "TBM_CERB"
+	music = "D_STR03"
 }
 
-map STR04 "Asteroid"
+map STR04 lookup "STR_MAP_STR04"
 {
 	levelnum = 4
 	sky1 = FORGE, 0.20
 	skyrotate = 0.6, 0.4, 0.3
-	music = "LAM_TORM"
+	music = "D_STR04"
 }
 
-map STR05 "Twilight"
+map STR05 lookup "STR_MAP_STR05"
 {
 	levelnum = 5
 	sky1 = CRIM, 0.0
-	music = "TBM_CHAR"
+	music = "D_STR05"
 }
 
-map STR06 "Downtown"
+map STR06 lookup "STR_MAP_STR06"
 {
 	levelnum = 6
 	sky1 = ABRA, 0.0
-	music = "SG_ART"
+	music = "D_STR06"
 }
 
-map STR07 "Sandstorm"
+map STR07 lookup "STR_MAP_STR07"
 {
 	levelnum = 7
 	sky1 = NULL, 0.0
-	music = "TBM_OCEA"
+	music = "D_STR07"
 }
 
-map STR08 "Tropical Paradox"
+map STR08 lookup "STR_MAP_STR08"
 {
 	levelnum = 8
 	sky1 = GORGE, 0
-	music = "LAM_BLOO"
+	music = "D_STR08"
 }
 
-map STR09 "Volcanic Installation"
+map STR09 lookup "STR_MAP_STR09"
 {
 	levelnum = 9
-	sky1 = SPACE, 1.0
-	music = "TBM_TART"
+	sky1 = HERES, 0.0
+	music = "D_STR09"
 }
 
-map STR10 "Skyfire Research"
+map STR10 lookup "STR_MAP_STR10"
 {
 	levelnum = 10
 	sky1 = CYCLO, 0.0
-	music = "TBM_EURD"
+	music = "D_STR10"
 }
 
-map STR11 "Tunnel"
+map STR11 lookup "STR_MAP_STR11"
 {
 	levelnum = 11
 	sky1 = SORB, 0.0
-	music = "SG_TMJ"
+	music = "D_STR11"
 }
 
-map STR12 "Dangoo Desert"
+map STR12 lookup "STR_MAP_STR12"
 {
 	levelnum = 12
 	sky1 = SORB, 0.0
-	music = "TBM_STYX"
+	music = "D_STR12"
 }
 
-map STR13 "Inferno"
+map STR13 lookup "STR_MAP_STR13"
 {
 	fade = "33 11 00"
 	levelnum = 13
 	sky1 = FORGE, 0.5
-	music = "LAX_WOLF"
+	music = "D_STR13"
 }
 
-map STR14 "Orbit"
+map STR14 lookup "STR_MAP_STR14"
 {
 	levelnum = 14
 	sky1 = ORBIT, 0.6
-	music = "LAM_LOST"
+	music = "D_STR14"
 }
 
-map STR15 "Armageddon"
+map STR15 lookup "STR_MAP_STR15"
 {
 	levelnum = 15
 	sky1 = STYX, 0.0
-	music = "TBM_ERIN"
+	music = "D_STR15"
 }
 
-map STR16 "Frozen"
+map STR16 lookup "STR_MAP_STR16"
 {
 	levelnum = 16
 	sky1 = FROZ, 0.0
-	music = "SG_PRT"
+	music = "D_STR16"
 }
 
-map STR17 "Slaughtered"
+map STR17 lookup "STR_MAP_STR17"
 {
 	levelnum = 17
 	sky1 = SWAMP, 0.0
-	music = "TBM_EURD"
+	music = "D_STR17"
 }
 
-map STR18 "Smoldering Caves"
+map STR18 lookup "STR_MAP_STR18"
 {
 	levelnum = 18
 	sky1 = MID, 0.0
-	music = "LAM_LOST"
+	music = "D_STR18"
 }
 
-map STR19 "Tarstone Fortress"
+map STR19 lookup "STR_MAP_STR19"
 {
 	levelnum = 19
 	sky1 = STYX, 0.0
-	music = "LAX_HERE"
+	music = "D_STR19"
 }
 
-map STR20 "Dust"
+map STR20 lookup "STR_MAP_STR20"
 {
 	levelnum = 20
-	music = "LAM_FINA"
-	sky1 = CRIM, 0.0
+	music = "D_STR20"
+	sky1 = HELL, 0.0
 }
 
-map STR21 "Overmind"
+map STR21 lookup "STR_MAP_STR21"
 {
 	levelnum = 21
-	sky1 = CRIM, 0.0
-	music = "SG_FMJ"
+	sky1 = MID, 0.0
+	music = "D_STR21"
 }
 
-map STR22 "Locus of Pestilence"
+map STR22 lookup "STR_MAP_STR22"
 {
 	levelnum = 22
 	sky1 = BLOOD, 0.0
-	music = "LAM_BLOO"
+	music = "D_STR22"
 }
 
-map STR23 "Bipolar Bunker"
+map STR23 lookup "STR_MAP_STR23"
 {
 	levelnum = 23
-	sky1 = CYCLO, 0.0
-	music = "TBM_TART"
+	sky1 = CHLOR, 0.0
+	music = "D_STR23"
 }
 
-map STR24 "Aurora Emitter"
+map STR24 lookup "STR_MAP_STR24"
 {
 	levelnum = 24
 	sky1 = MID, 0.0
-	music = "TBM_EURD"
+	music = "D_STR24"
 }
 
-map STR25 "Eye of the Storm"
+map STR25 lookup "STR_MAP_STR25"
 {
 	levelnum = 25
 	sky1 = BROMX, 0.0
-	music = "TBM_ORPH"
+	music = "D_STR25"
 }
 
-map STR26 "Deepspace 12"
+map STR26 lookup "STR_MAP_STR26"
 {
 	levelnum = 26
 	sky1 = SPACE, 0.1
-	music = "SG_FMJ"
+	music = "D_STR26"
 }
 
-map STR27 "Cyclone"
+map STR27 lookup "STR_MAP_STR27"
 {
 	levelnum = 27
 	sky1 = MID, 0.0
-	music = "TBM_STYX"
-	evenlighting 
+	music = "D_STR27"
+	evenlighting
 }
 
-map STR28 "Terrorforming"
+map STR28 lookup "STR_MAP_STR28"
 {
 	levelnum = 28
 	sky1 = SORB, 0.0
-	music = "LAM_TORM"
+	music = "D_STR28"
 	fogdensity = 70
 }
 
-map STR29 "Emerald Skies"
+map STR29 lookup "STR_MAP_STR29"
 {
 	levelnum = 29
-	sky1 = ORBIT, 0.0
-	music = "TBM_TART"
+	sky1 = JAIL, 0.0
+	music = "D_STR29"
 }
 
-map STR30 "Convulsion Of Nature"
+map STR30 lookup "STR_MAP_STR30"
 {
 	levelnum = 30
 	sky1 = SPACE, 0.8
 	skyrotate = 0.6, 0.4, 0.3
-	sky2 = ABRA, 0.0
+	sky2 = ABRA, 0.1
 	//skyrotate2 = 0.0, 0.0, 0.0
-	music = "LAX_HERE"
+	music = "D_STR30"
 }
 
-map STR31 "Black Gold"
+map STR31 lookup "STR_MAP_STR31"
 {
 	levelnum = 31
 	sky1 = NULL, 0.0
-	music = "TBM_OCEA"
+	music = "D_STR31"
 }
 
-map STR32 "Snake Corridors"
+map STR32 lookup "STR_MAP_STR32"
 {
 	levelnum = 32
-	sky1 = ABRA, 0.0
-	music = "TBM_EURD"
+	sky1 = CRIM, 0.0
+	music = "D_STR32"
 }
 
-map STR33 "Antlion Nebula"
+map STR33 lookup "STR_MAP_STR33"
 {
 	levelnum = 33
 	sky1 = ABRA, 0.0
-	music = "SG_ART"
+	music = "D_STR33"
 }
 
-map STR34 "Three Ways to Die"
+map STR34 lookup "STR_MAP_STR34"
 {
 	levelnum = 34
 	sky1 = BLOOD, 0.0
-	music = "TBM_OCEA"
+	music = "D_STR34"
 }
 
-map STR35 "The Final Stand"
+map STR35 lookup "STR_MAP_STR35"
 {
 	levelnum = 35
 	sky1 = BROMX, 0.0
-	music = "MR_FINAL"
+	music = "D_STR35"
 	next = CREDMAP
 	secretnext = MAP99
 }
-
-map CREDMAP "End & Credits"
+/////////////////// FAMILIAR MAPS ///////////////////
+map STR40 lookup "STR_MAP_STR40"
 {
-	evenlighting 
-	music = "CM_MUS2"
-	next = CREDMAP
+	levelnum = 40
+	sky1 = CRIM, 0.0
+	music = "D_STR40"
+}
+
+map STR41 lookup "STR_MAP_STR41"
+{
+	levelnum = 41
+	sky1 = NULL, 0.0
+	music = "D_STR41"
+}
+
+map STR42 lookup "STR_MAP_STR42"
+{
+	levelnum = 42
+	sky1 = CRIM, 0.0
+	music = "D_STR42"
+}
+
+map STR43 lookup "STR_MAP_STR43"
+{
+	levelnum = 43
+	sky1 = SWAMP, 0.0
+	music = "D_STR43"
+}
+
+map STR44 lookup "STR_MAP_STR44"
+{
+	levelnum = 44
+	sky1 = SPACE, 0.8
+	skyrotate = 0.6, 0.4, 0.3
+	sky2 = ABRA, 0.1
+	//skyrotate2 = 0.0, 0.0, 0.0
+	music = "D_STR44"
 }
 /////////////////// SECRET MAPS ///////////////////
-map STR50 "Duke it out"
+map STR50 lookup "STR_MAP_STR50"
 {
 	levelnum = 50
 	sky1 = DUKESKY, 0.0
-	music = "DN_STALK"
+	music = "D_STR50"
 }
 
-map STR52 "City of Silence - Apocalypse"
+map STR52 lookup "STR_MAP_STR52"
 {
 	levelnum = 52
 	sky1 = RSKY1, 0.0
-	music = "SH_SIL"
+	music = "D_STR52"
 }
 
-map STR54 "Fortress of Damnation"
+map STR54 lookup "STR_MAP_STR54"
 {
 	levelnum = 54
 	sky1 = RSKY1, 0.0
-	music = "TBM_CERB"
+	music = "D_STR54"
 }
 
-map STR56 "Phobos Anomaly"
+map STR56 lookup "STR_MAP_STR56"
 {
 	levelnum = 56
-	sky1 = SPACE, 0.1
-	music = "SG_ART"
+	sky1 = PHOBOS, 0.1
+	music = "D_STR56"
 }
 //////////////// INTERMAP ////////////////
-map MAP99 "Intermission"
+map MAP99 lookup "STR_MAP_MAP99"
 {
 	levelnum = 999
 	sky1 = BROM, 0.0
-	music = "D_INT"
+	music = "D_STRINT"
 }
 //////////////// TITLEMAP ////////////////
-map TITLEMAP "Titlemap"
+map TITLEMAP lookup "STR_MAP_TITLEMAP"
 {
-	music = "TBM_OCEA"
+	music = "D_STRTTL"
 	evenlighting 
 	next = TITLEMAP
 }
-
+//////////////// CREDMAP ////////////////
+map CREDMAP lookup "STR_MAP_CREDMAP"
+{
+	evenlighting 
+	music = "D_STRCR1"
+	next = MAP99
+}

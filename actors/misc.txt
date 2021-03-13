@@ -1,0 +1,40 @@
+actor StrVictoryInvulnerability : InvulnerabilitySphere
+{
+    Powerup.Color "00 00 00", 0.0 // None
+    Powerup.Duration 0x7FFFFFFF // last until the level change triggers
+    -COUNTITEM
+}
+
+actor StrExplosionHazard
+{
+    Radius 11
+    Height 8
+    Speed 20
+    Damage (0)
+    Projectile
+    +RANDOMIZE
+    DeathSound "weapons/rocklx"
+    DamageType "Rocket"
+    +DONTSPLASH
+    +DONTREFLECT
+    +DONTBLAST
+    +NOTIMEFREEZE
+    +NOTRIGGER
+    States
+    {
+      Spawn:
+        TNT1 A 1
+        loop
+
+      Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_SetTranslucent(0.67,1)
+        TNT1 A 0 A_Explode
+        MISL B 8 bright A_ChangeFlag("NOTIMEFREEZE",0)
+        MISL C 6 bright
+        MISL D 4 bright
+        stop
+    }
+}
+
+actor StrCometLarge_Enhanced : CometLarge_Enhanced replaces CometLarge_Enhanced { DamageType "Fire" }

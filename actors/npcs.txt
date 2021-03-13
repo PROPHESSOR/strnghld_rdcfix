@@ -9,6 +9,7 @@ actor StatistMarine1 : Zombieman 25101
   MaxStepHeight 16
   MaxDropoffHeight 32
   MONSTER
+  Tag "$STR_MONSTERTAG_STATISTMARINE"
   +FLOORCLIP
   +FRIENDLY
   -SHOOTABLE
@@ -40,6 +41,7 @@ actor StatistMarine2 : StatistMarine1 25102
 actor StatistScientist : StatistMarine1 25103
 {
 //$Category Stronghold_StatistNPCs
+  Tag "$STR_MONSTERTAG_STATISTSCIENTIST"
   states
   {
   Spawn:
@@ -54,6 +56,7 @@ actor StatistScientist : StatistMarine1 25103
 actor StatistArmorer : StatistMarine1 25104
 {
 //$Category Stronghold_StatistNPCs
+  Tag "$STR_MONSTERTAG_STATISTARMORER"
   states
   {
   Spawn:
@@ -69,6 +72,7 @@ actor StatistArmorer : StatistMarine1 25104
 actor StatistSellerr : StatistMarine1 25105
 {
 //$Category Stronghold_StatistNPCs
+  Tag "$STR_MONSTERTAG_STATISTSELLER"
   states
   {
   Spawn:
@@ -145,6 +149,7 @@ actor LtRandyHeit : StatistMarine1 28001
 //$Category Stronghold_StatistNPCs
     ConversationID 1 //this value will be referenced from in the dialog editor.
     Translation 2
+    Tag "$STR_MONSTERTAG_LTRANDYHEIT"
 }
 
 actor SgtMNiggel : StatistMarine2 28002
@@ -152,6 +157,7 @@ actor SgtMNiggel : StatistMarine2 28002
 //$Category Stronghold_StatistNPCs
     ConversationID 2
     Translation 2
+    Tag "$STR_MONSTERTAG_SGTMNIGGEL"
 }
 
 actor ProfDrOelckers : StatistScientist 28003
@@ -159,6 +165,7 @@ actor ProfDrOelckers : StatistScientist 28003
 //$Category Stronghold_StatistNPCs
     ConversationID 3
     Translation 2
+    Tag "$STR_MONSTERTAG_PROFDROELCKERS"
 }
 
 actor SgtRowand : StatistMarine1 28004
@@ -166,6 +173,7 @@ actor SgtRowand : StatistMarine1 28004
 //$Category Stronghold_StatistNPCs
     ConversationID 4
     Translation 0
+    Tag "$STR_MONSTERTAG_SGTROWAND"
 }
 
 actor LTToenail : StatistMarine2 28005
@@ -173,6 +181,7 @@ actor LTToenail : StatistMarine2 28005
 //$Category Stronghold_StatistNPCs
     ConversationID 5
     Translation 0
+    Tag "$STR_MONSTERTAG_LTTOENAIL"
 }
 
 actor ProfICTux : StatistScientist 28006
@@ -180,6 +189,7 @@ actor ProfICTux : StatistScientist 28006
 //$Category Stronghold_StatistNPCs
     ConversationID 6
     Translation 0
+    Tag "$STR_MONSTERTAG_PROFICTUX"
 }
 
 actor MajorBjoernV : StatistMarine1 28007
@@ -188,6 +198,7 @@ actor MajorBjoernV : StatistMarine1 28007
     ConversationID 7
     Translation 2
     speed 0
+    Tag "$STR_MONSTERTAG_MAJORBJOERNV"
     states
     {
     Spawn:
@@ -204,6 +215,7 @@ actor ProfMikeCutman : StatistScientist 28008
 //$Category Stronghold_StatistNPCs
     ConversationID 8
     Translation 0
+    Tag "$STR_MONSTERTAG_PROFMIKECUTMAN"
 }
 
 actor SgtJPaddock : StatistMarine5 28009
@@ -211,6 +223,7 @@ actor SgtJPaddock : StatistMarine5 28009
 //$Category Stronghold_StatistNPCs
     ConversationID 9
     Translation 1
+    Tag "$STR_MONSTERTAG_SGTJPADDOCK"
 }
 
 actor CmdNickBaker : StatistMarine7 28010
@@ -218,6 +231,7 @@ actor CmdNickBaker : StatistMarine7 28010
 //$Category Stronghold_StatistNPCs
     ConversationID 10
     Translation 2
+    Tag "$STR_MONSTERTAG_CMDNICKBAKER"
 }
 
 actor ProfDArchon : StatistScientist 28011
@@ -225,6 +239,7 @@ actor ProfDArchon : StatistScientist 28011
 //$Category Stronghold_StatistNPCs
     ConversationID 11
     Translation 0
+    Tag "$STR_MONSTERTAG_PROFDARCHON"
 }
 
 actor ColLWMouse : StatistFemaleMarine 28012
@@ -232,6 +247,7 @@ actor ColLWMouse : StatistFemaleMarine 28012
 //$Category Stronghold_StatistNPCs
     ConversationID 12
     Translation 1
+    Tag "$STR_MONSTERTAG_COLLWMOUSE"
 }
 
 actor LtWWeasel : StatistMarine6 28013
@@ -239,6 +255,7 @@ actor LtWWeasel : StatistMarine6 28013
 //$Category Stronghold_StatistNPCs
     ConversationID 13
     Translation 2
+    Tag "$STR_MONSTERTAG_LTWWEASEL"
 }
 
 actor LtSPriestess : StatistFemaleMarine 28014
@@ -246,12 +263,14 @@ actor LtSPriestess : StatistFemaleMarine 28014
 //$Category Stronghold_StatistNPCs
     ConversationID 14
     Translation 0
+    Tag "$STR_MONSTERTAG_LTSPRIESTESS"
 }
 
 actor Leonidas : StatistMarine2 28015
 {
 //$Category Stronghold_StatistNPCs
     ConversationID 15
+    Tag "$STR_MONSTERTAG_LEONIDAS"
     states
     {
     Spawn:
@@ -268,6 +287,7 @@ actor DrDentz : StatistScientist 28016
 //$Category Stronghold_StatistNPCs
     ConversationID 16
     Translation 1
+    Tag "$STR_MONSTERTAG_DRDENTZ"
 }
 
 actor BlastHardcheese : StatistMarine7 28017
@@ -275,6 +295,7 @@ actor BlastHardcheese : StatistMarine7 28017
 //$Category Stronghold_StatistNPCs
     ConversationID 17
     Translation 2
+    Tag "$STR_MONSTERTAG_BLASTHARDCHEESE"
 }
 
 actor GregTGreat : StatistMarine5 28018
@@ -282,6 +303,7 @@ actor GregTGreat : StatistMarine5 28018
 //$Category Stronghold_StatistNPCs
     ConversationID 18
     Translation 1
+    Tag "$STR_MONSTERTAG_GREGTGREAT"
 }
 
 actor PrivateGina : StatistFemaleMarine 28019
@@ -289,6 +311,7 @@ actor PrivateGina : StatistFemaleMarine 28019
 //$Category Stronghold_StatistNPCs
     ConversationID 19
     Translation 2
+    Tag "$STR_MONSTERTAG_PRIVATEGINA"
 }
 
 actor ProfDrPegCOp : StatistScientist 28020
@@ -296,11 +319,13 @@ actor ProfDrPegCOp : StatistScientist 28020
 //$Category Stronghold_StatistNPCs
     ConversationID 20
     Translation 0
+    Tag "$STR_MONSTERTAG_PROFDRPEGCOP"
 }
 
 actor FemaleScientist : StatistMarine1 28021
 {
 //$Category Stronghold_StatistNPCs
+  Tag "$STR_MONSTERTAG_STATISTSCIENTIST"
   states
   {
   Spawn:
@@ -316,6 +341,7 @@ actor ProfGDragon : FemaleScientist 28022
 {
 //$Category Stronghold_StatistNPCs
     ConversationID 21
+    Tag "$STR_MONSTERTAG_PROFGDRAGON"
 }
 
 actor McKenzie : StatistMarine6 28023
@@ -323,6 +349,7 @@ actor McKenzie : StatistMarine6 28023
 //$Category Stronghold_StatistNPCs
     ConversationID 22
     Translation 1
+    Tag "$STR_MONSTERTAG_MCKENZIE"
 }
 
 actor Reinhardt : StatistMarine5 28024
@@ -330,6 +357,7 @@ actor Reinhardt : StatistMarine5 28024
 //$Category Stronghold_StatistNPCs
     ConversationID 23
     Translation 0
+    Tag "$STR_MONSTERTAG_REINHARDT"
 }
 
 actor Thatcher : StatistMarine2 28025
@@ -337,6 +365,7 @@ actor Thatcher : StatistMarine2 28025
 //$Category Stronghold_StatistNPCs
     ConversationID 24
     Translation 1
+    Tag "$STR_MONSTERTAG_THATCHER"
 }
 
 actor Demonslayer : StatistMarine7 28026
@@ -344,6 +373,7 @@ actor Demonslayer : StatistMarine7 28026
 //$Category Stronghold_StatistNPCs
     ConversationID 25
     Translation 2
+    Tag "$STR_MONSTERTAG_DEMONSLAYER"
 }
 
 actor Shoemaker : StatistMarine2 28027
@@ -351,6 +381,7 @@ actor Shoemaker : StatistMarine2 28027
 //$Category Stronghold_StatistNPCs
     ConversationID 26
     Translation 0
+    Tag "$STR_MONSTERTAG_SHOEMAKER"
 }
 
 actor LtCarmack : StatistMarine1 28028
@@ -358,6 +389,7 @@ actor LtCarmack : StatistMarine1 28028
 //$Category Stronghold_StatistNPCs
     ConversationID 27
     speed 0
+    Tag "$STR_MONSTERTAG_LTCARMACK"
     states
     {
     Spawn:
@@ -371,6 +403,7 @@ actor Starscream : StatistMarine7 28029
 //$Category Stronghold_StatistNPCs
     ConversationID 28
     Translation 2
+    Tag "$STR_MONSTERTAG_STARSCREAM"
 }
 
 actor SgtMOrpheus : StatistMarine7 28030
@@ -378,15 +411,48 @@ actor SgtMOrpheus : StatistMarine7 28030
 //$Category Stronghold_StatistNPCs
     ConversationID 29
     Translation 1
+    Tag "$STR_MONSTERTAG_SGTMORPHEUS"
 }
 
 actor DrAeonD : StatistMarine1 //No doomednum necessary.
 {
     ConversationID 30
+    Tag "$STR_MONSTERTAG_DRAEOND"
 	states
     {
     Spawn:
      LANN A 1 
      loop
+    }
+}
+
+actor StrMetCaptEspio : Inventory { Inventory.MaxAmount 1 +UNDROPPABLE -INVBAR }
+
+actor StrCaptEspio : StatistMarine1 28031
+{
+    //ConversationID 7
+    Speed 0
+    Tag "$STR_MONSTERTAG_CAPTESPIO"
+    States
+    {
+      Spawn:
+        LEDR ABAC 50
+        loop
+    }
+}
+
+actor StrMetLtTVappy : Inventory { Inventory.MaxAmount 1 +UNDROPPABLE -INVBAR }
+
+actor StrLtTVappy : StatistMarine1 28032
+{
+    //ConversationID 7
+    Translation "112:127=208:223"
+    Speed 0
+    Tag "$STR_MONSTERTAG_LTTVAPPY"
+    States
+    {
+      Spawn:
+        PLAY A -1
+        stop
     }
 }

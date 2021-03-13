@@ -1,0 +1,469 @@
+[en enu default]
+
+// Items
+
+STR_GOTCOIN = "Picked up a coin.";
+STR_GOTYELLOWARMOR = "Picked up the yellow armor.";
+STR_GOTREDARMOR = "Picked up the red armor!";
+STR_GOTSUPERSHIELD = "Picked up the super shield!";
+STR_GOTMAXARMORBONUS = "Picked up a max. armor bonus.";
+STR_GOTMAXHEALTHBONUS = "Picked up a max. health bonus.";
+
+// Item tags
+
+STR_ITEMTAG_COIN = "Credits";
+
+// Weapons
+
+STR_GOTAUTOSHOTGUN = "You got the automatic shotgun!";
+STR_GOTLANDMINELAYER = "You got some land mines!";
+STR_GOTHRL = "You got the homing rocket launcher!";
+STR_GOTRAILGUN = "You got the railgun!";
+STR_GOTSTUNNERRIFLE = "You got the stunner rifle!";
+STR_GOTPYROCANNON = "You got the pyro cannon prototype!";
+STR_GOTFLAMER = "You got the flamethrower! Time for a BBQ!";
+STR_GOTDEVASTATOR = "You got the devastator! Hell yeah!";
+STR_GOTREPEATER = "You got the plasma repeater!";
+
+// Weapon tags
+
+STR_WEAPONTAG_AUTOSHOTGUN = "Auto Shotgun";
+STR_WEAPONTAG_LANDMINELAYER = "Land Mines";
+STR_WEAPONTAG_HRL = "Homing Rocket Launcher";
+STR_WEAPONTAG_RAILGUN = "Railgun";
+STR_WEAPONTAG_STUNNERRIFLE = "Stunner Rifle";
+STR_WEAPONTAG_PYROCANNON = "Pyro Cannon";
+STR_WEAPONTAG_FLAMER = "Flamethrower";
+STR_WEAPONTAG_DEVASTATOR = "Devastator";
+STR_WEAPONTAG_REPEATER = "Plasma Repeater";
+STR_WEAPONTAG_TERMINATORWEAPON = "Terminator Arsenal";
+STR_WEAPONTAG_BRUISERWEAPON = "Bruiser Attacks";
+STR_WEAPONTAG_VOTINGDEVICE = "Voting Device";
+
+// Ammo
+
+GOTSHELLS = "Picked up some shotgun shells.";
+STR_GOTMINES = "Picked up some additional land mines.";
+STR_GOTGAS = "Picked up a gas canister.";
+STR_GOTFUEL = "Picked up a gas pack.";
+
+// Ammo tags
+
+STR_AMMOTAG_MINES = "Land Mines";
+STR_AMMOTAG_GAS = "Gas";
+
+// Powerups
+
+GOTMAP = "Computer Area Map and Scanner!";
+STR_GOTMARINE = "Picked up some marine reinforcements.";
+STR_GOTSENTRY = "Picked up a deployable sentry turret.";
+STR_GOTBARREL = "Picked up a portable barrel.";
+STR_GOTLIFE = "Picked up an extra life!";
+STR_GOTSUPERMEDKIT = "Picked up a portable super medikit.";
+STR_GOTMEDKIT = "Picked up a portable medikit.";
+STR_GOTTIMEFREEZER = "Picked up a time freeze sphere.";
+STR_GOTTIMEFREEZERPOWERUP = "Time freeze!";
+STR_GOTQUADDAMAGE = "Picked up a quad damage sphere.";
+STR_GOTQUADDAMAGEPOWERUP = "Doomsphere!";
+STR_GOTINVULNERABILITY = "Picked up an invulnerability sphere.";
+STR_GOTREGENERATION = "Picked up a regeneration sphere.";
+STR_GOTWALL = "Picked up a barrier kit.";
+STR_GOTRANDOMWEAPON = "Picked up a random weapon sphere.";
+STR_GOTAUTODRONE = "Picked up an autodrone.";
+STR_GOTSMARTBOMB = "Picked up the smart bomb!";
+STR_GOTDRAIN = "Picked up a vampirism sphere.";
+STR_GOTPROTECTION = "Picked up a protection sphere.";
+STR_GOTMORPHPLAYER = "Picked up a morph sphere.";
+STR_GOTIWINBUTTON = "You got the I Win button. Yay!";
+STR_GOTWEAPONPOWER = "Picked up a weapon powerup kit.";
+STR_GOTSUPERSENTRY = "Picked up a deployable super sentry turret.";
+STR_GOTSUPERMARINE = "Picked up some elite marine reinforcements.";
+
+// Powerup tags
+
+STR_POWERUPTAG_MARINE = "Marine Reinforcements";
+STR_POWERUPTAG_SENTRY = "Sentry Turret";
+STR_POWERUPTAG_BARREL = "Barrel";
+STR_POWERUPTAG_LIFE = "Lives (Multiplayer Use Only)";
+STR_POWERUPTAG_SUPERMEDKIT = "Portable Super Medikit";
+STR_POWERUPTAG_MEDKIT = "Portable Medikit";
+STR_POWERUPTAG_TIMEFREEZER = "Time Freeze";
+STR_POWERUPTAG_QUADDAMAGE = "Quad Damage";
+STR_POWERUPTAG_INVULNERABILITY = "Invulnerability";
+STR_POWERUPTAG_REGENERATION = "Regeneration";
+STR_POWERUPTAG_WALL = "Barrier Kit";
+STR_POWERUPTAG_RANDOMWEAPON = "Random Weapon";
+STR_POWERUPTAG_AUTODRONE = "Autodrone";
+STR_POWERUPTAG_SMARTBOMB = "Smart Bomb";
+STR_POWERUPTAG_DRAIN = "Vampirism";
+STR_POWERUPTAG_PROTECTION = "Protection";
+STR_POWERUPTAG_MORPHPLAYER = "Morpher";
+STR_POWERUPTAG_IWINBUTTON = "I Win Button";
+STR_POWERUPTAG_WEAPONPOWER = "Weapon Powerup Kit";
+STR_POWERUPTAG_SUPERSENTRY = "Super Sentry Turret";
+STR_POWERUPTAG_SUPERMARINE = "Elite Marine Reinforcements";
+
+// Keys
+
+STR_GOTREDCARDDN = "Picked up a red keycard.";
+STR_GOTACCESSDISCBLUE = "Picked up a blue access disk.";
+STR_GOTACCESSDISCGREEN = "Picked up a green access disk.";
+STR_GOTYELLOWCARDFAMILIARMAPS = "Picked up a yellow keycard.";
+
+// Key tags
+
+STR_KEYTAG_REDCARDDN = "Red Keycard\c-"; // the \c- hack is there to ensure the sv_sharekeys pickup message is formatted properly
+STR_KEYTAG_ACCESSDISCBLUE = "Blue Access Disk\c-";
+STR_KEYTAG_ACCESSDISCGREEN = "Green Access Disk\c-";
+STR_KEYTAG_YELLOWCARDFAMILIARMAPS = "Yellow Keycard\c-";
+
+// Locks
+
+STR_REDCARDDNLOCK = "You need a red card to open this door";
+STR_REDCARDDNLOCKREMOTE = "You need a red card to activate this object";
+STR_ACCESSDISCBLUELOCK = "Blue access disk required.";
+STR_ACCESSDISCBLUELOCKREMOTE = "Blue access disk required.";
+STR_ACCESSDISCGREENLOCK = "Green access disk required.";
+STR_ACCESSDISCGREENLOCKREMOTE = "Green access disk required.";
+STR_YELLOWCARDFAMILIARMAPSLOCK = "You need a yellow card to open this door";
+STR_YELLOWCARDFAMILIARMAPSLOCKREMOTE = "You need a yellow card to activate this object";
+
+// Monster tags
+
+FN_ZOMBIE = "Former Human";
+FN_SHOTGUN = "Former Human Sergeant";
+FN_HEAVY = "Former Human Commando";
+FN_IMP = "Imp";
+FN_DEMON = "Bull Demon";
+FN_SPECTRE = "Spectre";
+FN_LOST = "Lost Soul";
+FN_CACO = "Cacodemon";
+FN_HELL = "Hell Knight";
+FN_BARON = "Baron of Hell";
+FN_ARACH = "Arachnotron";
+FN_PAIN = "Pain Elemental";
+FN_REVEN = "Revenant";
+FN_MANCU = "Mancubus";
+FN_ARCH = "Arch-Vile";
+FN_SPIDER = "Spider Mastermind";
+FN_CYBER = "Cyberdemon";
+FN_WOLFSS = "Nazi";
+FN_DOG = "Dog";
+FN_BARREL = "Explosive Barrel"; // internal tag name likely subject to change
+STR_MONSTERTAG_ARCHONOFHELL = "Archon of Hell";
+STR_MONSTERTAG_AZAZEL = "Azazel";
+STR_MONSTERTAG_SATYR = "Satyr";
+STR_MONSTERTAG_STBOSS = "Mephistopheles";
+STR_MONSTERTAG_STBOSSATTACK4 = "Skull";
+STR_MONSTERTAG_STBOSSSKELETON = "Skeleton";
+STR_MONSTERTAG_STBOSSSKELETON2 = "Skeleton";
+STR_MONSTERTAG_SPIRITKNIGHT = "Spirit Knight";
+STR_MONSTERTAG_SPIRITBOSS = "Mephistopheles' Spirit";
+STR_MONSTERTAG_CYBERDEMONMK2 = "Cyberdemon Mk. II";
+STR_MONSTERTAG_MINICYBER = "Mini Cyberdemon";
+STR_MONSTERTAG_CHAOSCYBER = "Chaos Cyberdemon";
+STR_MONSTERTAG_BLOODDEMON = "Blood Demon";
+STR_MONSTERTAG_BRUISERDEMON = "Bruiser Demon";
+STR_MONSTERTAG_CATHARSI = "Catharsi";
+STR_MONSTERTAG_CATHARSIDETONATOR = "Catharsi Detonator";
+STR_MONSTERTAG_CYBRUISER = "Cybruiser";
+STR_MONSTERTAG_DEMOLISHER = "Spider Demolisher";
+STR_MONSTERTAG_DIABLOIST = "Diabolist";
+STR_MONSTERTAG_DUNEWARRIOR = "Dune Warrior";
+STR_MONSTERTAG_ENHANCEDCACO = "Enhanced Cacodemon";
+STR_MONSTERTAG_FUSIONSPIDER = "Fusion Cannon Arachnotron";
+STR_MONSTERTAG_GUARDIAN = "Guardian Cube";
+STR_MONSTERTAG_HECTEBUS = "Hectebus";
+STR_MONSTERTAG_HELEMENTAL = "Hades Elemental";
+STR_MONSTERTAG_HS = "Hades Sphere";
+STR_MONSTERTAG_HELLION = "Hellion";
+STR_MONSTERTAG_HELLWARRIOR = "Hell Warrior";
+STR_MONSTERTAG_INFERNODEMON = "Inferno Demon";
+STR_MONSTERTAG_MOLOCH = "Moloch";
+STR_MONSTERTAG_NIGHTMAREDEMON = "Nightmare Demon";
+STR_MONSTERTAG_OVERMIND = "Overmind";
+STR_MONSTERTAG_PHASEIMP = "Phase Imp";
+STR_MONSTERTAG_PYRODEMON = "Pyro Demon";
+STR_MONSTERTAG_ROCKETGUY = "Former Human Rocketeer";
+STR_MONSTERTAG_PLASMAZOMBIE = "Former Human Plasma Gunner";
+STR_MONSTERTAG_SHADOW = "Shadow";
+STR_MONSTERTAG_SUICIDEBOMBER = "Suicide Bomber";
+STR_MONSTERTAG_TERMINATOR = "Terminator";
+STR_MONSTERTAG_WICKED = "Wicked";
+STR_MONSTERTAG_ZOMBIETANK = "Zombie Tank";
+STR_MONSTERTAG_ABADDON = "Abaddon";
+STR_MONSTERTAG_BELPHEGOR = "Belphegor";
+STR_MONSTERTAG_CACOLANTERN = "Cacolantern";
+STR_MONSTERTAG_DARKIMP = "Dark Imp";
+STR_MONSTERTAG_NIGHTMARECACO = "Nightmare Cacodemon";
+STR_MONSTERTAG_APPRENTICE = "Apprentice";
+STR_MONSTERTAG_MINISPIDER = "Mini Spider";
+STR_MONSTERTAG_LARGESPIDER = "Large Spider";
+STR_MONSTERTAG_THRALL = "Cultist";
+STR_MONSTERTAG_INCARNATE = "Death Incarnate";
+STR_MONSTERTAG_HOTDOG = "Hellhound";
+STR_MONSTERTAG_VULGAR = "Vulgar";
+STR_MONSTERTAG_ESOUL = "Ethereal Soul";
+STR_MONSTERTAG_WRAITH = "Wraith";
+STR_MONSTERTAG_CHAINGUNCULTIST = "Thompson Cultist";
+STR_MONSTERTAG_SHOTGUNCULTIST = "Shotgun Cultist";
+STR_MONSTERTAG_FATTY = "Fat Zombie";
+STR_MONSTERTAG_ZOMBIE = "Zombie";
+STR_MONSTERTAG_QUEEN = "Alien Queen";
+STR_MONSTERTAG_CYCLOID = "Cycloid Emperor";
+STR_MONSTERTAG_OVERLORD = "Overlord";
+STR_MONSTERTAG_ALIENDRONE = "Protector Drone";
+STR_MONSTERTAG_KAMIKAZESENTRY = "Sentry Drone";
+STR_MONSTERTAG_COMMANDER = "Commander";
+STR_MONSTERTAG_BATTLELORD = "Battlelord";
+STR_MONSTERTAG_SUPERBATTLELORD = "Super Battlelord";
+STR_MONSTERTAG_OCTABRAIN = "Octabrain";
+STR_MONSTERTAG_LIZARDCOMMANDO = "Enforcer";
+STR_MONSTERTAG_PIGCOP = "Pig Cop";
+STR_MONSTERTAG_DUKEFODDER = "Assault Trooper";
+STR_MONSTERTAG_TELEFODDER = "Assault Captain";
+STR_MONSTERTAG_HOLODOOMIMP = "Holographic Imp";
+STR_MONSTERTAG_HOLOZOMBIEMAN = "Holographic Former Human";
+STR_MONSTERTAG_HOLODEMON = "Holographic Bull Demon";
+STR_MONSTERTAG_MARINE = "Marine";
+STR_MONSTERTAG_SENTRY = "Sentry Turret";
+STR_MONSTERTAG_BARREL = "Explosive Barrel";
+STR_MONSTERTAG_WALL = "Barrier";
+STR_MONSTERTAG_AUTODRONE = "Autodrone";
+STR_MONSTERTAG_SUPERSENTRY = "Super Sentry Turret";
+STR_MONSTERTAG_SUPERMARINE = "Elite Marine";
+// Objectives
+STR_MONSTERTAG_GOAL = "Goal";
+STR_MONSTERTAG_GOAL_RED = "Red Goal";
+STR_MONSTERTAG_GOAL_ORANGE = "Orange Goal";
+STR_MONSTERTAG_GOAL_BLUE = "Blue Goal";
+STR_MONSTERTAG_GOAL_GREEN = "Green Goal";
+STR_MONSTERTAG_GOAL_WHITE = "White Goal";
+STR_MONSTERTAG_POWERCORE = "Power Core";
+STR_MONSTERTAG_OVERMINDCORE = "Power Core";
+STR_MONSTERTAG_BABE = "Babe";
+// MAP99
+STR_MONSTERTAG_STATISTMARINE = "Marine";
+STR_MONSTERTAG_STATISTSCIENTIST = "Scientist";
+STR_MONSTERTAG_STATISTARMORER = "Armorer";
+STR_MONSTERTAG_STATISTSELLER = "Seller";
+STR_MONSTERTAG_LTRANDYHEIT = "Lt. R. Heit";
+STR_MONSTERTAG_SGTMNIGGEL = "Sgt. M. Niggel";
+STR_MONSTERTAG_PROFDROELCKERS = "Prof. C. Oelcker";
+STR_MONSTERTAG_SGTROWAND = "Sgt. Rowand";
+STR_MONSTERTAG_LTTOENAIL = "Lt. Toenail";
+STR_MONSTERTAG_PROFICTUX = "Prof. I. C. Tux";
+STR_MONSTERTAG_MAJORBJOERNV = "Major B. Ostmann";
+STR_MONSTERTAG_PROFMIKECUTMAN = "Prof. M. Cutman";
+STR_MONSTERTAG_SGTJPADDOCK = "Sgt. J. Paddock";
+STR_MONSTERTAG_CMDNICKBAKER = "Cmd. Nick Baker";
+STR_MONSTERTAG_PROFDARCHON = "Prof. D. Archon";
+STR_MONSTERTAG_COLLWMOUSE = "Cpl. L. W. Mouse";
+STR_MONSTERTAG_LTWWEASEL = "Lt. W. Weasel";
+STR_MONSTERTAG_LTSPRIESTESS = "Lt. S. Priestess";
+STR_MONSTERTAG_LEONIDAS = "Leonidas OS";
+STR_MONSTERTAG_DRDENTZ = "Dr. Dentz";
+STR_MONSTERTAG_BLASTHARDCHEESE = "Blast Hardcheese";
+STR_MONSTERTAG_GREGTGREAT = "Greg T. Great";
+STR_MONSTERTAG_PRIVATEGINA = "Private Gina";
+STR_MONSTERTAG_PROFDRPEGCOP = "Prof. Peg Kobb";
+STR_MONSTERTAG_PROFGDRAGON = "Prof. G. Dragon";
+STR_MONSTERTAG_MCKENZIE = "Corp. McKenzie";
+STR_MONSTERTAG_REINHARDT = "Priv. Reinhardt";
+STR_MONSTERTAG_THATCHER = "Sgt. Thatcher";
+STR_MONSTERTAG_DEMONSLAYER = "Cpt. Demonslayer";
+STR_MONSTERTAG_SHOEMAKER = "F. Taggart Jr.";
+STR_MONSTERTAG_LTCARMACK = "Lt. Carmack";
+STR_MONSTERTAG_STARSCREAM = "Corp. S. Scream";
+STR_MONSTERTAG_SGTMORPHEUS = "Sgt. M. Orpheus";
+STR_MONSTERTAG_DRAEOND = "Dr. Aeon D.";
+STR_MONSTERTAG_CAPTESPIO = "Capt. Espio";
+STR_MONSTERTAG_LTTVAPPY = "Lt. T. Vappy";
+
+// Weapon obituaries
+
+OB_MPSHOTGUN = "%o got pummeled by %k's shotgun.";
+STR_OB_MPAUTOSHOTGUN = "%o got blasted away by %k's auto shotgun.";
+STR_OB_MPHRL = "%o couldn't dodge %k's homing rockets.";
+STR_OB_MPRAILGUN = "%o was railed by %k.";
+STR_OB_MPPYROCANNON = "%o was incinerated by %k's pyro cannon.";
+STR_OB_MPFLAMER = "%o was BBQed by %k's flamethrower.";
+STR_OB_MPDEVASTATOR = "%o was disintegrated by %k's devastator.";
+STR_OB_MPREPEATER = "%o was disintegrated by %k's repeater.";
+STR_OB_PBFG = "%o couldn't handle the overwhelming power.";
+
+// Monster obituaries
+
+OB_STEALTHVILE = "%o thought %g saw an arch-vile.";
+OB_STEALTHBARON = "%o thought %g saw a baron of Hell.";
+OB_STEALTHKNIGHT = "%o thought %g saw a Hell knight.";
+OB_BARONHIT = "%o was ripped open by a baron of Hell.";
+OB_KNIGHTHIT = "%o was gutted by a Hell knight.";
+OB_VILE = "%o was incinerated by an arch-vile.";
+OB_BARON = "%o was bruised by a baron of Hell.";
+OB_KNIGHT = "%o was splayed by a Hell knight.";
+OB_SPIDER = "%o stood in awe of a spider demon.";
+STR_OB_ARCHONOFHELL = "%o was no match for an archon of Hell.";
+STR_OB_ARCHONOFHELLHIT = "%o was ripped apart by an archon of Hell.";
+STR_OB_AZAZEL = "%o was slaughtered by an Azazel.";
+STR_OB_SATYR = "%o was mauled by a satyr.";
+STR_OB_STBOSS = "%o couldn't evade the wrath of Mephistopheles.";
+STR_OB_STBOSSATTACK4 = "%o was chewed up by a skull.";
+STR_OB_STBOSSSKELETON = "%o got whalloped by a skeleton.";
+STR_OB_STBOSSSKELETON2 = "%o got whalloped by a skeleton.";
+STR_OB_SPIRITKNIGHT = "%o was wrung from existence by Mephistopheles' spirit minions.";
+STR_OB_SPIRITKNIGHTHIT = "%o was wrung from existence by Mephistopheles' spirit minions.";
+STR_OB_SPIRITBOSS = "%o's existence was erased by the spirit of Mephistopheles.";
+STR_OB_CYBERDEMONMK2 = "%o was destroyed by the Cyberdemon Mk. II!";
+STR_OB_MINICYBER = "%o was made into a firework by a mini cyberdemon.";
+STR_OB_CHAOSCYBER = "%o met an irritating cyberdemon.";
+STR_OB_BLOODDEMON = "%o was chewed up and spat out by a blood demon.";
+STR_OB_BRUISERDEMON = "%o was slaughtered by a bruiser demon.";
+STR_OB_BRUISERDEMONHIT = "%o was cremated by a bruiser demon.";
+STR_OB_BRUISERDEMONFIRE = "%o was melted by a bruiser demon's fire trail.";
+STR_OB_CATHARSI = "%o was blasted by a catharsi.";
+STR_OB_CATHARSIDETONATOR = "%o was blasted by a catharsi's detonator.";
+STR_OB_CYBRUISER = "%o was blown away by a cybruiser.";
+STR_OB_CYBRUISERHIT = "%o was smashed by a cybruiser.";
+STR_OB_DEMOLISHER = "%o felt the power of a spider demolisher.";
+STR_OB_DIABLOIST = "%o was set ablaze by a diabolist.";
+STR_OB_DUNEWARRIOR = "%o was killed by a dune warrior.";
+STR_OB_ENHANCEDCACO = "%o was mowed down by an enhanced cacodemon.";
+STR_OB_ENHANCEDCACOHIT = "%o was made into a snack by an enhanced cacodemon.";
+STR_OB_FUSIONSPIDER = "%o was vaporized by a fusion cannon arachnotron.";
+STR_OB_GUARDIAN = "%o got fried by a guardian cube.";
+STR_OB_HECTEBUS = "%o was cremated by a hectebus.";
+STR_OB_HELEMENTAL = "%o was electrocuted by a Hades elemental.";
+STR_OB_HELEMENTALHIT = "%o got chomped by a Hades elemental.";
+STR_OB_HS = "%o was blown away by a Hades sphere.";
+STR_OB_HELLION = "A hellion burned %o to a crisp.";
+STR_OB_HELLWARRIOR = "%o was tagged by a Hell warrior's fireball.";
+STR_OB_HELLWARRIORHIT = "%o was torn apart by a Hell warrior.";
+STR_OB_INFERNODEMON = "%o was sent to burn in the fires of Hell for an eternity.";
+STR_OB_MOLOCH = "%o was sacrificed to a Moloch.";
+STR_OB_MOLOCHHIT = "%o got shredded by a Moloch's claws.";
+STR_OB_NIGHTMAREDEMON = "%o was spooked by a nightmare demon.";
+STR_OB_OVERMIND = "%o was slaughtered by the Overmind.";
+STR_OB_PHASEIMP = "%o was incinerated by a phase imp.";
+STR_OB_PHASEIMPHIT = "%o was scratched by a phase imp.";
+STR_OB_PYRODEMON = "%o was burnt to a crisp by a pyro demon.";
+STR_OB_PYRODEMONHIT = "%o was melted by a pyro demon.";
+STR_OB_PYRODEMONFIREBOMB = "%o was killed by a pyro demon's pyroblast explosion.";
+STR_OB_ROCKETGUY = "%o was splattered by a zombie rocketeer.";
+STR_OB_PLASMAZOMBIE = "%o got burned by a zombie plasma gunner.";
+STR_OB_SHADOW = "%o was assassinated by a shadow.";
+STR_OB_SUICIDEBOMBER = "%o was killed by a crazy suicide bomber.";
+STR_OB_TERMINATOR = "%o was liquidated by a terminator.";
+STR_OB_TERMINATORGRENADE = "%o was torn apart by a terminator's decimation missile.";
+STR_OB_WICKED = "%o got blasted by a wicked.";
+STR_OB_ZOMBIETANK = "%o was shot by a zombie in a tank.";
+STR_OB_ABADDON = "%o was smitten by an abaddon.";
+STR_OB_ABADDONHIT = "%o became food for an abaddon.";
+STR_OB_BELPHEGOR = "%o was slain by a belphegor.";
+STR_OB_BELPHEGORHIT = "%o was slain by a belphegor.";
+STR_OB_CACOLANTERN = "%o was smitten by a cacolantern.";
+STR_OB_CACOLANTERNHIT = "%o got too close to a cacolantern.";
+STR_OB_DARKIMP = "%o was burned by a dark imp.";
+STR_OB_DARKIMPHIT = "%o was slashed by a dark imp.";
+STR_OB_NIGHTMARECACO = "%o couldn't dodge a nightmare cacodemon's fireball.";
+STR_OB_NIGHTMARECACOHIT = "%o was snuck up on by a nightmare cacodemon.";
+STR_OB_APPRENTICE = "%o was spooked by an apprentice.";
+STR_OB_MINISPIDER = "%o succumbed to the swarm.";
+STR_OB_LARGESPIDER = "%o succumbed to the swarm.";
+STR_OB_THRALL = "%o was killed by a lowly cultist.";
+STR_OB_INCARNATE = "%o was killed by a death incarnate's glowing eyes.";
+STR_OB_INCARNATEHIT = "%o was beaten to death by a death incarnate.";
+STR_OB_HOTDOG = "%o was burned alive by a hellhound.";
+STR_OB_HOTDOGHIT = "A hellhound had %o for dinner.";
+STR_OB_VULGAR = "%o was poisoned by a vulgar.";
+STR_OB_VULGARHIT = "A vulgar had %o for lunch.";
+STR_OB_ESOUL = "%o's soul was leeched by an ethereal soul.";
+STR_OB_WRAITH = "A wraith had its way with %o.";
+STR_OB_WRAITHHIT = "%o got bitten by a wraith too many times.";
+STR_OB_CHAINGUNCULTIST = "%o was shot by a cultist with a Thompson.";
+STR_OB_SHOTGUNCULTIST = "%o was shot by a cultist with a shotgun.";
+STR_OB_FATTY = "%o couldn't evade a fat zombie's bile.";
+STR_OB_FATTYHIT = "%o was punched by a fat zombie.";
+STR_OB_ZOMBIE = "%o was axed by a zombie.";
+STR_OB_QUEEN = "%o met an alien queen.";
+STR_OB_CYCLOID = "%o tried to face a cycloid emperor.";
+STR_OB_OVERLORD = "%o was blown apart by an overlord.";
+STR_OB_ALIENDRONE = "%o was scratched by a protector drone.";
+STR_OB_KAMIKAZESENTRY = "%o let a sentry drone get too close.";
+STR_OB_COMMANDER = "%o sucked down a commander's rocket.";
+STR_OB_BATTLELORD = "%o was stomped on by a battlelord.";
+STR_OB_SUPERBATTLELORD = "%o was annihilated by a super battlelord.";
+STR_OB_OCTABRAIN = "%o was killed by an octabrain.";
+STR_OB_LIZARDCOMMANDO = "%o was rattled by an enforcer.";
+STR_OB_PIGCOP = "%o was filled with lead by a pig cop.";
+STR_OB_DUKEFODDER = "%o was taken down by an assault trooper.";
+STR_OB_TELEFODDER = "%o didn't see an assault captain coming.";
+STR_OB_MARINE = "%o was betrayed by a marine.";
+STR_OB_SENTRY = "%o was betrayed by a sentry turret.";
+STR_OB_BARREL = "%o went boom.";
+STR_OB_SUPERSENTRY = "%o was betrayed by a super sentry turret.";
+STR_OB_SUPERMARINE = "%o was betrayed by an elite marine.";
+STR_OB_SMARTBOMB = "%o was completely obliterated by a smart bomb!";
+
+// Menu stuff
+
+STR_KEYSECTION_STRONGHOLDREJUV = "Stronghold Rejuvenated";
+
+STR_CONTROLS_SHOWBANKMENU = "Show Bank Menu";
+
+STR_MENU_TITLE_BANK = "BANK";
+STR_MENU_BANKCREDITS = "Amount Of Credits";
+STR_MENU_BANKPAYFEE = "Pay Initial Fee";
+STR_MENU_BANKWITHDRAW = "Withdraw Credits";
+STR_MENU_BANKDEPOSIT = "Deposit Credits";
+
+// Maps
+
+STR_EPISODE = "Stronghold";
+STR_MAP_STR01 = "Introduction";
+STR_MAP_STR02 = "Too Young To Defend";
+STR_MAP_STR03 = "Swamp";
+STR_MAP_STR04 = "Asteroid";
+STR_MAP_STR05 = "Twilight";
+STR_MAP_STR06 = "Downtown";
+STR_MAP_STR07 = "Sandstorm";
+STR_MAP_STR08 = "Tropical Paradox";
+STR_MAP_STR09 = "Volcanic Installation";
+STR_MAP_STR10 = "Skyfire Research";
+STR_MAP_STR11 = "Tunnel";
+STR_MAP_STR12 = "Dangoo Desert";
+STR_MAP_STR13 = "Inferno";
+STR_MAP_STR14 = "Orbit";
+STR_MAP_STR15 = "Armageddon";
+STR_MAP_STR16 = "Frozen";
+STR_MAP_STR17 = "Slaughtered";
+STR_MAP_STR18 = "Delta Bunker";
+STR_MAP_STR19 = "Tarstone Fortress";
+STR_MAP_STR20 = "Snake Corridors";
+STR_MAP_STR21 = "Overmind";
+STR_MAP_STR22 = "Locus Of Pestilence";
+STR_MAP_STR23 = "Bipolar Bunker";
+STR_MAP_STR24 = "Aurora Emitter";
+STR_MAP_STR25 = "Eye Of The Storm";
+STR_MAP_STR26 = "Deepspace 12";
+STR_MAP_STR27 = "Cyclone";
+STR_MAP_STR28 = "Terrorforming";
+STR_MAP_STR29 = "Emerald Skies";
+STR_MAP_STR30 = "Convulsion Of Nature";
+STR_MAP_STR31 = "Black Gold";
+STR_MAP_STR32 = "Dusk";
+STR_MAP_STR33 = "Antlion Nebula";
+STR_MAP_STR34 = "Three Ways To Die";
+STR_MAP_STR35 = "The Final Stand";
+STR_MAP_STR40 = "Smoldering Caves";
+STR_MAP_STR41 = "Shell Shock";
+STR_MAP_STR42 = "Dusk (Old)";
+STR_MAP_STR43 = "Slaughtered (Old)";
+STR_MAP_STR44 = "Convulsion: Aftermath";
+STR_MAP_STR50 = "Duke It Out";
+STR_MAP_STR52 = "City Of Silence - Apocalypse";
+STR_MAP_STR54 = "Fortress Of Damnation";
+STR_MAP_STR56 = "Phobos Anomaly";
+STR_MAP_MAP99 = "Intermission";
+STR_MAP_CREDMAP = "End & Credits";
+STR_MAP_TITLEMAP = "Titlemap";

@@ -1,23 +1,31 @@
 Lock 24
 {
-	RedCardDN
-	Message "$PD_REDC"
-	RemoteMessage "You need a red card to activate this object"
+    Any { RedCardDN StrRedCardDN }
+	Message "$STR_REDCARDDNLOCK"
+	RemoteMessage "$STR_REDCARDDNLOCKREMOTE"
 	Mapcolor 255 0 0
 }
 
 Lock 25
 {
-	AccessDiscBlue
-	Message "Blue access disk required."
-	RemoteMessage "Blue access disk required."
+    Any { AccessDiscBlue StrAccessDiscBlue }
+	Message "$STR_ACCESSDISCBLUELOCK"
+	RemoteMessage "$STR_ACCESSDISCBLUELOCKREMOTE"
 	Mapcolor 50 50 255
 }
 
 Lock 26
 {
-	AccessDiscGreen
-	Message "Green access disk required."
-	RemoteMessage "Green access disk required."
+	Any { AccessDiscGreen StrAccessDiscGreen }
+	Message "$STR_ACCESSDISCGREENLOCK"
+	RemoteMessage "$STR_ACCESSDISCGREENLOCKREMOTE"
 	Mapcolor 50 255 50
+}
+
+Lock 27
+{
+	StrYellowCardFamiliarMaps
+	Message "$STR_YELLOWCARDFAMILIARMAPSLOCK"
+	RemoteMessage "$STR_YELLOWCARDFAMILIARMAPSLOCKREMOTE"
+	Mapcolor 255 255 0
 }

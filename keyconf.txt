@@ -1,36 +1,8 @@
-/////////////
-// CLASSES //
-/////////////
-clearplayerclasses
-addplayerclass StrongholdPlayer nomenu
+alias str_bankmenu "openmenu StrongholdBankMenu"
+alias str_bankpayfee "closemenu;pukename \"StrBankSystem\" always 1" // Turns out you can't call these commands together in MENUDEF directly, so I had to make aliases.
+alias str_bankwithdraw "closemenu;pukename \"StrBankSystem\" always 2"
+alias str_bankdeposit "closemenu;pukename \"StrBankSystem\" always 3"
 
-/////////////
-// WEAPONS //
-/////////////
-weaponsection Stronghold
+addkeysection "$STR_KEYSECTION_STRONGHOLDREJUV" StrongholdRejuv
 
-setslot 1 DEFist DEChainsaw 
-setslot 2 DEPistol 
-setslot 3 DEShotgun DESuperShotgun AutoShotgun  
-setslot 4 DEChaingun
-setslot 5 LandMineLayer DERLauncher HRL
-setslot 6 RailGun StunnerRifle DEPlasmaRifle 
-setslot 7 DEBFG9000 
-setslot 8 PyroCannon Flamer 
-setslot 9 Devastator Repeater
-setslot 0 BruiserWeapon
-
-/////////////////
-// CUSTOM KEYS //
-/////////////////
-addkeysection "Stronghold" Stronghold
-
-alias sthd_hud_toggle "set sthd_hud_disable $sthd_hud_disable; eval - 1 $sthd_hud_disable sthd_hud_disable"
-addmenukey "Toggle HUD" "sthd_hud_toggle"
-defaultbind n "sthd_hud_toggle"
-
-//addmenukey "Toggle Scoreboard" "use ScoreboardToggle"
-// addmenukey "Show Scoreboard" "use ScoreboardOn"
-// addmenukey "Hide Scoreboard" "use ScoreboardOff"
-
-//defaultbind b "use ScoreboardToggle"
+addmenukey "$STR_CONTROLS_SHOWBANKMENU" "str_bankmenu"

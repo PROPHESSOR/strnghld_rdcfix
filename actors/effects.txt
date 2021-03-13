@@ -1,0 +1,92 @@
+actor StrSFX_WaterSplash_Large : SFX_WaterSplash_Large replaces SFX_WaterSplash_Large { +DONTSPLASH } // cut back on lag, hopefully
+actor StrSFX_WaterSplash_Small : SFX_WaterSplash_Small replaces SFX_WaterSplash_Small { +DONTSPLASH }
+actor StrWatersplash_Medium : Watersplash_Medium replaces Watersplash_Medium { +DONTSPLASH }
+
+actor StrRainSpawner : RainSpawner replaces RainSpawner { +DONTSPLASH }
+actor StrRainDrop : RainDrop replaces RainDrop { +DONTSPLASH }
+
+actor StrThunder_Generator : Thunder_Generator replaces Thunder_Generator { +DONTSPLASH }
+actor StrThunder_Smoke : Thunder_Smoke replaces Thunder_Smoke { +DONTSPLASH }
+actor StrThunder_Spark : Thunder_Spark replaces Thunder_Spark { +DONTSPLASH }
+
+actor StrRadioactive_Shower : Radioactive_Shower replaces Radioactive_Shower { +DONTSPLASH }
+actor StrBaseWasteShower01 : BaseWasteShower01 replaces BaseWasteShower01 { +DONTSPLASH }
+
+actor StrSpark_B1 : Spark_B1 replaces Spark_B1 { +DONTSPLASH }
+actor StrSpark_B2 : Spark_B2 replaces Spark_B2 { +DONTSPLASH }
+actor StrSpark_B3 : Spark_B3 replaces Spark_B3 { +DONTSPLASH }
+actor StrSpark_B4 : Spark_B4 replaces Spark_B4 { +DONTSPLASH }
+actor StrSpark_B5 : Spark_B5 replaces Spark_B5 { +DONTSPLASH }
+actor StrSpark_B6 : Spark_B6 replaces Spark_B6 { +DONTSPLASH }
+actor StrSpark_B7 : Spark_B7 replaces Spark_B7 { +DONTSPLASH }
+actor StrSpark_B8 : Spark_B8 replaces Spark_B8 { +DONTSPLASH }
+actor StrSpark_B9 : Spark_B9 replaces Spark_B9 { +DONTSPLASH }
+
+actor StrSpark_G1 : Spark_G1 replaces Spark_G1 { +DONTSPLASH }
+actor StrSpark_G2 : Spark_G2 replaces Spark_G2 { +DONTSPLASH }
+actor StrSpark_G3 : Spark_G3 replaces Spark_G3 { +DONTSPLASH }
+actor StrSpark_G4 : Spark_G4 replaces Spark_G4 { +DONTSPLASH }
+actor StrSpark_G5 : Spark_G5 replaces Spark_G5 { +DONTSPLASH }
+actor StrSpark_G6 : Spark_G6 replaces Spark_G6 { +DONTSPLASH }
+actor StrSpark_G7 : Spark_G7 replaces Spark_G7 { +DONTSPLASH }
+actor StrSpark_G8 : Spark_G8 replaces Spark_G8 { +DONTSPLASH }
+actor StrSpark_G9 : Spark_G9 replaces Spark_G9 { +DONTSPLASH }
+
+actor StrSpark_O1 : Spark_O1 replaces Spark_O1 { +DONTSPLASH }
+actor StrSpark_O2 : Spark_O2 replaces Spark_O2 { +DONTSPLASH }
+actor StrSpark_O3 : Spark_O3 replaces Spark_O3 { +DONTSPLASH }
+actor StrSpark_O4 : Spark_O4 replaces Spark_O4 { +DONTSPLASH }
+actor StrSpark_O5 : Spark_O5 replaces Spark_O5 { +DONTSPLASH }
+actor StrSpark_O6 : Spark_O6 replaces Spark_O6 { +DONTSPLASH }
+actor StrSpark_O7 : Spark_O7 replaces Spark_O7 { +DONTSPLASH }
+actor StrSpark_O8 : Spark_O8 replaces Spark_O8 { +DONTSPLASH }
+actor StrSpark_O9 : Spark_O9 replaces Spark_O9 { +DONTSPLASH }
+
+actor StrSpark_R1 : Spark_R1 replaces Spark_R1 { +DONTSPLASH }
+actor StrSpark_R2 : Spark_R2 replaces Spark_R2 { +DONTSPLASH }
+actor StrSpark_R3 : Spark_R3 replaces Spark_R3 { +DONTSPLASH }
+actor StrSpark_R4 : Spark_R4 replaces Spark_R4 { +DONTSPLASH }
+actor StrSpark_R5 : Spark_R5 replaces Spark_R5 { +DONTSPLASH }
+actor StrSpark_R6 : Spark_R6 replaces Spark_R6 { +DONTSPLASH }
+actor StrSpark_R7 : Spark_R7 replaces Spark_R7 { +DONTSPLASH }
+actor StrSpark_R8 : Spark_R8 replaces Spark_R8 { +DONTSPLASH }
+actor StrSpark_R9 : Spark_R9 replaces Spark_R9 { +DONTSPLASH }
+
+actor StrSpark_C1 : Spark_C1 replaces Spark_C1 { +DONTSPLASH }
+actor StrSpark_C2 : Spark_C2 replaces Spark_C2 { +DONTSPLASH }
+actor StrSpark_C3 : Spark_C3 replaces Spark_C3 { +DONTSPLASH }
+actor StrSpark_C4 : Spark_C4 replaces Spark_C4 { +DONTSPLASH }
+actor StrSpark_C5 : Spark_C5 replaces Spark_C5 { +DONTSPLASH }
+actor StrSpark_C6 : Spark_C6 replaces Spark_C6 { +DONTSPLASH }
+actor StrSpark_C7 : Spark_C7 replaces Spark_C7 { +DONTSPLASH }
+actor StrSpark_C8 : Spark_C8 replaces Spark_C8 { +DONTSPLASH }
+actor StrSpark_C9 : Spark_C9 replaces Spark_C9 { +DONTSPLASH }
+
+actor StrSpark_Y1 : Spark_Y1 replaces Spark_Y1 { +DONTSPLASH }
+actor StrSpark_Y2 : Spark_Y2 replaces Spark_Y2 { +DONTSPLASH }
+actor StrSpark_Y3 : Spark_Y3 replaces Spark_Y3 { +DONTSPLASH }
+actor StrSpark_Y4 : Spark_Y4 replaces Spark_Y4 { +DONTSPLASH }
+actor StrSpark_Y5 : Spark_Y5 replaces Spark_Y5 { +DONTSPLASH }
+actor StrSpark_Y6 : Spark_Y6 replaces Spark_Y6 { +DONTSPLASH }
+actor StrSpark_Y7 : Spark_Y7 replaces Spark_Y7 { +DONTSPLASH }
+actor StrSpark_Y8 : Spark_Y8 replaces Spark_Y8 { +DONTSPLASH }
+actor StrSpark_Y9 : Spark_Y9 replaces Spark_Y9 { +DONTSPLASH }
+
+actor StrSteam1 : Steam1 replaces Steam1 { +DONTSPLASH }
+actor StrSteam2 : Steam2 replaces Steam2 { +DONTSPLASH }
+actor StrSteam3 : Steam3 replaces Steam3 { +DONTSPLASH }
+actor StrSteam4 : Steam4 replaces Steam4 { +DONTSPLASH }
+actor StrSteam5 : Steam5 replaces Steam5 { +DONTSPLASH }
+
+actor StrCometLarge_Enhanced_NoDmg : CometLarge_Enhanced_NoDmg replaces CometLarge_Enhanced_NoDmg
+{
+    Damage (0)
+    DamageType "Fire"
+    +CLIENTSIDEONLY
+    States
+    {
+      Death:
+        COMT DEFGHI 3 Bright
+        stop
+    }
+}

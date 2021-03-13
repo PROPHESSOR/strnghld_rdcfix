@@ -1,0 +1,74 @@
+actor StrIWantToKickAss : CustomInventory replaces IWantToKickAss
+{
+    ConversationID 110
+    Inventory.MaxAmount 0
+    +AUTOACTIVATE
+    States
+    {
+      Pickup:
+        TNT1 A 0 ACS_Execute(123,0,35)
+        stop
+    }
+}
+
+/*actor WhyZandronumWhy 31505 //TELL US THE REASON WHY
+{
+    +NOTIMEFREEZE
+    States
+    {
+      Spawn:
+        TNT1 A 1
+        TNT1 A 1 ACS_Execute(1,0,0,0,0)
+        stop
+    }
+}*/
+
+actor StrAlreadyGotCredits : Inventory { Inventory.MaxAmount 1 +UNDROPPABLE -INVBAR }
+actor StrPaidInitialBankFee : Inventory { Inventory.MaxAmount 1 +UNDROPPABLE -INVBAR }
+actor StrDamageCheckerIgnore : Inventory { Inventory.MaxAmount 1 +UNDROPPABLE -INVBAR }
+
+DamageType AMushroomHack
+{
+    Factor 0 // don't damage anything
+    ReplaceFactor // ignore Normal damage type
+}
+
+actor StrAMushroomBypassOn : CustomInventory
+{
+    Inventory.MaxAmount 0
+    +AUTOACTIVATE
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SetDamageType("AMushroomHack") // apply "no damage" damage type
+        TNT1 A 0 A_ChangeFlag("NODAMAGETHRUST",1) // don't fling anything
+        TNT1 A 0 A_ChangeFlag("BLOODLESSIMPACT",1) // make nothing bleed
+        stop
+    }
+}
+
+actor StrAMushroomBypassOff : CustomInventory // reset
+{
+    Inventory.MaxAmount 0
+    +AUTOACTIVATE
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_SetDamageType("Normal")
+        TNT1 A 0 A_ChangeFlag("NODAMAGETHRUST",0)
+        TNT1 A 0 A_ChangeFlag("BLOODLESSIMPACT",0)
+        stop
+    }
+}
+
+actor StrMonsterKiller : CustomInventory
+{
+    Inventory.MaxAmount 0
+    +AUTOACTIVATE
+    States
+    {
+      Pickup:
+        TNT1 A 0 A_Die
+        stop
+    }
+}

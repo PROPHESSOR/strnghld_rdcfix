@@ -1,64 +1,77 @@
-texture ENCYCL1, 256, 256
+sprite PLSGF0, 86, 103 // Plasma Rifle
 {
-  XScale 4.5
-  YScale 4.5
-  Patch ENCYCL_1, 16, 16
-  {
-  }
+    patch PLSGF0, 0, 0
+    offset -117, -77
 }
 
-texture ENCYCL2, 256, 256
+sprite PLSGG0, 86, 99
 {
-  XScale 4.5
-  YScale 4.5
-  Patch ENCYCL_2, 16, 16
-  {
-  }
+    patch PLSGG0, 0, 0
+    offset -117, -78
 }
 
-texture ENCYCL3, 256, 256
+sprite PLSGH0, 86, 93
 {
-  XScale 4.5
-  YScale 4.5
-  Patch ENCYCL_3, 16, 16
-  {
-  }
+    patch PLSGH0, 0, 0
+    offset -117, -81
 }
 
-texture BERGE2, 1024, 512
+sprite PYRGB0, 313, 148 // Pyro Cannon
 {
-  XScale 4.0
-  YScale 4.0
-  Patch BERGE2, 0, 0
-  {
-  }
+    patch PYRGB0, 0, 0
+    offset 10, -85
 }
 
-/*
-// Half-sizes everything
-define HUDLEFT 114 32
-define HUDLIVES 42 25
-define HUDRIGHT 100 33
-define HUDSCORE 99 75
-define HUDCREDS 324 36*/
-
-
-////////////////////////////////////////////////////////////////
-//
-// Sprite definitions
-//
-////////////////////////////////////////////////////////////////
-
-Sprite "PARTA0", 128, 128
+sprite PYRGC0, 313, 163
 {
-	Offset 64, 128
-	
-	Patch "Flare03g", 0, 0
+    patch PYRGC0, 0, 0
+    offset 10, -80
 }
 
-Sprite "PARTB0", 128, 128
+sprite PYRGD0, 313, 156
 {
-	Offset 64, 128
-	
-	Patch "Flare03d", 0, 0
+    patch PYRGD0, 0, 0
+    offset 10, -84
+}
+
+sprite PYRGE0, 313, 157
+{
+    patch PYRGE0, 0, 0
+    offset 10, -80
+}
+
+sprite PYRGF0, 313, 153
+{
+    patch PYRGF0, 0, 0
+    offset 10, -77
+}
+
+sprite PYRGG0, 313, 153
+{
+    patch PYRGG0, 0, 0
+    offset 10, -77
+}
+
+sprite REPGE0, 205, 112 // Plasma Repeater
+{
+    patch REPGE0, 0, 0
+    offset -23, -84
+}
+
+sprite REPGF0, 205, 95
+{
+    patch REPGF0, 0, 0
+    offset -23, -98
+}
+
+sprite REPGG0, 205, 100
+{
+    patch REPGG0, 0, 0
+    offset -23, -96
+}
+
+sprite REPGH0, 205, 104
+{
+    patch REPGH0, 0, 0
+    offset -23, -89
 }

@@ -1,10 +1,10 @@
 ACTOR Catharsi 29123
 {
 //$Category Stronghold_Monsters
-  painchance "Stunner", 255
-
+  PainChance "Stunner", 255
   SpawnId 230
-  OBITUARY "%o was blasted by a catharsi."
+  OBITUARY "$STR_OB_CATHARSI"
+  Tag "$STR_MONSTERTAG_CATHARSI"
   Health 120
   Radius 20
   Height 56
@@ -41,7 +41,7 @@ ACTOR Catharsi 29123
     SDDM E 2
     SDDM F 2 BRIGHT A_CustomMissile("CatharsiBall", 30, 8, 16, 0)
     SDDM E 2
-    Goto See 
+    Goto See
     SDDM E 4
     SDDM E 10 A_FaceTarget
     SDDM F 2 BRIGHT A_CustomMissile("CatharsiBall", 30, 8, 4, 0)
@@ -67,27 +67,27 @@ ACTOR Catharsi 29123
        SDDM G 0 A_ChangeFlag("NoPain", 0)
        goto See
   Death:
-    TNT1 A 0 A_GiveToTarget("AwardItem", 6)
+    TNT1 A 0 A_GiveToTarget("AwardItem", 5)
     SDDM H 5
     SDDM I 5 A_Scream
     SDDM J 5 A_NoBlocking  
     SDDM J 0 A_SpawnItem("CatharsiDetonator", 0, 30)
     SDDM KLM 5
-    SDDM N 3000 
-    SDDM NNNNNNNNNNNN 2 A_FadeOut(0.1)
-    Stop
+    SDDM N 3000 CanRaise
+    SDDM N 2 A_FadeOut(0.1)
+    wait
   XDeath:
     TNT1 A 0 A_GiveToTarget("AwardItem", 8)
     SDDM O 5
     SDDM P 5 A_XScream
     SDDM Q 5 A_NoBlocking
     SDDM RSTUV 5
-    SDDM W 3000 
-    SDDM WWWWWWWWWWWW 2 A_FadeOut(0.1)
-    Stop
+    SDDM W 3000 CanRaise
+    SDDM W 2 A_FadeOut(0.1)
+    wait
   Raise:
     SDDM NMLKJIH 5
-    Goto See
+    goto See
   }
 }
 
@@ -97,10 +97,12 @@ ACTOR CatharsiBall
   Height 8
   Speed 15
   Damage 3
+  DamageType "Fire"
   RENDERSTYLE Add
   SEESOUND "catharsi/shotsit"
   DEATHSOUND "catharsi/shotdth"
   PROJECTILE
+  Decal PlasmaScorchLower
   +Randomize
   states
   {
@@ -118,49 +120,51 @@ ACTOR CatharsiDetonator
 	Radius 6
 	Height 8
 	Speed 0
-	SEESOUND "catharsi/shotsit"
-	DEATHSOUND "catharsi/shotdth"
-	+SOLID
+	//SEESOUND "catharsi/shotsit"
+	//DEATHSOUND "catharsi/shotdth"
+	OBITUARY "$STR_OB_CATHARSIDETONATOR"
+    Tag "$STR_MONSTERTAG_CATHARSIDETONATOR"
+    ReactionTime 5
+	-SOLID
 	+ISMONSTER
 	+FloatBob
 	+Randomize
-	+NoGravity
+	-NoGravity
 	+NoBlood
+    +NEVERTARGET
+    +NOTAUTOAIMED
 	states
 	{
 	Spawn:
 		THRM A 4 A_PlaySound("catharsi/thermtick")
-		THRM B 16 
-		THRM A 4 A_PlaySound("catharsi/thermtick")
 		THRM B 16
-		THRM A 4 A_PlaySound("catharsi/thermtick")
-		THRM B 16
-		THRM A 4 A_PlaySound("catharsi/thermtick")  
-		THRM B 16
-		THRM A 4 A_PlaySound("catharsi/thermtick")  
-		THRM B 16  
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 0)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 20)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 40)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 60)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 80)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 100)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 120)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 140)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 160)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 180)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 200)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 220)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 240)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 260)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 280)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 300)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 320)
-		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 340)
-		SDFB BCDE 6 BRIGHT A_Die
-		Stop
-	Death:
-		TNT1 A 0
-		Stop
+        TNT1 A 0 A_Countdown
+		loop
+
+    Death:
+        TNT1 A 0 A_NoGravity
+        TNT1 A 0 A_StopSound(4)
+        TNT1 A 0 A_ChangeFlag("FLOATBOB",0)
+    DeathFinish:
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 0, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 20, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 40, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 60, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 80, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 100, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 120, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 140, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 160, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 180, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 200, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 220, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 240, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 260, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 280, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 300, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 320, 4)
+		SDFB B 0 A_CustomMissile("CatharsiBall", 4, 2, 340, 4)
+		SDFB BCDE 6 BRIGHT
+		stop
 	}
 }

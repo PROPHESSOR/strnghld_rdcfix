@@ -1,5 +1,5 @@
-#include "zcommon.acs"
 #library "strnghld"
+#include "zcommon.acs"
 
 /* ******************************* **
 ** Public defines, for maps to use **
@@ -13,7 +13,7 @@
 #libdefine	RADIO_PETERSEN	1
 #libdefine	RADIO_PRINCE	2
 #libdefine	RADIO_WILBUR	3
-#libdefine	RADIO_CLOUD		4
+#libdefine	RADIO_CLOUD	4
 #libdefine	RADIO_TAYLOR	5
 #libdefine	RADIO_POTHEM	6
 #libdefine	RADIO_CRESSWELL	7
@@ -26,6 +26,8 @@
 #libdefine	RADIO_EMMIRATH	14
 #libdefine	RADIO_KILLSAW	15
 #libdefine	RADIO_METER		16
+#libdefine	RADIO_ESPIO		17
+#libdefine	RADIO_VAPPY		18
 
 // Ammo Defines (used with WaveAmmo function)
 #libdefine	BULLETS		1
@@ -49,7 +51,6 @@
 
 #libdefine	S_GETBONUS	980
 #libdefine	S_MINUTECHECKS	981
-#libdefine	S_DAMAGECHECKS	982
 #libdefine 	S_DETECTENDOFLVL 983
 
 #libdefine	S_MILE_MARKER	250
@@ -60,14 +61,13 @@
 #libdefine	S_MISSION_FAIL	912
 #libdefine	S_JAIL_GIVEUP	252
 #libdefine	S_JAIL_LEAVE	898
-#libdefine	S_JAIL_OPEN	897
 #libdefine	S_BRIEF_END	251
 #libdefine	S_BRIEF_MAIN	925
 
 #libdefine	S_STR52CODEGET	927
 
 #libdefine	S_GOAL_DESTROYED	926
-#libdefine  S_CORE_WARNINGS     929
+#libdefine 	S_CORE_WARNINGS     929
 
 #libdefine	GOAL_RED	1
 #libdefine	GOAL_ORANGE	2
@@ -91,8 +91,8 @@
 #libdefine B_KILLS300 5
 #libdefine B_NOMILESTONES 6
 #libdefine B_NOGOALS 7
-#libdefine B_CORE90 8
-#libdefine B_CORE95 9
+#libdefine B_CORE80 8
+#libdefine B_CORE90 9
 #libdefine B_CORE100 10
 #libdefine B_LIMITHALF 11
 #libdefine B_LIMITQUARTER 12
@@ -102,13 +102,14 @@
 #libdefine B_INDIRECTKILLS1 16
 #libdefine B_INDIRECTKILLS2 17
 #libdefine B_INDIRECTKILLS3 18
-#libdefine B_CASH1000 19
-#libdefine B_CASH2000 20
-#libdefine B_CASH3000 21
-#libdefine B_DAMAGE100 22
-#libdefine B_DAMAGE50 23
-#libdefine B_NODAMAGE 24
-#libdefine B_NODEATHS 25
+#libdefine B_CASH10K 19
+#libdefine B_CASH20K 20
+#libdefine B_CASH30K 21
+#libdefine B_NODEATHS 22
+#libdefine B_DAMAGE100 23
+#libdefine B_DAMAGE50 24
+#libdefine B_NODAMAGE 25
+#libdefine B_NIGHTMARE 26
 
 #libdefine GAME_DEADLINE 0
 #libdefine GAME_CORE 1
@@ -131,7 +132,7 @@ int HateEpicenter;
 int NumberOfTargets;
 int BossMonster;
 int BossTarget;
-int BossHealth = 20000;
+int BossHealth = 50000;
 int EventScript = 0;
 int GoalScript = 0;
 int MileScript = 0;
@@ -143,25 +144,28 @@ int PrisonCamStart;
 int PrisonTeleporterLineId;
 int PrisonTeleporterThrustAngle;
 int PrisonExitThrustAngle = -1;
-int TeleporterOnLight;
-int TeleporterOffLight;
-int BreakTime = -1;	// Deadline default is 6*35. Can be overridden by map.
+int TeleporterOnLight = 99;
+int TeleporterOffLight = 98;
+int BreakTime = -1;	// Deadline default is 3*35. Can be overridden by map.
 int LimitMax = 100;	// Can be overridden by map
-int tics_between_monster_spawns = 4;	// Can be overridden, but highly not recommended to shorten this either.
+int tics_between_monster_spawns = 1;	// Originally 5, can be overridden by map at any time
 bool GameActive = TRUE;	// When this is false, the player can't lose lives
 bool GameVictory = FALSE;
-bool TrainingMap = FALSE;
-bool TimeAttackMode = FALSE;
-bool GivePistol = TRUE;	// Set to false for Intermap
+bool ReplayMode = FALSE;
+bool LivesChecking = FALSE; // Ensures the life/damage checks actually start as the game begins
 bool BriefSkippable = TRUE;	// If this is false, "Press <use> to skip" won't be shown
 bool BriefTalking = FALSE;	// When true, talking animation in briefing happens
 bool BriefActive = FALSE;	// Should be TRUE when players should be frozen (PROP_TOTALLY_FROZEN)
 bool BriefNoGun = FALSE;	// The player won't be given a gun on first spawn while this is true
 str BriefBackground = "TNTA0";
 int BriefScript = 0;	// Set to script number of briefing script. See STR01 for example.
-int DamageTaken[32];
+int DamageTaken[64];
+bool PlayerDiedInMap[64];
 bool PlayersAreLate = FALSE;
-int LatePlayersDelay = 35*20; // Time before late players are put into jail immediately.
+bool isZandronum = FALSE;
+
+int HardScalerPlayerCount = 6; //Used for player scaling. 6 on average, generally varies between 5-7, with some 8-9.
+bool MusicChangeDisabled = FALSE; // Music changes won't trigger if this is true.
 
 #libdefine RADIONAME_SIZE	16
 int RadioName[RADIONAME_SIZE];
@@ -169,6 +173,7 @@ int RadioName[RADIONAME_SIZE];
 #define MAX_LEVEL_IDS	255
 int MapCoinReward[MAX_LEVEL_IDS];
 int MapParTime[MAX_LEVEL_IDS];
+str MapParTimeDisplay[MAX_LEVEL_IDS]; // HACK
 
 // 0	= level not finished
 // -1	= level finished, but par-time not met
@@ -183,6 +188,10 @@ global bool 51:STR50Open;
 global bool 53:STR52Open;
 global bool 55:STR54Open;
 global bool 56:STR56Open;
+global bool 57:FamiliarMapsOpen;
+
+global int 60:StartingCredits;
+global int 61:BankCredits;
 
 // These next few shouldn't be changed - pretend they're defines :P
 // (They're not set as defines so that way maps don't need to recompile if they're changed.)
@@ -201,7 +210,6 @@ int BriefExtraHID	= 1003;
 
 #define S_ENTER		669
 #define S_LIVE_WATCH	668
-#define S_LATEPLAYERS 667
 #define S_RESPAWN	670
 #define	S_DEATH		671
 #define S_DISCONNECT	923
@@ -264,12 +272,15 @@ int BriefExtraHID	= 1003;
 #define	HUDParTimeHID	1034
 #define	HUDParTimeLabelHID	1035
 #define	HUDBodyCountHID	1036
+#define	HUDBestTimeHID	1037
+#define	HUDBestTimeLabelHID	1038
 
 #define	HUDRightHID	1050
 #define	HUDLeftHID	1051
 
 #define	MoneyCountHID	1100
-#define	MoneyBarHID	1101
+#define	MoneyCountBankHID	1101
+#define	MoneyBarHID	1102
 
 #define	CoreGraphicX	50.2
 #define	CoreGraphicY	390.0
@@ -293,7 +304,7 @@ bool isSetup = FALSE;
 int msgEndOfLine = 0;
 int msgCurTurn = 0;
 int TimerIsLive = FALSE;
-int AllVarsLocal = FALSE;	// If this is false, then we're a client in a Skulltag client/server setup
+int AllVarsLocal = FALSE;	// If this is false, then we're a client in a Zandronum client/server setup
 
 int levelRunningTime	= 0;
 int levelMinutes	= 0;
@@ -310,6 +321,10 @@ int parTime	= 0;
 int parTimeMinutes	= 0;
 int parTimeSeconds	= 0;
 str parTimeSecondsSpace	= "0";
+int bestTime	= 0;
+int bestTimeMinutes	= 0;
+int bestTimeSeconds	= 0;
+str bestTimeSecondsSpace	= "0";
 
 bool jailTeleporter = FALSE;
 str TeleporterOnTexture = "TELEPTY1";
@@ -319,7 +334,7 @@ int curWave = 0;	// Only to be used for display purposes
 bool DisableAnnounceWaveDone = FALSE;	// When TRUE, finishing a wave isn't announced. Used for Overmind mode.
 bool GameFinishing = FALSE;	// When set to true, causes all currently running waves to shut down
 
-#define	LEN_RADIO	16
+#define	LEN_RADIO	18
 str RadioData[LEN_RADIO][2] = {
 {	"Cpl. S. Petersen",	"DIALOG1"	},
 {	"Sgt. R. Prince",	"DIALOG2"	},
@@ -337,16 +352,24 @@ str RadioData[LEN_RADIO][2] = {
 {	"Lt. R. Emmirath",	""	},
 {	"Col. S. Killsaw",	""	},
 {	"Pvt. G. Meter",	""	},
+{	"Capt. Espio",		""	},
+{	"Lt. T. Vappy",		""	},
 };
 
-str WaveCompleteSound = "T_WAVDON";
+#define WAVE_COMPLETE_SOUNDS_LEN	21
+str WaveCompleteSounds[WAVE_COMPLETE_SOUNDS_LEN] = {"T_WAVDNF",
+"T_WAVDN1","T_WAVDN2","T_WAVDN3","T_WAVDN4","T_WAVDN5",
+"T_WAVDN6","T_WAVDN7","T_WAVDN8","T_WAVDN9","T_WAVD10",
+"T_WAVD11","T_WAVD12","T_WAVD13","T_WAVD14","T_WAVD15",
+"T_WAVD16","T_WAVD17","T_WAVD18","T_WAVD19","T_WAVD20"
+};
 
-#define WAVE_ANNOUNCE_SOUNDS_LEN	20
+#define WAVE_ANNOUNCE_SOUNDS_LEN	21
 str WaveAnnounceSounds[WAVE_ANNOUNCE_SOUNDS_LEN] = {"T_WAVFNL",
 "T_WAVNR1","T_WAVNR2","T_WAVNR3","T_WAVNR4","T_WAVNR5",
 "T_WAVNR6","T_WAVNR7","T_WAVNR8","T_WAVNR9","T_WAVN10",
 "T_WAVN11","T_WAVN12","T_WAVN13","T_WAVN14","T_WAVN15",
-"T_WAVN16","T_WAVN17","T_WAVN18","T_WAVN19"
+"T_WAVN16","T_WAVN17","T_WAVN18","T_WAVN19","T_WAVN20"
 };
 
 #define WAVE_NUM_WORDS	21
@@ -362,7 +385,7 @@ str MileAnnounceSounds[MILE_ANNOUNCE_SOUNDS_LEN] = { "",
 "T_MLSTN1","T_MLSTN2","T_MLSTN3"
 };
 
-#define MAXBONUSES 26
+#define MAXBONUSES 27
 int BonusArray[MAXBONUSES][3] = {
 // Icon     Name                        Description                                                Award
 //-------------------------------------------------------------------------------------------------------
@@ -371,40 +394,42 @@ int BonusArray[MAXBONUSES][3] = {
 {"B_TIME2", "\ceTIMESPLITTER",          "Completed the mission in a third of the par time.",       },//1000},
 {"B_TIME3", "\ceTIMESLICER",            "Completed the mission in a quarter of the par time.",     },//1500},
 // Killing bonuses.
-{"B_KILL1", "\cgCARNAGE",               "Killed 100 monsters in 1 minute.",                        },//250},
-{"B_KILL2", "\cgCRUSADER",              "Killed 200 monsters in 1 minute.",                        },//500},
-{"B_KILL3", "\cgCATACLYSM",             "Killed 300 monsters in 1 minute.",                        },//750},
+{"B_KILL1", "\cgCARNAGE",               "Killed 100 monsters in one minute.",                      },//250},
+{"B_KILL2", "\cgCRUSADER",              "Killed 200 monsters in one minute.",                      },//500},
+{"B_KILL3", "\cgCATACLYSM",             "Killed 300 monsters in one minute.",                      },//750},
 // Defense bonuses.
 {"B_MILE",  "\chMILESTONE DEFENDER",    "Didn't let the demons cross one milestone.",              },//2000},
-{"B_GOAL",  "\chGOAL DEFENDER",         "Didn't let the demons destroy one goal.",                 },//800},
+{"B_GOAL",  "\chGOAL DEFENDER",         "Didn't let the demons destroy one goal.",                 },//1000},
 // Core bonuses.
-{"B_CORE1", "\cdCORE PROTECTOR",        "Completed the mission with the core at 90%-94%.",         },//500},
-{"B_CORE2", "\cdCORE PRESERVER",        "Completed the mission with the core at 95%-99%.",         },//750},
+{"B_CORE1", "\cdCORE PROTECTOR",        "Completed the mission with the core at 80%-89%.",         },//200},
+{"B_CORE2", "\cdCORE PRESERVER",        "Completed the mission with the core at 90%-99%.",         },//600},
 {"B_CORE3", "\cdCORE PERFECTOR",        "Completed the mission with the core at 100%!",            },//1000},
 // Limit bonuses.
-{"B_LIMIT1","\cfLIMIT PROTECTOR",       "Monster limit did not exceed half.",                      },//200},
-{"B_LIMIT2","\cfLIMIT PRESERVER",       "Monster limit did not exceed one third.",                 },//600},
+{"B_LIMIT1","\cfLIMIT PROTECTOR",       "Monster limit did not exceed half.",                      },//500},
+{"B_LIMIT2","\cfLIMIT PRESERVER",       "Monster limit did not exceed one quarter.",               },//750},
 {"B_LIMIT3","\cfLIMIT PERFECTOR",       "Didn't let a single demon pass the deadline!",            },//1000},
 // Overmind bonuses.
-{"B_OVER1", "\caOVERKILL",              "Killed the overmind without killing any other monsters.", },//1000},
-{"B_OVER2", "\caOVERRIDE",              "Didn't let the Overmind destroy one core.",               },//1000},
+{"B_OVER1", "\caOVERKILL",              "Killed the Overmind without killing any other monsters.", },//1000},
+{"B_OVER2", "\caOVERRIDE",              "Didn't let the Overmind destroy one core.",               },//3000},
 // Indirect kill bonuses.
 {"B_INDK1", "\ciMODERATOR",             "Killed 100 monsters indirectly.",                         },//200},
 {"B_INDK2", "\ciMANIPULATOR",           "Killed 200 monsters indirectly.",                         },//600},
 {"B_INDK3", "\ciMASTERMIND",            "Killed 300 monsters indirectly.",                         },//1000},
 // Cash bonuses.
-{"B_CASH1", "\cqMONEY MERCHANT",        "Earnt more than $1000 in one minute.",                    },//500},
-{"B_CASH2", "\cqMONEY MAGNET",          "Earnt more than $2000 in one minute.",                    },//1000},
-{"B_CASH3", "\cqMONEY MASTER",          "Earnt more than $3000 in one minute.",                    },//1500},
+{"B_CASH1", "\cqMONEY MERCHANT",        "Accumulated more than $10000 credits.",                   },//500},
+{"B_CASH2", "\cqMONEY MAGNET",          "Accumulated more than $20000 credits.",                   },//1000},
+{"B_CASH2", "\cqMONEY MASTER",          "Accumulated more than $30000 credits.",                   },//1500},
 // Damage bonuses.
+{"B_NODETH","\crSURVIVOR",              "Didn't die once.",                                        },//500},
 {"B_DAMG1", "\ctUNSTOPPABLE",           "Took less than 100 damage overall.",                      },//1000},
 {"B_DAMG2", "\csINHUMAN",               "Took less than 50 damage overall.",                       },//2500},
 {"B_DAMG3", "\cnGODLIKE",               "Took no damage overall.",                                 },//5000},
-{"B_NODETH","\cbDOMINATOR",             "Didn't die once.",                                        },//2000},
+// Difficulty bonus.
+{"B_NIGHTM","\cbDOMINATOR",             "Played on Nightmare difficulty.",                         },//2000},
 };
 
 int BonusAwards[MAXBONUSES] =
-{500,1000,1500,250,500,750,2000,800,500,750,1000,200,600,1000,1000,1000,200,600,1000,500,1000,1500,1000,2500,5000,2000};
+{500,1000,1500,250,500,750,2000,1000,200,600,1000,500,750,1000,1000,3000,200,600,1000,500,1000,1500,500,1000,2500,5000,2000};
 
 // Spots arrays
 #define MAX_WEAPON_SPOTS	32
@@ -426,7 +451,7 @@ int PowerupSpotsUsed = 0;
 // Object spawn arrays
 
 // EnemyEntries[] format is {int wave, str actor, int number}
-#define MAX_ENEMY_ENTRIES	8192
+#define MAX_ENEMY_ENTRIES	512
 int EnemyEntries[MAX_ENEMY_ENTRIES][3];
 int EnemyEntriesUsed = 0;
 
@@ -437,36 +462,36 @@ int ZoneData[MAX_ZONES][ZONEDATA_WIDTH];
 int ZoneDataUsed = 0;
 
 // WeaponItems[] format is {int wave, str actor}
-#define MAX_WEAPON_ITEMS	32
+#define MAX_WEAPON_ITEMS	256
 int WeaponItems[MAX_WEAPON_ITEMS][2];
 int WeaponItemsUsed = 0;
 
 // MedicItems[] format is {int wave, str actor, int number}
-#define MAX_MEDIC_ITEMS		128
+#define MAX_MEDIC_ITEMS		2048
 int MedicItems[MAX_MEDIC_ITEMS][3];
 int MedicItemsUsed = 0;
 
-#define MAX_POWERUP_ITEMS	128
+#define MAX_POWERUP_ITEMS	1024
 int PowerupItems[MAX_POWERUP_ITEMS][3];
 int PowerupItemsUsed = 0;
 
 // AmmoEntries[] format is {int wave, int type, int amount}
-#define MAX_AMMO_ENTRIES	256
+#define MAX_AMMO_ENTRIES	1024
 int AmmoEntries[MAX_AMMO_ENTRIES][3];
 int AmmoEntriesUsed = 0;
 
 // AmmoActors[] format is {int type, str actor, int amount}
-#define MAX_AMMO_ACTORS		32
+#define MAX_AMMO_ACTORS		4096
 int AmmoActors[MAX_AMMO_ACTORS][3];
 int AmmoActorsUsed = 0;
 
 // MapRewards[] format is {str actor, int amount}
-#define MAX_MAP_REWARDS		8
+#define MAX_MAP_REWARDS		64
 int MapRewards[MAX_MAP_REWARDS][2];
 int MapRewardsUsed = 0;
 
 // RadioMessages[] format is {int wave, int name, str message}
-#define MAX_RADIO_MSGS		80
+#define MAX_RADIO_MSGS		512
 #define RADIO_MSGS_WIDTH	3
 int RadioMessages[MAX_RADIO_MSGS][RADIO_MSGS_WIDTH];
 int RadioMessagesUsed = 0;
@@ -477,7 +502,7 @@ int RadioMessagesUsed = 0;
 #define MAX_NORMAL_WAVES	40
 int WaveFinishCallback[MAX_NORMAL_WAVES];
 
-#define MAX_ENEMIES_PER_WAVE	1024
+#define MAX_ENEMIES_PER_WAVE	32767 //8192
 
 // EnemySpawnCache[] format is {int loc, str actor}
 // ENEMY_SPAWN_CACHE_LEN is the limit of how many concurrent waves can be running at once.
@@ -927,23 +952,19 @@ function void AddAmmoActor (int type, str actor, int amount)
 	AmmoActors[AmmoActorsUsed++][2]	= amount;
 }
 
-Script S_DETECTENDOFLVL ENTER
+script "StrZandronumChecker" OPEN // safely ignored in zdoom
+{
+    SetDBEntry("strnghldstuff", "iszandronum", 1);
+    isZandronum = GetDBEntry("strnghldstuff", "iszandronum") == 1;
+}
+
+script S_DETECTENDOFLVL ENTER
 {
 	while (!GameVictory)
 	{
-		while (TimeAttackMode)
-		{
-			if ((levelRunningTime / 35) > MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)] && MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)])
-			{
-				acs_execute(S_MISSION_FAIL,0,1,0,0);
-				//log(s:"SHIP IS GOING DOWN CAPTAIN! ",i:levelrunningtime, s:"  -  ", i:MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]);
-				terminate;
-			}
-			delay(1);
-		}
-		delay(35);
+		delay(1);
 	}
-	if (GetLevelInfo(LEVELINFO_LEVELNUM)!=1) GetEndBonuses(1);
+	if (GetLevelInfo(LEVELINFO_LEVELNUM) != 1 && !MapIsMenu()) GetEndBonuses(1);
 }
 
 function void AddMapReward (str actor, int amount)
@@ -957,42 +978,54 @@ function void AddMapReward (str actor, int amount)
 
 //Added by Jimmy. Tweak if needed.
 
-int bonuses[32];
-int BonusQueue[MAXBONUSES];
+int bonuses[64];
+int BonusQueue[MAXBONUSES][64];
 
 function void GetBonus ( int bonustype )
 {
   bonuses[playernumber()]++;
- 	log(i:bonustype, s:"    ",i:bonuses[playernumber()]);
- BonusQueue[bonuses[playernumber()]] = bonustype;
-  LocalAmbientSound("Cash",128);
+ 	//log(i:bonustype, s:"    ",i:bonuses[playernumber()]);
+ BonusQueue[bonuses[playernumber()]][playernumber()] = bonustype;
+  LocalAmbientSound("Cash", 127);
 }
 
 script S_GETBONUS ( int bonustype )
 {
+  int totalcredits = 0;
+
   SetHudSize(800,600,1);
   
   SetFont("BigFont");
   
   str bigmessage = "Extra Bonuses Awarded!";
-  if(!bonuses[playernumber()]) bigmessage = " ";
-  
-  HudMessage(s:bigmessage;
-  HUDMSG_FADEOUT|HUDMSG_LOG,200,CR_WHITE,400.4,392.2,4.0+bonuses[playernumber()],1.0);
+  if(!bonuses[playernumber()])
+  {
+    bigmessage = " ";
+  } else {
+    HudMessage(s:bigmessage;
+    HUDMSG_FADEOUT|HUDMSG_LOG,200,CR_WHITE,400.4,392.2,4.0+bonuses[playernumber()],1.0);
+  }
   
   SetFont("ConFont");
   
   for(int i=1; i<=bonuses[playernumber()]; i++)
   {
-    HudMessage(s:BonusArray[BonusQueue[i]][1], s:" BONUS \cf($",d:BonusAwards[BonusQueue[i]],s:")";
+    HudMessage(s:BonusArray[BonusQueue[i][playernumber()]][1], s:" BONUS \cf($",d:BonusAwards[BonusQueue[i][playernumber()]],s:")";
     HUDMSG_FADEOUT|HUDMSG_LOG,200+i,CR_UNTRANSLATED,400.4,416.2+(8.0*i),4.0+bonuses[playernumber()],1.0);
-  
-    HudMessage(s:BonusArray[BonusQueue[i]][2];
+
+    HudMessage(s:BonusArray[BonusQueue[i][playernumber()]][2];
     HUDMSG_FADEOUT|HUDMSG_LOG,300+i,CR_WHITE,400.4,432.2+(8.0*i)+(8.0*bonuses[playernumber()]),4.0+bonuses[playernumber()],1.0);
-    
-    GiveInventory("CoinItem",BonusAwards[BonusQueue[i]]);
+
+    GiveInventory("AwardItem",BonusAwards[BonusQueue[i][playernumber()]]);
+    totalcredits += BonusAwards[BonusQueue[i][playernumber()]];
   }
-  
+
+  if (bonuses[playernumber()])
+  {
+    HudMessage(s:"TOTAL AMOUNT: $", d:totalcredits;
+    HUDMSG_FADEOUT|HUDMSG_LOG,399,CR_GOLD,400.4,448.2+(8.0*i)+(8.0*bonuses[playernumber()]),4.0+bonuses[playernumber()],1.0);
+  }
+
   bonuses[playernumber()] = 0;
   
   SetFont("BigFont");
@@ -1006,9 +1039,16 @@ script S_GETBONUS ( int bonustype )
 
 function void GetEndBonuses ( int correct )
 {
-	if (!correct) //Patch code to save me the trouble of trying to go through all themaps to fix this.
+	if (!correct) //Patch code to save me the trouble of trying to go through all the maps to fix this.
 	return;
-	
+
+  if(CheckInventory("CoinItem") > 30000)
+    GetBonus(B_CASH30K);
+  else if(CheckInventory("CoinItem") > 20000)
+    GetBonus(B_CASH20K);
+  else if(CheckInventory("CoinItem") > 10000)
+    GetBonus(B_CASH10K);
+
 	//log(s:"Game mode - ", i:gamemode, s:"  - Activator: ", n:playernumber()+1);
   if(GameMode==GAME_MILESTONE && CurrentMile==0)
     GetBonus(B_NOMILESTONES);
@@ -1016,17 +1056,17 @@ function void GetEndBonuses ( int correct )
   if(GameMode==GAME_GOAL && ThingCount(T_NONE, HateEpicenter)==NumberOfTargets)
     GetBonus(B_NOGOALS);
 
-  if(GameMode==GAME_OVERMIND && ThingCount(T_NONE, HateEpicenter)==NumberOfTargets)
+  if(GameMode==GAME_OVERMIND && ThingCount(T_NONE, BossTarget)==NumberOfTargets)
     GetBonus(B_NOCORES);
 
   if(GameMode==GAME_CORE)
   {
     if(GetActorProperty(HateEpicenter,AProp_Health)==1000)
       GetBonus(B_CORE100);
-	else if(GetActorProperty(HateEpicenter,AProp_Health)>=950 && GetActorProperty(HateEpicenter,AProp_Health)<1000)
-	  GetBonus(B_CORE95);
-	else if(GetActorProperty(HateEpicenter,AProp_Health)>=900 && GetActorProperty(HateEpicenter,AProp_Health)<950)
+	else if(GetActorProperty(HateEpicenter,AProp_Health)>=900 && GetActorProperty(HateEpicenter,AProp_Health)<1000)
 	  GetBonus(B_CORE90);
+	else if(GetActorProperty(HateEpicenter,AProp_Health)>=800 && GetActorProperty(HateEpicenter,AProp_Health)<900)
+	  GetBonus(B_CORE80);
   }
   
   if(GameMode==GAME_LIMIT)
@@ -1038,39 +1078,71 @@ function void GetEndBonuses ( int correct )
 	else if(LimitCounter<=LimitMax/2)
 	  GetBonus(B_LIMITHALF);
   }
-  
-  if(DamageTaken[PlayerNumber()]==0) // Took no damage.
-    GetBonus(B_NODAMAGE);
-  else if(DamageTaken[PlayerNumber()]>=50 && DamageTaken[PlayerNumber()]<100) // Took between 50 and 99 damage.
-    GetBonus(B_DAMAGE100);
-  else if(DamageTaken[PlayerNumber()]<50) //Took less than 50 damage.
-    GetBonus(B_DAMAGE50);
 
-  if(MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)]==-1) // If the map is in time attack mode.
+  if (!PlayerDiedInMap[PlayerNumber()])
+  {
+    if(DamageTaken[PlayerNumber()]==0) // Took no damage.
+    {
+      GetBonus(B_NODAMAGE);
+    } else if(DamageTaken[PlayerNumber()]>=50 && DamageTaken[PlayerNumber()]<100) { // Took between 50 and 99 damage.
+      GetBonus(B_DAMAGE100);
+    } else if(DamageTaken[PlayerNumber()]<50) { // Took less than 50 damage.
+      GetBonus(B_DAMAGE50);
+    } else { // Took more than 99 damage, but you're still on the same life.
+      GetBonus(B_NODEATHS);
+    }
+  }
+
+  if(GameSkill() == SKILL_VERY_HARD)
+    GetBonus(B_NIGHTMARE);
+
+  if(parTimeMode != 0) // If the map is in time attack mode.
   {
 	  //log(s:"Time checked");
-    if(levelRunningTime<=MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]/4)
+    if(levelRunningTime<=MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35/4)
 	  GetBonus(B_TIMEQUARTER);
-    else if(levelRunningTime<=MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]/3)
+    else if(levelRunningTime<=MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35/3)
 	  GetBonus(B_TIMETHIRD);
-	else if(levelRunningTime<=MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]/2)
+	else if(levelRunningTime<=MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35/2)
 	  GetBonus(B_TIMEHALF);
   }
     ACS_ExecuteAlways(S_GETBONUS,0,0);
 }
 
-script S_DAMAGECHECKS ENTER
+script "StrDamageChecker" ENTER
 {
-  int oldhealth = 0;
-  int newhealth = 0;
-  while(1)
-  {
-    oldhealth = GetActorProperty(0,AProp_Health);
-   	delay(1);
-	newhealth = GetActorProperty(0,AProp_Health);
-	if(newhealth<oldhealth) DamageTaken[PlayerNumber()] = DamageTaken[PlayerNumber()] + (oldhealth-newhealth);
-	
-  }
+    int oldhealth = 0;
+    int newhealth = 0;
+    int degentimer;
+
+    while (1)
+    {
+        if (GameActive && LivesChecking && !MapIsMenu())
+        {
+            oldhealth = GetActorProperty(0, APROP_Health);
+
+            Delay(1);
+
+            newhealth = GetActorProperty(0, APROP_Health);
+
+            if (isZandronum) { degentimer = Timer() % 128; } else { degentimer = Timer() % 35; }
+
+            if (newhealth < oldhealth)
+            {
+                if ((degentimer == 0 && GetCVar("sv_degeneration")) || CheckInventory("StrDamageCheckerIgnore")) // hackery
+                {
+                    // do nothing here
+                } else {
+                    DamageTaken[PlayerNumber()] = DamageTaken[PlayerNumber()] + (oldhealth - newhealth);
+                    if (DamageTaken[PlayerNumber()] > 100) DamageTaken[PlayerNumber()] = 100;
+                }
+            }
+        } else {
+            Delay(1);
+        }
+
+        if (CheckInventory("StrDamageCheckerIgnore")) { TakeInventory("StrDamageCheckerIgnore", INT_MAX); } // take away the hackery
+    }
 }
 
 // Wave settings
@@ -1208,6 +1280,19 @@ function void CallWave (int wave)
 		WaveFinishCallback[wave]	= FALSE;
 
 	ACS_ExecuteAlways(S_CALLWAVE,0,wave);
+
+    // MODIFIED: Change music in the last few waves if stronghold_cl_dukemusic is active.
+    if (GameActive)
+    {
+        if (wave == Waves)
+        {
+            ACS_NamedExecuteWithResult("StrDukeMusic", 2);
+        }
+        else if ((Waves >= 9 && wave == Waves - 2) || (Waves < 9 && wave == Waves - 1))
+        {
+            ACS_NamedExecuteWithResult("StrDukeMusic", 1);
+        }
+    }
 }
 
 function void SpawnStuff (int wave)
@@ -1236,16 +1321,7 @@ function int SpawnAmmo (int wave)
 	{
 		if(AmmoEntries[i][0]==wave)
 		{
-			//curAmmoQuota = Multiplier( M_AMMO, AmmoEntries[i][2] ); 
-
-			if (PlayerCount() == 1)
-			{
-				curAmmoQuota = AmmoEntries[i][2];
-			}
-			else
-			{
-				curAmmoQuota = Multiplier( M_AMMO, AmmoEntries[i][2] );
-			}
+			curAmmoQuota = Multiplier( M_AMMO, AmmoEntries[i][2] );
 			curAmmoActorIndex = FindAmmoActor(AmmoEntries[i][1],curAmmoQuota);
 
 			// If we don't even have enough ammo quota in the first loop to spawn even one ammo item, spawn
@@ -1370,25 +1446,28 @@ function int SpawnPowerups (int wave)
 
 	int spot = 0;
 	int tid = NewTempTid();
+	int newTid = NewTempTid(); // waste a TID just so it won't read off items spawned via scripts. may or may not cause problems
 
 	for(int i=0; i<PowerupItemsUsed; i++)
 	{
 		if( PowerupItems[i][0]==wave )
 		{
-			while( ThingCountName(PowerupItems[i][1], 0) < Multiplier( M_POWERUP, PowerupItems[i][2] ) )
+			while( ThingCountName(PowerupItems[i][1], newTid) < Multiplier( M_POWERUP, PowerupItems[i][2] ) )
 			{
 				SpawnSpot(PowerupItems[i][1], PowerupSpots[spot], tid);
 				ItemFogSpawner(PowerupSpots[spot]);
 				ItemThruster(tid);
-				Thing_ChangeTid(tid, 0);
+				Thing_ChangeTid(tid, newTid);
 
 				counter++;
 
 				if (spot == PowerupSpotsUsed-1) {spot=0;} else {spot++;} // Cycle through each spot
 			}
+			Thing_ChangeTid(newTid, 0);
 		}
 	}
 	FreeTempTid(tid);
+	FreeTempTid(newTid);
 	return counter;
 }
 
@@ -1402,25 +1481,28 @@ function int SpawnMedic (int wave)
 
 	int spot = 0;
 	int tid = NewTempTid();
+	int newTid = NewTempTid(); // waste a TID just so it won't read off items spawned via scripts. may or may not cause problems
 
 	for(int i=0; i<MedicItemsUsed; i++)
 	{
 		if( MedicItems[i][0]==wave )
 		{
-			while( ThingCountName(MedicItems[i][1], 0) < Multiplier( M_MEDIC, MedicItems[i][2] ) )
+			while( ThingCountName(MedicItems[i][1], newTid) < Multiplier( M_MEDIC, MedicItems[i][2] ) )
 			{
 				SpawnSpot(MedicItems[i][1], MedicSpots[spot], tid);
 				ItemFogSpawner(MedicSpots[spot]);
 				ItemThruster(tid);
-				Thing_ChangeTid(tid, 0);
+				Thing_ChangeTid(tid, newTid);
 
 				counter++;
 
 				if (spot == MedicSpotsUsed-1) {spot=0;} else {spot++;} // Cycle through each spot
 			}
+			Thing_ChangeTid(newTid, 0);
 		}
 	}
 	FreeTempTid(tid);
+	FreeTempTid(newTid);
 	return counter;
 }
 
@@ -1459,8 +1541,8 @@ function void WeaponThruster (int tid)
 
 function void ItemThruster (int tid)
 {
-	ThrustThing(random(0,255), random(2,3), 0, tid);
-	ThrustThingZ(tid, random(16,24), 0, 0);
+	ThrustThing(random(0,255), random(1,3), 0, tid);
+	ThrustThingZ(tid, random(8,24), 0, 0);
 }
 
 // Internal, probably shouldn't be called by a map directly
@@ -1478,6 +1560,8 @@ function void GiveMapRewards (void)
 
 function void AnnounceNewWave (int wave)
 {
+    str soundfile;
+
 	if((wave>0)&&(wave<=Waves)) // Don't announce for special negative waves or post-final wave
 	{
 		curWave = wave;
@@ -1494,21 +1578,29 @@ function void AnnounceNewWave (int wave)
 
 			if(wave<WAVE_NUM_WORDS)
 			{
-				HudmessageBold(s:WaveNumberWord[wave],s:"\cc Wave!";
+				HudmessageBold(s:WaveNumberWord[wave],s:" \ccWave!";
 					HUDMSG_FADEINOUT|HUDMSG_LOG,0,CR_RED,256.0,128.1,3.0,1.0,1.0);
 			} else {
 				HudMessageBold(s:"Wave ",d:wave,s:"\cc!";
 					HUDMSG_FADEINOUT|HUDMSG_LOG,0,CR_RED,256.0,128.1,3.0,1.0,1.0);
 			}
 
-			if( wave<WAVE_ANNOUNCE_SOUNDS_LEN )
-			{	AmbientSound(WaveAnnounceSounds[wave],127);	}
+            if (wave < WAVE_ANNOUNCE_SOUNDS_LEN)
+            {
+                soundfile = WaveAnnounceSounds[wave];
+            } else {
+                soundfile = "T_WAVBGN";
+            }
+
+            ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 1, soundfile);
 	//	}
 	}
 }
 
 function void AnnounceWaveDone (int wave)
 {
+    str soundfile;
+
 	if(DisableAnnounceWaveDone)
 	{	return;	}
 
@@ -1529,26 +1621,38 @@ function void AnnounceWaveDone (int wave)
 				HUDMSG_FADEINOUT|HUDMSG_LOG,0,CR_RED,256.0,128.1,3.0,1.0,1.0);
 		}
 
-		AmbientSound(WaveCompleteSound,127);
+        if (wave < WAVE_COMPLETE_SOUNDS_LEN )
+        {
+            soundfile = WaveCompleteSounds[wave];
+        } else {
+            soundfile = "T_WAVDON";
+        }
+
+        ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 1, soundfile);
 	}
 }
 
 function void AnnounceNewMile (int mile)
 {
+    str soundfile;
+
 	SetHudSize(640,480,1);
 	SetFont("BigFont");
 
 	if(mile<WAVE_NUM_WORDS)
 	{
 		HudmessageBold(s:WaveNumberWord[mile],s:" Milestone \cchas been breached!";
-			HUDMSG_FADEINOUT|HUDMSG_LOG,0,CR_BLACK,320.0,130.1,3.0,1.0,1.0);
+			HUDMSG_FADEINOUT|HUDMSG_LOG,275,CR_BLACK,320.0,130.1,3.0,1.0,1.0);
 	} else {
 		HudmessageBold(s:"Milestone ",d:mile,s:" \cchas been breached!";
-			HUDMSG_FADEINOUT|HUDMSG_LOG,0,CR_BLACK,320.0,130.1,3.0,1.0,1.0);
+			HUDMSG_FADEINOUT|HUDMSG_LOG,275,CR_BLACK,320.0,130.1,3.0,1.0,1.0);
 	}
 
-	if( mile<MILE_ANNOUNCE_SOUNDS_LEN )
-	{	AmbientSound(MileAnnounceSounds[mile],127);	}
+    if (mile < MILE_ANNOUNCE_SOUNDS_LEN)
+    {
+        soundfile = MileAnnounceSounds[mile];
+        ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 1, soundfile);
+    }
 }
 
 function int RandomCoords (int zone, int axis)	// 0 is x, 1 is y, 2 is z
@@ -1694,55 +1798,110 @@ function void Setup (void)
 		MapCoinReward[33]	= 3200;
 		MapCoinReward[34]	= 3300;
 		MapCoinReward[35]	= 0;
+		MapCoinReward[40]	= 3000;
+		MapCoinReward[41]	= 3000;
+		MapCoinReward[42]	= 3000;
+		MapCoinReward[43]	= 3000;
+		MapCoinReward[44]	= 3000;
 		MapCoinReward[50]	= 1500;
 		MapCoinReward[52]	= 1500;
 		MapCoinReward[54]	= 1500;
 		MapCoinReward[56]	= 1500;
 
-		// All level par times here, in seconds
+		// All level par times here, in minutes
 		// 0 means no set par time (yet)
 		// Hint: 5min 20sec can be shown as 5*60+20
-		MapParTime[1]	= 2*60;
-		MapParTime[2]	= 5*60;
-		MapParTime[3]	= 10*60;
-		MapParTime[4]	= 6*60;
-		MapParTime[5]	= 8*60;
-		MapParTime[6]	= 10*60;
-		MapParTime[7]	= 9*60;
-		MapParTime[8]	= 8*60;
-		MapParTime[9]	= 3*60;
-		MapParTime[10]	= 9*60;
-		MapParTime[11]	= 9*60;
-		MapParTime[12]	= 10*60;
-		MapParTime[13]	= 8*60;
-		MapParTime[14]	= 10*60;
-		MapParTime[15]	= 11*60;
-		MapParTime[16]	= 19*60;
-		MapParTime[17]	= 10*60;
-		MapParTime[18]	= 15*60;
-		MapParTime[19]	= 15*60;
-		MapParTime[20]	= 10*60;
-		MapParTime[21]	= 5*60;
-		MapParTime[22]	= 9*60;
-		MapParTime[23]	= 13*60;
-		MapParTime[24]	= 16*60;
-		MapParTime[25]	= 6*60;
-		MapParTime[26]	= 11*60;
-		MapParTime[27]	= 24*60;
-		MapParTime[28]	= 20*60;
-		MapParTime[29]	= 19*60;
-		MapParTime[30]	= 25*60;
-		MapParTime[31]	= 13*60;
-		MapParTime[32]	= 22*60;
-		MapParTime[33]	= 14*60;
-		MapParTime[34]	= 19*60;
-		MapParTime[35]	= 30*60;
-		MapParTime[50]	= 9*60;
-		MapParTime[52]	= 12*60;
-		MapParTime[54]	= 11*60;
-		MapParTime[56]	= 14*60;
+		MapParTime[1]	= 4*60;
+		MapParTime[2]	= 10*60;
+		MapParTime[3]	= 20*60;
+		MapParTime[4]	= 12*60;
+		MapParTime[5]	= 16*60;
+		MapParTime[6]	= 20*60;
+		MapParTime[7]	= 18*60;
+		MapParTime[8]	= 16*60;
+		MapParTime[9]	= 12*60;
+		MapParTime[10]	= 18*60;
+		MapParTime[11]	= 18*60;
+		MapParTime[12]	= 20*60;
+		MapParTime[13]	= 16*60;
+		MapParTime[14]	= 20*60;
+		MapParTime[15]	= 25*60;
+		MapParTime[16]	= 45*60;
+		MapParTime[17]	= 20*60;
+		MapParTime[18]	= 28*60;
+		MapParTime[19]	= 30*60;
+		MapParTime[20]	= 33*60;
+		MapParTime[21]	= 10*60;
+		MapParTime[22]	= 25*60;
+		MapParTime[23]	= 30*60;
+		MapParTime[24]	= 32*60;
+		MapParTime[25]	= 12*60;
+		MapParTime[26]	= 50*60;
+		MapParTime[27]	= 40*60;
+		MapParTime[28]	= 40*60;
+		MapParTime[29]	= 38*60;
+		MapParTime[30]	= 44*60;
+		MapParTime[31]	= 30*60;
+		MapParTime[32]	= 48*60;
+		MapParTime[33]	= 35*60;
+		MapParTime[34]	= 60*60;
+		MapParTime[35]	= 90*60;
+		MapParTime[40]	= 36*60;
+		MapParTime[41]	= 15*60;
+		MapParTime[42]	= 20*60;
+		MapParTime[43]	= 28*60;
+		MapParTime[44]	= 55*60;
+		MapParTime[50]	= 18*60;
+		MapParTime[52]	= 24*60;
+		MapParTime[54]	= 75*60;
+		MapParTime[56]	= 27*60;
 
-		AddMapReward("CoinItem", MapCoinReward[GetLevelInfo(LEVELINFO_LEVELNUM)]);
+		MapParTimeDisplay[1]	= "4:00"; // HACK X2
+		MapParTimeDisplay[2]	= "10:00";
+		MapParTimeDisplay[3]	= "20:00";
+		MapParTimeDisplay[4]	= "12:00";
+		MapParTimeDisplay[5]	= "16:00";
+		MapParTimeDisplay[6]	= "20:00";
+		MapParTimeDisplay[7]	= "18:00";
+		MapParTimeDisplay[8]	= "16:00";
+		MapParTimeDisplay[9]	= "12:00";
+		MapParTimeDisplay[10]	= "18:00";
+		MapParTimeDisplay[11]	= "18:00";
+		MapParTimeDisplay[12]	= "20:00";
+		MapParTimeDisplay[13]	= "16:00";
+		MapParTimeDisplay[14]	= "20:00";
+		MapParTimeDisplay[15]	= "25:00";
+		MapParTimeDisplay[16]	= "45:00";
+		MapParTimeDisplay[17]	= "20:00";
+		MapParTimeDisplay[18]	= "28:00";
+		MapParTimeDisplay[19]	= "30:00";
+		MapParTimeDisplay[20]	= "33:00";
+		MapParTimeDisplay[21]	= "10:00";
+		MapParTimeDisplay[22]	= "25:00";
+		MapParTimeDisplay[23]	= "30:00";
+		MapParTimeDisplay[24]	= "32:00";
+		MapParTimeDisplay[25]	= "12:00";
+		MapParTimeDisplay[26]	= "50:00";
+		MapParTimeDisplay[27]	= "40:00";
+		MapParTimeDisplay[28]	= "40:00";
+		MapParTimeDisplay[29]	= "38:00";
+		MapParTimeDisplay[30]	= "44:00";
+		MapParTimeDisplay[31]	= "30:00";
+		MapParTimeDisplay[32]	= "48:00";
+		MapParTimeDisplay[33]	= "35:00";
+		MapParTimeDisplay[34]	= "60:00";
+		MapParTimeDisplay[35]	= "90:00";
+		MapParTimeDisplay[40]	= "36:00";
+		MapParTimeDisplay[41]	= "15:00";
+		MapParTimeDisplay[42]	= "20:00";
+		MapParTimeDisplay[43]	= "28:00";
+		MapParTimeDisplay[44]	= "55:00";
+		MapParTimeDisplay[50]	= "18:00";
+		MapParTimeDisplay[52]	= "24:00";
+		MapParTimeDisplay[54]	= "75:00";
+		MapParTimeDisplay[56]	= "27:00";
+
+		AddMapReward("AwardItem", MapCoinReward[GetLevelInfo(LEVELINFO_LEVELNUM)]);
 
 		if ( MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)] == -1 )
 		{
@@ -1773,36 +1932,72 @@ function int Multiplier (int type, int amount)
 	return result;
 }
 
-int SkillScaler[5] =	{ 0.6, 0.75, 1.0, 1.5, 2.0 };
+int SkillScaler[5] =	{ 0.75, 0.75, 1.0, 1.5, 2.0 };
 
 // This function returns the multiplier as a fixed point value.
 // If the multiplier needs to be tweaked, this is the function to do it in.
 function int RawMultiplier (int type)
 {
 	int result = 1.0;
+
 	switch(type)
 	{
 	case M_POWERUP:
-		result = 1.0*PlayerCount();
+		result = 1.0*PlayersNotInJailCount();
 		break;
 	case M_MEDIC:
 	case M_AMMO:
-		result = 0.03 + 1.18*PlayerCount();	// Slightly above 1.0 for one player to account for rounding errors
+		If(ReplayMode)
+		{
+			result = 1.05*PlayersNotInJailCount() + 0.36;	// Slightly above 1.4 for one player to account for rounding errors
+		} else {
+			result = 1.05*PlayersNotInJailCount() - 0.04;	// Slightly above 1.0 for one player to account for rounding errors
+		}
 		break;
 	case M_ENEMIES:
-		result = FixedMul(0.05 + 0.96*PlayerCount(), SkillScaler[GameSkill()]);
+		If(ReplayMode)
+		{
+			result = FixedMul(0.55 + 0.96*PlayersNotInJailCount(), SkillScaler[GameSkill()]);
+		} else {
+			result = FixedMul(0.05 + 0.96*PlayersNotInJailCount(), SkillScaler[GameSkill()]);
+		}
 		break;
-	case M_BOSSHEALTH:
+	case M_BOSSHEALTH: //Not being used anymore, because THANKS ZANDRONUM
 		// 1 player	= 1x
 		// 8 players	= 3x
 		// result = 2/7 * playercount + 5/7
 		// result = (2*playercount + 5) / 7
-		result = ( 2.0*PlayerCount() + 5.0 ) / 7; // Dividing fixed by int yields a fixed
+		result = ( 2.0*PlayersNotInJailCount() + 5.0 ) / 7; // Dividing fixed by int yields a fixed
 		break;
 	default:
 		PrintBold(s:"Error: Function Multiplier() called without a valid type argument");
 	}
 	return result;
+}
+
+function int PlayersNotInJailCount (void)
+{
+    int playerAmount = PlayerCount();
+    int fakePlayerAmount = GetCVar("stronghold_effectiveplayercount");
+    int actualPlayerAmount;
+    int inJail = 0;
+    int i;
+
+    for (i = 0; i <= highestPlayerNumber; i++)
+    {
+        inJail += CheckActorInventory(PLAYER_TID_START+i, "JailTracker");
+    }
+
+    if (GetCVar("stronghold_effectiveplayercounttype") >= 1)
+    {
+        actualPlayerAmount = fakePlayerAmount;
+    } else {
+        actualPlayerAmount = playerAmount - inJail + fakePlayerAmount;
+    }
+
+    if (actualPlayerAmount < 1) { actualPlayerAmount = 1; }
+
+    return actualPlayerAmount;
 }
 
 function void ScreenFadeOut (int inTime) // time is a float value in seconds
@@ -1828,11 +2023,18 @@ script S_MISSION_COMPLETE (void)
 		bool newRecord = false;
 		bool MapCompleted = false;
 		
-		SetPlayerProperty(1, 2, PROP_INVULNERABILITY);
-		// Set the player invulverable so he can't die after winning the game
+		//SetPlayerProperty(1, 2, PROP_INVULNERABILITY);
+		for(int i=0; i<=highestPlayerNumber; i++)
+		{
+			GiveActorInventory(PLAYER_TID_START+i, "StrVictoryInvulnerability", 1); // SetPlayerProperty wouldn't work sometimes, so this should ensure invulnerability for everyone
+		}
+		// Set the player invulnerable so they can't die after winning the game
 
 		SetActorProperty(HateEpicenter, APROP_Invulnerable, true);
-		  // Core is made invulnerable so it can't be destroyed after winning.
+		// Core is made invulnerable so it can't be destroyed after winning.
+
+		SetActorProperty(BossTarget, APROP_Invulnerable, true);
+		// Same deal with the power nodes.
 		
 		// Jimmy: I really butchered this script. Sorry about that. :S
 		if(MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)]==0)
@@ -1843,7 +2045,7 @@ script S_MISSION_COMPLETE (void)
 		else
 			{
 				if(levelRunningTime<MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35)
-					newRecord = true;
+				newRecord = true;
 			}
 
 		GameActive = FALSE;
@@ -1853,7 +2055,7 @@ script S_MISSION_COMPLETE (void)
 		SetMusic("");
 		AmbientSound("TB_VICT", 127);
 		GameVictory = TRUE;
-		TimeAttackMode = FALSE;
+		MusicChangeDisabled = TRUE;
 
 		SetHudSize (640, 480, 1);
 
@@ -1864,11 +2066,12 @@ script S_MISSION_COMPLETE (void)
 
 		delay(3*35);
 
+		ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 2);
 		ScreenFadeOut(3.0);
 
 		delay(5*35);
 
-		if (!MapCompleted) // If the player has been playing in time attack mode.
+		if (!MapCompleted && !MapIsMenu()) // If the player has been playing in time attack mode.
 		{
 			SetPlayerProperty(1, true, PROP_TOTALLYFROZEN);
 
@@ -1893,34 +2096,49 @@ script S_MISSION_COMPLETE (void)
 					HUDMSG_FADEINOUT|HUDMSG_LOG, 0, CR_WHITE, 240.0, 160.1, 7.0, 1.5, 1.0);
 			}
 
-			if(MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)] != 0)
+			if(MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)] != -1)
 			{
 				int bseconds = (MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)]/35)%60;
 				int bminutes = (MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)]/35)/60;
 
-				HudMessageBold(s:"Best Time: \cg",s:zerospace(bminutes,2),d:bminutes,s:":",s:zerospace(bseconds,2),d:bseconds;
-					HUDMSG_FADEINOUT|HUDMSG_LOG, 0, CR_WHITE, 240.0, 200.1, 7.0, 1.5, 1.0);
+                HudMessageBold(s:"Best Time: \cg",s:zerospace(bminutes,2),d:bminutes,s:":",s:zerospace(bseconds,2),d:bseconds;
+                    HUDMSG_FADEINOUT|HUDMSG_LOG, 0, CR_WHITE, 240.0, 200.1, 7.0, 1.5, 1.0);
 			}
 
 			if(newRecord)
 			{
-				MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)] = levelRunningTime;
-				//Log(s:"Extra Credit: ", d:(MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]-(levelRunningTime/35))*10);
-				GiveInventory("CoinItem", (MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]-(levelRunningTime/35))*10);
+                if (parTimeMode == 1 || (levelRunningTime < MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)] && parTimeMode == 2))
+                {
+                    MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)] = levelRunningTime; //Always true
+                }
 
-				HudMessageBold(s:"A new record!";
+				for(int j=0; j<=highestPlayerNumber; j++)
+				{
+					GiveActorInventory(PLAYER_TID_START+j, "AwardItem", (MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]-(levelRunningTime/35))*10);
+				}
+				AmbientSound("Cash", 127);
+
+				HudMessageBold(s:"Par time beaten! (",d:(MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]-(levelRunningTime/35))*10,s:" credits gained)";
 					HUDMSG_FADEINOUT|HUDMSG_LOG, 0, CR_GREEN, 240.0, 240.1, 6.0, 2.5, 1.0);
+				ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 3);
 			} else {
-				HudMessageBold(s:"Record not beaten";
+                if (parTimeMode == 1)
+                {
+                    MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)] = MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35;
+                }
+
+				HudMessageBold(s:"Par time not beaten (0 credits gained)";
 					HUDMSG_FADEINOUT|HUDMSG_LOG, 0, CR_ORANGE, 240.0, 240.1, 6.0, 2.5, 1.0);
 			}
 
+				HudMessageBold(s:"Hard mode completed!";
+					HUDMSG_FADEINOUT|HUDMSG_LOG, 0, CR_GREEN, 240.0, 280.1, 6.0, 2.5, 1.0);
 			delay(10*35);
 
 			SetPlayerProperty(1, false, PROP_TOTALLYFROZEN);
 		}
 
-		SetPlayerProperty(1, false, PROP_INVULNERABILITY);
+		//SetPlayerProperty(1, false, PROP_INVULNERABILITY);
 
 		GiveMapRewards();
 
@@ -1933,6 +2151,7 @@ script S_M_ACTIVATE_FAIL (void)
 {
 	// Don't continue if the activator is a dead monster or friendly
 	if(	GameActive &&
+		( (ClassifyActor(0) & ACTOR_MONSTER) == ACTOR_MONSTER ) &&
 		( (ClassifyActor(0) & ( ACTOR_MONSTER | ACTOR_DEAD )) != ( ACTOR_MONSTER | ACTOR_DEAD ) ) &&
 		( !GetActorProperty(0, APROP_Friendly) ) )
 	{
@@ -1946,7 +2165,7 @@ script S_MISSION_FAIL (void)
 	{	Terminate;	}
 
 	GameActive = FALSE;
-	TimeAttackMode = FALSE;
+	MusicChangeDisabled = TRUE;
 
 	StopTimer();
 
@@ -1955,25 +2174,15 @@ script S_MISSION_FAIL (void)
 
 	SetHudSize (640, 480, 1);
 
-
-	if (MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)]==-1)
-	{
-		SetFont("HUDTH");
-	HudMessageBold (s:"a"; HUDMSG_FADEINOUT, EndMessageHID, CR_UNTRANSLATED,
-			320.0, 240.0,
-			5.0, 0.5, 0.5);
-	}
-	else
-	{
 	SetFont("HUDGO");
 	HudMessageBold (s:"a"; HUDMSG_FADEINOUT, EndMessageHID, CR_UNTRANSLATED,
 			320.0, 240.0,
 			5.0, 0.5, 0.5);
-	}
+
 	ScreenFadeOut( 5.0 );
 
 	delay(35 * 3);
-	AmbientSound("T_FAIL", 127); // "You have failed to defend your Stronghold"
+	ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 4); // "You have failed to defend your Stronghold"
 	delay(35 * 4);
 
 	Exit_Secret(ExitPos);
@@ -1981,6 +2190,8 @@ script S_MISSION_FAIL (void)
 
 script S_DEADLINE (void)
 {
+    if (!LivesChecking) { LivesChecking = TRUE; }
+
 	if(BreakTime == -1)	// Default setting
 	{	BreakTime	= 3*35;	}
 
@@ -2035,6 +2246,11 @@ script S_DEADLINE (void)
 
 script S_CORE_GAME (void)
 {
+    if (!LivesChecking) { LivesChecking = TRUE; }
+
+	if(BreakTime == -1)	// Default setting
+	{	BreakTime	= 6*35;	}
+
 	GameMode = GAME_CORE;
 	HealthWatch(	HateEpicenter,
 			GetActorProperty(HateEpicenter, APROP_SpawnHealth),
@@ -2116,7 +2332,6 @@ function void WatchAnnounceChange(int type, int value, int maxnum)
 	switch(type)
 	{
 	case WATCH_CORE:
-	case WATCH_BOSS:
 	case WATCH_GOALS:	// Handled by S_GOAL_DESTROYED
 		return;
 	}
@@ -2125,18 +2340,24 @@ function void WatchAnnounceChange(int type, int value, int maxnum)
 
 	switch(type)
 	{
+	case WATCH_BOSS:
+		if (value <= 0) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 5); }
+		break;
+
 	case WATCH_BOSSTARGET:
 		if(value == maxnum)	// Don't announce when we have all cores still left
 		{	break;	}
 
-		AmbientSound("amb16",127);
+		ACS_NamedExecuteWithResult("StrAlarmSounding", 1);
 		if(value == 0)
 		{
 			PrintBold(s:"\cgAll \cccores have been destroyed!");
+			ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 6);
 		}
 		else
 		{
 			PrintBold(s:"\cg",d:value,s:" / ",d:maxnum,s:" \cccores remaining!");
+			ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 7);
 		}
 		break;
 	case WATCH_LIMIT:
@@ -2188,12 +2409,12 @@ script S_HEALTH_WATCH (int tid, int maxhealth, int data)
 		if(GetActorProperty(tid, APROP_HEALTH) <= 0)
 		{	break;	}
 
-		delay(15);
+		//delay(15);
 
 		// We don't need to update the screen until the health changes enough to change the
 		// actual percent display value	
 		while( GetPercent( GetActorProperty(tid, APROP_HEALTH), maxhealth ) == curpercent )
-		{	delay(5);	}
+		{	delay(1);	}
 	}
 
 	delay(45);
@@ -2242,11 +2463,11 @@ script S_COUNT_WATCH (int tid, int maxnum, int data)
 		if(curcount <= 0)
 		{	break;	}
 
-		delay(5);
+		//delay(5);
 
 		// We don't need to update the screen until the count changes
 		while( ThingCount( T_NONE, tid ) == curcount )
-		{	delay(5);	}
+		{	delay(1);	}
 	}
 
 	delay(45);
@@ -2278,6 +2499,12 @@ script S_LIMIT_WATCH (int maxnum, int data)
 	int color;
 	int curcount;
 
+	bool announcedcount20 = FALSE; // Used in case more than one enemy is counted in the same tic.
+	bool announcedcount40 = FALSE;
+	bool announcedcount60 = FALSE;
+	bool announcedcount80 = FALSE;
+	bool announcedcountall = FALSE;
+
 	SetHudSize(WatchHudSizeX, WatchHudSizeY, 0);
 	SetFont(WatchHudFont);
 
@@ -2293,8 +2520,18 @@ script S_LIMIT_WATCH (int maxnum, int data)
 
 		WatchAnnounceChange(type,curcount,maxnum);
 
-		if(curcount >= maxnum)
-		{	break;	}
+		if (curcount >= maxnum && !announcedcountall) // Not exactly the best place, but whatever.
+		{
+			ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 8);
+			announcedcountall = TRUE;
+		} else if (curcount < maxnum) {
+			if (curcount >= 20 && !announcedcount20) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 9); announcedcount20 = TRUE; }
+			if (curcount >= 40 && !announcedcount40) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 10); announcedcount40 = TRUE; }
+			if (curcount >= 60 && !announcedcount60) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 11); announcedcount60 = TRUE; }
+			if (curcount >= 80 && !announcedcount80) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 12); announcedcount80 = TRUE; }
+		}
+
+		if (curcount >= maxnum) { break; }
 
 		// We don't need to update the screen until the count changes
 		while( LimitCounter == curcount )
@@ -2313,12 +2550,18 @@ script S_LIMIT_WATCH (int maxnum, int data)
 
 script S_MILESTONE (void)
 {
+    if (!LivesChecking) { LivesChecking = TRUE; }
+
 	GameMode = GAME_MILESTONE;
+	if(BreakTime == -1)	// Default setting
+	{	BreakTime	= 9*35;	}
 	ACS_ExecuteWait(S_DEADLINE,0,0);
 }
 
 script S_LIMIT_GAME (void)
 {
+    if (!LivesChecking) { LivesChecking = TRUE; }
+
 	GameMode = GAME_LIMIT;
 	if(BreakTime == -1)	// Default setting
 	{	BreakTime	= 12*35;	}
@@ -2332,16 +2575,39 @@ script S_LIMIT_GAME (void)
 	ACS_ExecuteWait(S_DEADLINE,0,0);
 }
 
+/* //Testing script, also not used anymore.
+script 180 (void)
+{
+	PrintBold(d:ActivatorTID());
+	int NewHealth = Multiplier( M_BOSSHEALTH, BossHealth );
+	SetActorProperty(0, APROP_Health, NewHealth);
+	Delay(35);
+	PrintBold(d:ActivatorTID());
+}
+*/
+
 script S_OVERMIND (void)
 {
+    if (!LivesChecking) { LivesChecking = TRUE; }
+
 	// Set up boss monster
 	GameMode = GAME_OVERMIND;
-//	int OriginalHealth = Multiplier( M_BOSSHEALTH, BossHealth ); //
-	int OriginalHealth = BossHealth * PlayerCount(); //Decided to do this here, Multiplier messes up for some reason
-	SetActorProperty(BossMonster, APROP_Health, OriginalHealth);
-	Thing_Hate(BossMonster, BossTarget, 2);
-	Thing_Activate(BossMonster);
 	
+	/* //Testing stuff back when Overmind was broken
+	PrintBold(s:"GameMode is currently: ", d:GameMode);
+	PrintBold(s:"BossHealth is currently: ", d:BossHealth);
+	PrintBold(s:"BossTarget is currently: ", d:BossTarget);
+	PrintBold(s:"BossMonster is currently: ", d:BossMonster);
+	*/
+	
+	Thing_Activate(BossMonster);
+	Thing_Hate(BossMonster, BossTarget, 6); // 2
+
+	int OriginalHealth = GetActorProperty(BossMonster, APROP_HEALTH); //SCREW YOU OVERMIND I HAD TO REWRITE YOUR GAME MODE
+
+	/*int OriginalHealth = Multiplier(M_BOSSHEALTH, BossHealth); //BECAUSE THIS SETACTORPROPERTY RANDOMLY LOST THE DAMN TID
+	SetActorProperty(BossMonster, APROP_Health, OriginalHealth);*/ //TIDS ARE LITERALLY THE WORST, CAN YOU NOT FUCKING WORK PROPERLY
+
 	NumberOfTargets = ThingCount( T_NONE, BossTarget );
 
 	HealthWatch(	BossMonster,
@@ -2364,11 +2630,10 @@ script S_OVERMIND (void)
 		CallWave(ThisWave);
 
 		Delay(4*35);
-
+		
 		while( GetActorProperty(BossMonster, APROP_Health) > OriginalHealth * (Waves-ThisWave) / Waves )
-		{	delay(5);	}
+		{	delay(1);	}
 	}
-
 	Suspend;
 	// Gameplay control continues in S_OVERMIND_COMPLETE.
 	// This script left suspended so that it can be terminated later, and level control continues.
@@ -2376,8 +2641,7 @@ script S_OVERMIND (void)
 
 script S_OVERMIND_COMPLETE (void)
 {
-	if(MonstersTid)
-	{	Thing_Damage(MonstersTid, INT_MAX);	}
+    if (MonstersTid) { GiveActorInventory(MonstersTid, "StrMonsterKiller", 1); }
 
 	GameFinishing = TRUE;	// Stop all running waves
 	ACS_Suspend( S_OVERMIND, 0 );	// Pause Overmind script so it doesn't continue launching waves
@@ -2403,7 +2667,8 @@ script S_MILE_MARKER (int mile)
 	}
 
 	// Don't continue if the activator is a dead monster or friendly
-	if(	(mile>CurrentMile) &&
+	if(	GameActive && mile>CurrentMile &&
+		( (ClassifyActor(0) & ACTOR_MONSTER) == ACTOR_MONSTER ) &&
 		( (ClassifyActor(0) & ( ACTOR_MONSTER | ACTOR_DEAD )) != ( ACTOR_MONSTER | ACTOR_DEAD ) ) &&
 		( !GetActorProperty(0, APROP_Friendly) ) )
 	{
@@ -2443,13 +2708,16 @@ script S_LIMIT_MARKER (void)
 
 		Thing_Remove(0);
 
-		LimitCounter++;
+		if (LimitCounter < LimitMax) LimitCounter++;
 	}
 }
 
 script S_GOAL_GAME (void)
 {
+    if (!LivesChecking) { LivesChecking = TRUE; }
+
 	GameMode = GAME_GOAL;
+
 	CountWatch(	HateEpicenter,
 			ThingCount( T_NONE, HateEpicenter ),
 			S_MISSION_FAIL,
@@ -2465,19 +2733,24 @@ script S_GOAL_DESTROYED (int color)
 	switch(color)
 	{
 	case GOAL_RED:
-		printbold(s:"\cARed \cGGoal has been destroyed!");
+		printbold(s:"\caRed \cgGoal has been destroyed!");
+		ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 13);
 		break;
 	case GOAL_ORANGE:
-		printbold(s:"\cIOrange \cGGoal has been destroyed!");
+		printbold(s:"\ciOrange \cgGoal has been destroyed!");
+		ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 14);
 		break;
 	case GOAL_BLUE:
-		printbold(s:"\cHBlue \cGGoal has been destroyed!");
+		printbold(s:"\chBlue \cgGoal has been destroyed!");
+		ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 15);
 		break;
 	case GOAL_GREEN:
-		printbold(s:"\cDGreen \cGGoal has been destroyed!");
+		printbold(s:"\cdGreen \cgGoal has been destroyed!");
+		ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 16);
 		break;
 	case GOAL_WHITE:
-		printbold(s:"\cJWhite \cGGoal has been destroyed!");
+		printbold(s:"\cjWhite \cgGoal has been destroyed!");
+		ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 17);
 		break;
 	default:
 		printbold(s:"Error: Invalid goal color");
@@ -2495,24 +2768,36 @@ script S_CORE_WARNINGS (int healthleft)
   switch(healthleft)
   {
   case 1:
-	HudmessageBold(s:"Core \ccis under attack!";
-	HUDMSG_FADEINOUT|HUDMSG_LOG,0,CR_GREEN,320.0,130.1,3.0,0.0,1.0);
-	AmbientSound("T_CRATTK", 128);
+    if (GetActorProperty(0, APROP_Health) > 0)
+    {
+        HudmessageBold(s:"Core \ccis under attack!";
+        HUDMSG_FADEINOUT|HUDMSG_LOG,275,CR_GREEN,320.0,130.1,3.0,0.0,1.0);
+        ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 18);
+    }
 	break;
   case 2:
-	HudmessageBold(s:"Core \ccis sustaining damage!";
-	HUDMSG_FADEINOUT|HUDMSG_LOG,0,CR_YELLOW,320.0,130.1,3.0,0.0,1.0);
-	AmbientSound("T_CRHEVY", 128);
+    if (GetActorProperty(0, APROP_Health) > 0)
+    {
+        HudmessageBold(s:"Core \ccis sustaining damage!";
+        HUDMSG_FADEINOUT|HUDMSG_LOG,275,CR_YELLOW,320.0,130.1,3.0,0.0,1.0);
+        ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 19);
+    }
 	break;
   case 3:
-	HudmessageBold(s:"Core \ccis reaching critical mass!";
-	HUDMSG_FADEINOUT|HUDMSG_LOG,0,CR_RED,320.0,130.1,3.0,0.0,1.0);
-	AmbientSound("T_CRUNST", 128);
+    if (GetActorProperty(0, APROP_Health) > 0)
+    {
+        HudmessageBold(s:"Core \ccis reaching critical mass!";
+        HUDMSG_FADEINOUT|HUDMSG_LOG,275,CR_RED,320.0,130.1,3.0,0.0,1.0);
+        ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 20);
+    }
 	break;
   case 4:
-	HudmessageBold(s:"Core \cchas been destroyed!";
-	HUDMSG_FADEINOUT|HUDMSG_LOG,0,CR_BLACK,320.0,130.1,3.0,0.0,1.0);
-	AmbientSound("T_CRDEST", 128);
+    HudmessageBold(s:"Core \cchas been destroyed!";
+    HUDMSG_FADEINOUT|HUDMSG_LOG,275,CR_BLACK,320.0,130.1,3.0,0.0,1.0);
+    ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 21);
+
+	if(GoalScript)
+	{	ACS_ExecuteAlways(GoalScript, 0, ThingCount(T_NONE, HateEpicenter) );	} // STR35
   }
   delay(35*4);
 }
@@ -2536,17 +2821,18 @@ function int GetPercentColor (int percent)
 	if (percent > 75)			{	return CR_GREEN;	}
 	else if (percent <= 75 && percent > 50)	{	return CR_YELLOW;	}
 	else if (percent <= 50 && percent > 25)	{	return CR_ORANGE;	}
-//	else if (percent <= 25)			{	return CR_RED;	}
+	else if (percent <= 25 && percent > 0)	{	return CR_RED;	}
 
-	return CR_RED;
+	return CR_BLACK;
 }
 
 function int GetPercentColorCore (int percent)
 {
 	if (percent > 66)			{	return CR_GREEN;	}
 	else if (percent <= 66 && percent > 33)	{	return CR_YELLOW;	}
+	else if (percent <= 33 && percent > 0)	{	return CR_RED;	}
 
-	return CR_RED;
+	return CR_BLACK;
 }
 
 // Don't call this script directly, use CallWave() function
@@ -2573,6 +2859,7 @@ script S_CALLWAVE (int wave)
 
 	Delay( 5*35 );
 
+    if (wave == 1 && GameMode != GAME_OVERMIND && GetLevelInfo(LEVELINFO_LEVELNUM) != 54) { ACS_NamedExecuteWithResult("StrAlarmSounding", 2); }
 
 	// Monster spawning
 	if( ZoneDataUsed )
@@ -2661,6 +2948,9 @@ script S_CALLWAVE (int wave)
 					Thing_ChangeTID(tid, MonstersTid);
 				}
 
+				if(ReplayMode)
+				delay( Random(0,tics_between_monster_spawns) );
+				else
 				delay( tics_between_monster_spawns );
 			}
 
@@ -2758,7 +3048,7 @@ script S_MESSAGE (int wave)
 			
 			SetHudSize(800,600,1);
 
-			// Show his name
+			// Show their name
 			SetFont("ConFont");
 			HudmessageBold(s:RadioData[curFace][0]; HUDMSG_PLAIN, RadioNameHID, CR_WHITE, 44.1, 80.1, 4.5);
 
@@ -2770,7 +3060,7 @@ script S_MESSAGE (int wave)
 			SetFont("DIALOGBX");
 			HudmessageBold(s:"A"; HUDMSG_FADEINOUT, RadioBoxHID, CR_WHITE, 32.1, 134.0, 4.35, 0.15, 0.0);
 			
-			AmbientSound("misc/chat", 64);
+			AmbientSound("radio/message", 127);
 
 			delay((4.5*35)/1.0);
 		}
@@ -2788,81 +3078,100 @@ script S_ENTER ENTER
 
 	highestPlayerNumber = max( PlayerNumber(), highestPlayerNumber );
 
+	if (!MapIsMenu() && CheckInventory("StrBackpackCooldownTimer")) TakeInventory("StrBackpackCooldownTimer", INT_MAX);
+	if (CheckInventory("Backpack")) TakeInventory("Backpack", INT_MAX);
 	// Weapons
-	TakeInventory("DEChainsaw", INT_MAX);
-	TakeInventory("AutoShotgun", INT_MAX);
-	TakeInventory("DESuperShotgun", INT_MAX);
-	TakeInventory("SuperShotgun", INT_MAX);
-	TakeInventory("DEShotgun", INT_MAX);
-	TakeInventory("Shotgun", INT_MAX);
-	TakeInventory("DEChaingun", INT_MAX);
-	TakeInventory("Chaingun", INT_MAX);
-	TakeInventory("HRL", INT_MAX);
-	TakeInventory("LandMineLayer", INT_MAX);
-	TakeInventory("DERLauncher", INT_MAX);
-	TakeInventory("RocketLauncher", INT_MAX);
-	TakeInventory("Railgun", INT_MAX);
-	TakeInventory("StunnerRifle", INT_MAX);
-	TakeInventory("DEPlasmaRifle", INT_MAX);
-	TakeInventory("PlasmaRifle", INT_MAX);
-	TakeInventory("DEBFG9000", INT_MAX);
-	TakeInventory("BFG9000", INT_MAX);
-	TakeInventory("PyroCannon", INT_MAX);
-	TakeInventory("Flamer", INT_MAX);
-	TakeInventory("Devastator", INT_MAX);
-	TakeInventory("Repeater", INT_MAX);
-	TakeInventory("Pistol", INT_MAX);
-	TakeInventory("DEPistol", INT_MAX);
-	TakeInventory("DEFist", INT_MAX);
-	TakeInventory("DEShrinkFist", INT_MAX);
-	TakeInventory("BruiserWeapon", INT_MAX);
+	if (CheckInventory("DEChainsaw")) TakeInventory("DEChainsaw", INT_MAX);
+	if (CheckInventory("AutoShotgun")) TakeInventory("AutoShotgun", INT_MAX);
+	if (CheckInventory("ASGClip")) TakeInventory("ASGClip", INT_MAX);
+	if (CheckInventory("DESuperShotgun")) TakeInventory("DESuperShotgun", INT_MAX);
+	if (CheckInventory("SuperShotgun")) TakeInventory("SuperShotgun", INT_MAX);
+	if (CheckInventory("DEShotgun")) TakeInventory("DEShotgun", INT_MAX);
+	if (CheckInventory("Shotgun")) TakeInventory("Shotgun", INT_MAX);
+	if (CheckInventory("DEChaingun")) TakeInventory("DEChaingun", INT_MAX);
+	if (CheckInventory("Chaingun")) TakeInventory("Chaingun", INT_MAX);
+	if (CheckInventory("HRL")) TakeInventory("HRL", INT_MAX);
+	if (CheckInventory("LandMineLayer")) TakeInventory("LandMineLayer", INT_MAX);
+	if (CheckInventory("DERLauncher")) TakeInventory("DERLauncher", INT_MAX);
+	if (CheckInventory("RocketLauncher")) TakeInventory("RocketLauncher", INT_MAX);
+	if (CheckInventory("Railgun")) TakeInventory("Railgun", INT_MAX);
+	if (CheckInventory("RailCharge")) TakeInventory("RailCharge", INT_MAX);
+	if (CheckInventory("RailgunScope")) TakeInventory("RailgunScope", INT_MAX);
+	if (CheckInventory("StunnerRifle")) TakeInventory("StunnerRifle", INT_MAX);
+	if (CheckInventory("DEPlasmaRifle")) TakeInventory("DEPlasmaRifle", INT_MAX);
+	if (CheckInventory("PlasmaRifle")) TakeInventory("PlasmaRifle", INT_MAX);
+	if (CheckInventory("DEBFG9000")) TakeInventory("DEBFG9000", INT_MAX);
+	if (CheckInventory("BFG9000")) TakeInventory("BFG9000", INT_MAX);
+	if (CheckInventory("PyroCannon")) TakeInventory("PyroCannon", INT_MAX);
+	if (CheckInventory("Flamer")) TakeInventory("Flamer", INT_MAX);
+	if (CheckInventory("Devastator")) TakeInventory("Devastator", INT_MAX);
+	if (CheckInventory("Repeater")) TakeInventory("Repeater", INT_MAX);
+	if (CheckInventory("DEPistol")) TakeInventory("DEPistol", INT_MAX);
+	if (CheckInventory("Pistol")) TakeInventory("Pistol", INT_MAX);
+	if (CheckInventory("PCount")) TakeInventory("PCount", INT_MAX);
+	if (CheckInventory("DEFist")) TakeInventory("DEFist", INT_MAX);
+	if (CheckInventory("DEShrinkFist")) TakeInventory("DEShrinkFist", INT_MAX);
+	if (CheckInventory("Fist")) TakeInventory("Fist", INT_MAX);
+	if (CheckInventory("TerminatorWeapon")) TakeInventory("TerminatorWeapon", INT_MAX);
+	if (CheckInventory("BruiserWeapon")) TakeInventory("BruiserWeapon", INT_MAX);
 	// Trackers (for SBARINFO)
-	TakeInventory("JailTracker", INT_MAX);
-	TakeInventory("JailTrackerAllPlayers", INT_MAX);
-	TakeInventory("HUDCredits", INT_MAX);
-	TakeInventory("ThrustDummy", INT_MAX);
+	if (CheckInventory("JailTracker")) TakeInventory("JailTracker", INT_MAX);
+	if (CheckInventory("JailTrackerAllPlayers")) TakeInventory("JailTrackerAllPlayers", INT_MAX);
+	if (CheckInventory("HUDCredits")) TakeInventory("HUDCredits", INT_MAX);
+	if (CheckInventory("ThrustDummy")) TakeInventory("ThrustDummy", INT_MAX);
+	// ZDoom/Zandronum Bugs
+	if (CheckInventory("PowerStrQuadDamage")) TakeInventory("PowerStrQuadDamage", INT_MAX);
+	if (CheckInventory("PowerTimeFreezer")) TakeInventory("PowerTimeFreezer", INT_MAX);
+	if (CheckInventory("PowerScanner")) TakeInventory("PowerScanner", INT_MAX);
+	if (CheckInventory("PowerStrength")) TakeInventory("PowerStrength", INT_MAX);
+	if (CheckInventory("PowerLightAmp")) TakeInventory("PowerLightAmp", INT_MAX);
+	if (CheckInventory("PowerTorch")) TakeInventory("PowerTorch", INT_MAX);
+	if (CheckInventory("PowerFlight")) TakeInventory("PowerFlight", INT_MAX);
+	if (CheckInventory("PowerMorphPlayer")) TakeInventory("PowerMorphPlayer", INT_MAX);
+	if (CheckInventory("PowerMorphPlayer2")) TakeInventory("PowerMorphPlayer2", INT_MAX);
 	// Ammo
-	TakeInventory("Clip", INT_MAX);
-	TakeInventory("Cell", INT_MAX);
-	TakeInventory("RocketAmmo", INT_MAX);
-	TakeInventory("Gas", INT_MAX);
-	TakeInventory("Shell", INT_MAX);
-	TakeInventory("Mines", INT_MAX);
+	if (CheckInventory("Clip")) TakeInventory("Clip", INT_MAX);
+	if (CheckInventory("Shell")) TakeInventory("Shell", INT_MAX);
+	if (CheckInventory("RocketAmmo")) TakeInventory("RocketAmmo", INT_MAX);
+	if (CheckInventory("Cell")) TakeInventory("Cell", INT_MAX);
+	if (CheckInventory("Mines")) TakeInventory("Mines", INT_MAX);
+	if (CheckInventory("Gas")) TakeInventory("Gas", INT_MAX);
 	
-	if (PlayersAreLate)
+	if (PlayersAreLate && LivesChecking && !GetCVar("stronghold_infinitelives"))
 	{
 		if(PrisonSpot)
 		{
 			Print(s:"You are late to the game!");
+			ACS_NamedExecuteWithResult("StrJailMessagePrinter", 2);
 
-			GiveInventory("JailTracker", 1);
+			if (!CheckInventory("JailTracker")) { GiveInventory("JailTracker", 1); }
+			GiveInventory("CoinItem", 750);
+			TakeInventory("LifeItem", INT_MAX);
 			UpdateJailTrackers();
 
 			While(! Teleport_NoFog(PrisonSpot, true, 0))
-			{	delay(5);	}
-			GiveInventory("CoinItem", 50);
-			TakeInventory("LifeItem", 9);
+			{	Delay(1);	}
 		}
 		else UpdateJailTrackers();
-	}
+	} else { UpdateJailTrackers(); }
 
 	UpdateWaveTrackers();
 	UpdateTime();
 
-	// We need to reset the player's speed just in case he ended a map with it modified.
+	// We need to reset the player's speed just in case they ended a map with it modified.
 	// (The thrusting script can modify it.)
 	SetActorProperty(0, APROP_Speed, 1.0);
 
 	if(BriefActive)
 	{
-		SetPlayerProperty (1, true, PROP_TOTALLYFROZEN);
+		SetPlayerProperty (0, true, PROP_TOTALLYFROZEN);
 	} else {
 		SetPlayerProperty (0, false, PROP_TOTALLYFROZEN);
 	}
 
 	delay(1);
 
-	// Pause this script while Brief is active, so that way the player gets his gun
+	// Pause this script while Brief is active, so that way the player gets their gun
 	// after it's finished. The Briefing scripts handle unfreezing the player.
 	while(BriefNoGun)
 	{	delay(1);	}
@@ -2879,10 +3188,10 @@ script S_ENTER ENTER
 			delay(35);	// Placed at beginning of loop, so that there is no chance this
 					// becomes a runaway script
 
-			if(!CheckWeapon("DEShrinkFist"))
+			if(!CheckWeapon("DEShrinkFist") && !CheckWeapon("StrVotingDevice"))
 			{
 				Print(s:"You're lucky you didn't get shot for holding a loaded weapon here!");
-				restart;	// Clear inventory again
+				restart; // Clear inventory again
 			}
 		}
 	}
@@ -2890,27 +3199,27 @@ script S_ENTER ENTER
 	switch (GameSkill())
 	{
 	case SKILL_VERY_EASY:
-	case SKILL_VERY_HARD:
-		GiveInventory("Clip", 25);
+	case SKILL_VERY_HARD: // double ammo is applied on these skills
+		GiveInventory("Clip", 5); // actually 10
 		break;
 	default:
-		GiveInventory("Clip", 50);
+		if (GetCVar("sv_doubleammo"))
+		{
+			GiveInventory("Clip", 5); // same
+		} else {
+			GiveInventory("Clip", 30);
+		}
 	}
 
+	GiveInventory("ASGClip", 20);
+
 	GiveInventory("DEFist", 1);
-	GiveInventory("DEPistol", 1);
+	GiveInventory("DEPistol", 1); // gives 20/40 bullets
 
 	SetWeapon("DEPistol");
 }
 
-script S_LATEPLAYERS OPEN
-{
-  delay(LatePlayersDelay);
-  
-  PlayersAreLate++;
-}
-
-// Displays amount of user's coins at top of screen in the intermap
+// Displays amount of coins in bank at top of screen in the intermap
 script S_HUD_COINS (void)
 {
 	sethudsize(640,480,0);
@@ -2919,42 +3228,52 @@ script S_HUD_COINS (void)
 	SetFont("SMALLFONT");
 
 	int lastCoinAmount = -1;
-	while(true)
+	int lastCoinAmountBank = -1;
+	while (true)
 	{
-		if( CheckInventory("CoinItem") != lastCoinAmount )
+		if (CheckInventory("CoinItem") != lastCoinAmount)
 		{
-			HudMessage(s:"\cGCredits\n$",i:CheckInventory("CoinItem");
-				HUDMSG_PLAIN, MoneyCountHID, CR_UNTRANSLATED, 570.0, 30.0, 0.0);
+			HudMessage(s:"\cgCredits\n$",i:CheckInventory("CoinItem");
+				HUDMSG_PLAIN, MoneyCountHID, CR_UNTRANSLATED, 522.1, 20.0, 0.0);
 			lastCoinAmount = CheckInventory("CoinItem");
 		}
-		delay(25);
+
+		if (BankCredits != lastCoinAmountBank)
+		{
+			HudMessage(s:"\cgBank\n$",i:BankCredits;
+				HUDMSG_PLAIN, MoneyCountBankHID, CR_UNTRANSLATED, 522.1, 44.0, 0.0);
+			lastCoinAmountBank = BankCredits;
+		}
+		delay(1);
 	}
 }
 
-// If player has zero lives, alert him, then send to jail
-// For if a player drops his last life while alive (respawn script handles spawning without a life)
+// If player has zero lives, alert them, then send to jail
+// For if a player drops their last life while alive (respawn script handles spawning without a life)
 script S_LIVE_WATCH ENTER
 {
 	while(true)
 	{
-		// If the player has a JailTracker, then the respawn script is handling this, or he's in jail already
-		if ((CheckInventory("LifeItem") == 0) && (CheckInventory("JailTracker") == 0) && (CheckInventory("Health") > 0))
+		// If the player has a JailTracker, then the respawn script is handling this, or they're in jail already
+		if (!CheckInventory("LifeItem") && !CheckInventory("JailTracker") && GetActorProperty(0, APROP_Health) > 0 && LivesChecking && !GetCVar("stronghold_infinitelives"))
 		{
 			if(PrisonSpot)
 			{
-				Print(s:"Warning: You are out of lives!\n\nYou are about to be teleported to jail");
+				Print(s:"WARNING: You are out of lives!\n\nYou are about to be teleported to jail!");
 
-				delay(35*6);	// Give the player a moment, so he can pick the life back
-						// up if he accidentally dropped it.
+				delay(35*10); // Give the player a moment, so they can pick the life back up if they accidentally dropped it.
 
-				ACS_ExecuteAlways(S_RESPAWN, 0, 0);
+                if (!CheckInventory("LifeItem") && !CheckInventory("JailTracker") && GetActorProperty(0, APROP_Health) > 0 && LivesChecking && !GetCVar("stronghold_infinitelives"))
+                {
+                    ACS_ExecuteAlways(S_RESPAWN, 0, 0);
+                }
 			} else {
-				Print(s:"Warning: You are out of lives!\n\nBut this map doesn't use a Jail, so you're free for now.");
+				Print(s:"WARNING: You are out of lives!\n\nBut this map doesn't use a jail, so you're free for now.");
 
-				delay(20*35); // Wait a bit so that this message isn't constant
+				delay(30*35); // Wait a bit so that this message isn't constant
 			}
 		}
-		delay(5);
+		delay(1);
 	}
 }
 
@@ -2963,9 +3282,11 @@ script S_DEATH DEATH
 {
 	TakeInventory("ThrustDummy", 1);
 
-	if ( GameActive && (!MapIsMenu()) )
+	if ( GameActive && LivesChecking && !MapIsMenu() )
 	{
-		if (CheckInventory("LifeItem") > 0)
+        if (!PlayerDiedInMap[PlayerNumber()]) PlayerDiedInMap[PlayerNumber()] = TRUE;
+
+		if (CheckInventory("LifeItem") > 0 && GetLevelInfo(LEVELINFO_LEVELNUM) != 1 && !GetCVar("stronghold_infinitelives"))
 		{
 			TakeInventory("LifeItem", 1);
 		}
@@ -2978,20 +3299,21 @@ script S_RESPAWN RESPAWN
 	Thing_ChangeTid(PLAYER_TID_START+PlayerNumber(),0);
 	Thing_ChangeTid(0,PLAYER_TID_START+PlayerNumber());
 
-	TakeInventory("JailTracker", INT_MAX);
-	TakeInventory("ThrustDummy", 1);
+	if (CheckInventory("JailTracker")) { TakeInventory("JailTracker", INT_MAX); }
+	if (CheckInventory("ThrustDummy")) { TakeInventory("ThrustDummy", 1); }
 
-	if (CheckInventory("LifeItem") == 0)
+	if (LivesChecking && !CheckInventory("LifeItem") && !GetCVar("stronghold_infinitelives"))
 	{
 		if(PrisonSpot)
 		{
 			Print(s:"You are out of lives!");
+			ACS_NamedExecuteWithResult("StrJailMessagePrinter", 1);
 
-			GiveInventory("JailTracker", 1);
+			if (!CheckInventory("JailTracker")) { GiveInventory("JailTracker", 1); }
 			UpdateJailTrackers();
 
 			While(! Teleport_NoFog(PrisonSpot, true, 0))
-			{	delay(5);	}
+			{	Delay(1);	}
 		}
 	} else {
 		UpdateJailTrackers();
@@ -3001,7 +3323,7 @@ script S_RESPAWN RESPAWN
 
 	if(BriefActive)
 	{
-		SetPlayerProperty (1, true, PROP_TOTALLYFROZEN);
+		SetPlayerProperty (0, true, PROP_TOTALLYFROZEN);
 	} else {
 		SetPlayerProperty (0, false, PROP_TOTALLYFROZEN);
 	}
@@ -3017,14 +3339,24 @@ function void SetJailTeleporter (bool setting)
 	jailTeleporter = setting;
 	if( jailTeleporter )
 	{
-		thing_deactivate(TeleporterOffLight);	// Dynamic Lights
-		thing_activate(TeleporterOnLight);
+        ACS_NamedExecute("StrJailTeleporterLightHandlerOn", 0); // Dynamic Lights
 		setlinetexture(PrisonTeleporterLineId, SIDE_FRONT, TEXTURE_MIDDLE, TeleporterOnTexture);
 	} else {
-		thing_activate(TeleporterOffLight);
-		thing_deactivate(TeleporterOnLight);
+        ACS_NamedExecute("StrJailTeleporterLightHandlerOff", 0);
 		setlinetexture(PrisonTeleporterLineId, SIDE_FRONT, TEXTURE_MIDDLE, TeleporterOffTexture);
 	}
+}
+
+script "StrJailTeleporterLightHandlerOn" (void) CLIENTSIDE
+{
+    Thing_Deactivate(TeleporterOffLight);
+    Thing_Activate(TeleporterOnLight);
+}
+
+script "StrJailTeleporterLightHandlerOff" (void) CLIENTSIDE
+{
+    Thing_Activate(TeleporterOffLight);
+    Thing_Deactivate(TeleporterOnLight);
 }
 
 script S_JAIL_LEAVE (int angle)
@@ -3034,7 +3366,8 @@ script S_JAIL_LEAVE (int angle)
 		if( Teleport(PrisonExit, 0, 0) )
 		{
 			SetJailTeleporter( FALSE );
-			TakeInventory("JailTracker", 1);
+			ACS_NamedExecuteWithResult("StrJailMessagePrinter", 3);
+			if (CheckInventory("JailTracker")) { TakeInventory("JailTracker", 1); }
 			GiveInventory("LifeItem", 1);
 			UpdateJailTrackers();
 		} else {
@@ -3051,9 +3384,9 @@ script S_JAIL_GIVEUP (void)
 {
 	if(CheckInventory("JailTrackerAllPlayers")==PlayerCount())
 	{
-		Exit_Normal(ExitPos);
+		Exit_Secret(ExitPos);
 	} else {
-		Print(s:"\cGThere are still \cCplayers \cGon the battlefield!");
+		Print(s:"\cgThere are still \ccplayers \cgon the battlefield!");
 		if(PrisonExitThrustAngle==-1)
 		{
 			ACS_ExecuteAlways(S_G_THRUST,0,0);
@@ -3063,28 +3396,28 @@ script S_JAIL_GIVEUP (void)
 	}
 }
 
-script S_JAIL_OPEN (void) // This is the script called if you use a LifeItem
+script "StrJailOpenHandler" (void) // This is the script called if you use a LifeItem
 {
-	// If the player is in jail, he can use his last LifeItem.
-	// (...This is impossible to do without cheats.)
-	if( (CheckInventory("LifeItem") == 1) && (CheckInventory("JailTracker") == 0) )
-	{
-		Print(s:"You can't use your last Life to open the jail teleporter!");
-		SetResultValue( FALSE );
-		Terminate;
-	}
-
 	if( PrisonTeleporterLineId )
 	{
+        // If the player is in jail, they can use their last LifeItem.
+        // (...This is impossible to do without cheats.)
+		if( (CheckInventory("LifeItem") == 1) && (!CheckInventory("JailTracker")) )
+		{
+			Print(s:"You can't use your last life to open the jail teleporter!");
+			SetResultValue( FALSE );
+			Terminate;
+		}
+
 		if(CheckInventory("JailTrackerAllPlayers") > 0)
 		{
 			if( ! jailTeleporter )
 			{
-				PrintBold(s:"Prison Teleporter Opened");
+				PrintBold(s:"Prison teleporter opened by ", n:0);
 				SetJailTeleporter( TRUE );
 				SetResultValue( TRUE );
 			} else {
-				Print(s:"Prison Teleporter already Open");
+				Print(s:"Prison teleporter already open");
 				SetResultValue( FALSE );
 			}
 		} else {
@@ -3099,6 +3432,8 @@ script S_JAIL_OPEN (void) // This is the script called if you use a LifeItem
 
 script S_BRIEF_MAIN (void)
 {
+    if (GetCVar("stronghold_skipbriefings")) { Thing_Remove(85); terminate; } // away with ye!
+
 	ACS_Execute(S_BRIEF_ANIMATE,0,0);
 
 	BriefActive = TRUE;
@@ -3117,7 +3452,7 @@ script S_BRIEF_MAIN (void)
 	SetHudSize(640, 480, 1);
 	if(BriefSkippable) {
 		SetFont("SMALLFONT");
-		HudMessageBold(s:"\cCHit \cG<Use> \cCto skip the introduction";
+		HudMessageBold(s:"\ccHit \cg<Use> \ccto skip the introduction";
 			HUDMSG_FADEINOUT, BriefSkipHID, 0, 320.0, 465.0, 2.0, 6.0, 2.0);
 	}
 
@@ -3134,7 +3469,7 @@ script S_BRIEF_ANIMATE (void)
 	sethudsize(640, 480, 1);
 
 	setfont("BIGFONT");
-	hudmessagebold (s:"\cGInstructor Lt. Carmack:\n";HUDMSG_PLAIN, BriefNameHID, CR_UNTRANSLATED, 345.0, 310.0, 0.0);
+	hudmessagebold (s:"\cgInstructor Lt. Carmack:\n";HUDMSG_PLAIN, BriefNameHID, CR_UNTRANSLATED, 345.0, 310.0, 0.0);
 
 	while( TRUE )
 	{
@@ -3202,14 +3537,16 @@ script S_BRIEF_END (void)	// #251
 
 	SetHudSize(640, 480, 1);
 	SetFont("BIGFONT");
-	HudMessageBold(s:"\cGInstructor Lt. Carmack:\n";
+	HudMessageBold(s:"\cgInstructor Lt. Carmack:\n";
 		HUDMSG_FADEOUT, BriefNameHID, CR_UNTRANSLATED, 345.0, 310.0, 0.0, 0.5);
 
 	SetFont("BRIEFTN2");
 	HudMessageBold (s:"a"; HUDMSG_FADEOUT, BriefTalkBoxHID, 0, BriefTalkBoxX, BriefTalkBoxY, 0.2, 0.5);
 
+    Thing_Remove(85); // remove sector use actors that call this script just in case
+
 	Delay(1*35);
-	BriefNoGun = FALSE;	// This lets the player spawn with his gun a bit before unfreezing
+	BriefNoGun = FALSE;	// This lets the player spawn with their gun a bit before unfreezing
 
 	Delay(2*35);
 	BriefActive = FALSE;
@@ -3219,7 +3556,7 @@ script S_BRIEF_END (void)	// #251
 // Standard Battlefield Border Script
 script S_BF_THRUST (int byte_angle, int focustid) // #254
 {
-	Print(s:"\cGYou must not leave the battlefield!");
+	Print(s:"\cgYou must not leave the battlefield!");
 //	ThrustThing(byte_angle, 30, 0, 0);
 	ACS_ExecuteAlways(S_G_THRUST,0,focustid);
 }
@@ -3228,7 +3565,7 @@ script S_BF_THRUST (int byte_angle, int focustid) // #254
 // Optional arg, focustid: Thrust is towards it
 script S_G_THRUST (int focustid)
 {
-	if((LineSide() == LINE_FRONT) && (CheckInventory("ThrustDummy")==0))
+	if((LineSide() == LINE_FRONT) && (!CheckInventory("ThrustDummy")))
 	{
 		GiveInventory("ThrustDummy", 1);
 
@@ -3269,21 +3606,21 @@ script S_G_THRUST (int focustid)
 			if( (i%10) == 0)
 			{
 				if( i>35*13 )
-				{	Thing_Damage(0,100000,MOD_UNKNOWN);	}
+				{ DamageThing(100000, MOD_UNKNOWN); }
 				else if( i>35*5 )
-				{	Thing_Damage(0,20,MOD_UNKNOWN);	}
+				{ DamageThing(20, MOD_UNKNOWN); }
 			}
 
 			i++;
 			delay(1);
-		} while ( (CheckInventory("ThrustDummy")>0) && (GetActorProperty(0, APROP_Health)>0) );
+		} while ( (CheckInventory("ThrustDummy")) && (GetActorProperty(0, APROP_Health)>0) );
 
 		SetActorProperty(0, APROP_Speed, oldSpeed);
 	}
 
 	if(LineSide() == LINE_BACK)
 	{
-		TakeInventory("ThrustDummy", 1);
+		if (CheckInventory("ThrustDummy")) { TakeInventory("ThrustDummy", 1); }
 	}
 }
 
@@ -3452,7 +3789,7 @@ script S_STR52CODEGET (void)	// Script 927
 			d:str52code[4],s:" ";
 		HUDMSG_PLAIN | HUDMSG_LOG, 11, CR_WHITE, 60.0, 400.0, 9.0);
 
-	delay(35*8);
+	//delay(35*8);
 }
 
 // HUD Stuff
@@ -3515,30 +3852,80 @@ script S_HUD OPEN clientside
 		// Show Par Time
 		if(parTimeMode != 0)
 		{
+			MapParTimeDisplay[1]	= "4:00"; // HACK X2.5
+			MapParTimeDisplay[2]	= "10:00";
+			MapParTimeDisplay[3]	= "20:00";
+			MapParTimeDisplay[4]	= "12:00";
+			MapParTimeDisplay[5]	= "16:00";
+			MapParTimeDisplay[6]	= "20:00";
+			MapParTimeDisplay[7]	= "18:00";
+			MapParTimeDisplay[8]	= "16:00";
+			MapParTimeDisplay[9]	= "12:00";
+			MapParTimeDisplay[10]	= "18:00";
+			MapParTimeDisplay[11]	= "18:00";
+			MapParTimeDisplay[12]	= "20:00";
+			MapParTimeDisplay[13]	= "16:00";
+			MapParTimeDisplay[14]	= "20:00";
+			MapParTimeDisplay[15]	= "25:00";
+			MapParTimeDisplay[16]	= "45:00";
+			MapParTimeDisplay[17]	= "20:00";
+			MapParTimeDisplay[18]	= "28:00";
+			MapParTimeDisplay[19]	= "30:00";
+			MapParTimeDisplay[20]	= "33:00";
+			MapParTimeDisplay[21]	= "10:00";
+			MapParTimeDisplay[22]	= "25:00";
+			MapParTimeDisplay[23]	= "30:00";
+			MapParTimeDisplay[24]	= "32:00";
+			MapParTimeDisplay[25]	= "12:00";
+			MapParTimeDisplay[26]	= "50:00";
+			MapParTimeDisplay[27]	= "40:00";
+			MapParTimeDisplay[28]	= "40:00";
+			MapParTimeDisplay[29]	= "38:00";
+			MapParTimeDisplay[30]	= "44:00";
+			MapParTimeDisplay[31]	= "30:00";
+			MapParTimeDisplay[32]	= "48:00";
+			MapParTimeDisplay[33]	= "35:00";
+			MapParTimeDisplay[34]	= "60:00";
+			MapParTimeDisplay[35]	= "90:00";
+			MapParTimeDisplay[40]	= "36:00";
+			MapParTimeDisplay[41]	= "15:00";
+			MapParTimeDisplay[42]	= "20:00";
+			MapParTimeDisplay[43]	= "28:00";
+			MapParTimeDisplay[44]	= "55:00";
+			MapParTimeDisplay[50]	= "18:00";
+			MapParTimeDisplay[52]	= "24:00";
+			MapParTimeDisplay[54]	= "75:00";
+			MapParTimeDisplay[56]	= "27:00";
+
 			// Time
-			HudMessageBold (d:parTimeMinutes,s:":",s:parTimeSecondsSpace,d:parTimeSeconds;
+			HudMessageBold (s:MapParTimeDisplay[GetLevelInfo(LEVELINFO_LEVELNUM)]; // HACK X3
 				HUDMSG_PLAIN, HUDParTimeHID, CR_DARKGRAY,
 				right-38.0, 80.0,
 				0.0 );
 
 			// Label
-			if(parTimeMode==1)
+			HudMessageBold (s:"Par Time";
+				HUDMSG_PLAIN, HUDParTimeLabelHID, CR_DARKGRAY,
+				right-70.0+0.2, 80.0,
+				0.0 );
+
+			if (parTimeMode == 2)
 			{
-				HudMessageBold (s:"Par Time";
-					HUDMSG_PLAIN, HUDParTimeLabelHID, CR_DARKGRAY,
-					right-70.0+0.2, 80.0,
+				HudMessageBold (d:parTimeMinutes,s:":",s:parTimeSecondsSpace,d:parTimeSeconds;
+					HUDMSG_PLAIN, HUDBestTimeHID, CR_DARKGRAY,
+					right-38.0, 100.0,
 					0.0 );
-			}
-			else if (parTimeMode==2)
-			{
+
 				HudMessageBold (s:"Best Time";
-					HUDMSG_PLAIN, HUDParTimeLabelHID, CR_DARKGRAY,
-					right-70.0+0.2, 80.0,
+					HUDMSG_PLAIN, HUDBestTimeLabelHID, CR_DARKGRAY,
+					right-70.0+0.2, 100.0,
 					0.0 );
 			}
 		} else {
 			HudMessageBold(s:""; HUDMSG_PLAIN, HUDParTimeHID, CR_UNTRANSLATED, 0.0, 0.0, 0.5 );
 			HudMessageBold(s:""; HUDMSG_PLAIN, HUDParTimeLabelHID, CR_UNTRANSLATED, 0.0, 0.0, 0.5 );
+			HudMessageBold(s:""; HUDMSG_PLAIN, HUDBestTimeHID, CR_UNTRANSLATED, 0.0, 0.0, 0.5 );
+			HudMessageBold(s:""; HUDMSG_PLAIN, HUDBestTimeLabelHID, CR_UNTRANSLATED, 0.0, 0.0, 0.5 );
 		}
 		showedPar = parTimeMode;
 
@@ -3583,13 +3970,16 @@ function void clearHud (void)
 	HudMessageBold(s:""; HUDMSG_PLAIN, HUDTimeHID, CR_UNTRANSLATED, 0.0, 0.0, 0.5 );
 	HudMessageBold(s:""; HUDMSG_PLAIN, HUDParTimeHID, CR_UNTRANSLATED, 0.0, 0.0, 0.5 );
 	HudMessageBold(s:""; HUDMSG_PLAIN, HUDParTimeLabelHID, CR_UNTRANSLATED, 0.0, 0.0, 0.5 );
+	HudMessageBold(s:""; HUDMSG_PLAIN, HUDBestTimeHID, CR_UNTRANSLATED, 0.0, 0.0, 0.5 );
+	HudMessageBold(s:""; HUDMSG_PLAIN, HUDBestTimeLabelHID, CR_UNTRANSLATED, 0.0, 0.0, 0.5 );
 }
 
 script S_TIMER open
 {
-	if(MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)]!=0)
-		TimeAttackMode = TRUE;
+    int LatePlayersDelay = 600*35; // Time before late players are put into jail immediately.
 
+	if(MapScores[GetLevelInfo(LEVELINFO_LEVELNUM)] != 0 || GetCVar("stronghold_hardmode"))
+		ReplayMode = TRUE;
 
 	while( TRUE )
 	{
@@ -3597,6 +3987,27 @@ script S_TIMER open
 		{
 			delay( 1 );
 			levelRunningTime++;
+
+			if (parTimeMode != 0)
+			{
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-10500) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 22); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-6300) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 23); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-2100) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 24); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-1050) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 25); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-350) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 26); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-315) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 27); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-280) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 28); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-245) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 29); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-210) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 30); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-175) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 31); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-140) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 32); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-105) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 33); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-70) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 34); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35-35) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 35); }
+				if (levelRunningTime == MapParTime[GetLevelInfo(LEVELINFO_LEVELNUM)]*35) { ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 36); }
+			}
+
+            if (levelRunningTime >= LatePlayersDelay && !PlayersAreLate && GetLevelInfo(LEVELINFO_LEVELNUM) != 1 && !MapIsMenu()) { PlayersAreLate = TRUE; }
 
 			if( levelRunningTime % 35 == 0 )
 			{
@@ -3648,7 +4059,7 @@ function void UpdateTime (void)
 		);
 
 	// Maybe not the best place for sending the par time to clients, but it ensures no clients never get it
-	if(parTimeMode != 0)
+	if (parTimeMode != 0)
 	{
 		ACS_ExecuteAlways( S_SYNC, 0, SYNC_PARTIME | ((parTimeMode-1)<<7),
 			parTime>>8,
@@ -3872,4 +4283,170 @@ function int FreeTempTid (int tid)
 		return FALSE;
 	}
 	return TRUE;
+}
+
+script "StrIWinButtonMusic" (void)
+{
+    SetActivator(0, AAPTR_NULL);
+
+    int IWinning = 0;
+    int i;
+
+    for (i = 0; i <= highestPlayerNumber; i++)
+    {
+        IWinning += CheckActorInventory(PLAYER_TID_START+i, "PowerOSPDamage");
+    }
+
+    if (!MusicChangeDisabled) { ACS_NamedExecuteWithResult("StrIWinButtonMusicHandler", 1); }
+
+    while (IWinning > 0)
+    {
+        IWinning = 0; // reset and constantly check for players
+
+        for (i = 0; i <= highestPlayerNumber; i++)
+        {
+            IWinning += CheckActorInventory(PLAYER_TID_START+i, "PowerOSPDamage");
+        }
+
+        if (MusicChangeDisabled) { terminate; } else if (IWinning > 0) { Delay(1); }
+    }
+
+    if (!MusicChangeDisabled) { ACS_NamedExecuteWithResult("StrIWinButtonMusicHandler", 0); }
+}
+
+script "StrIWinButtonMusicHandler" (int music) CLIENTSIDE
+{
+    if (GetUserCVar(ConsolePlayerNumber(), "stronghold_cl_iwinbuttonmusic"))
+    {
+        if (music)
+        {
+            SetMusic("");
+            SetMusic("D_WINNIN");
+        } else {
+            SetMusic("*");
+        }
+    }
+}
+
+script "StrDukeMusic" (int music) CLIENTSIDE //Duke Music
+{
+    if (GetUserCVar(ConsolePlayerNumber(), "stronghold_cl_dukemusic") > 0)
+    {
+        if (music == 1)
+        {
+            SetMusic("D_GRAB1");
+            if (GetUserCVar(ConsolePlayerNumber(), "stronghold_cl_dukemusic") == 1)
+            {
+                Print(s:"\cbYeah, come get some!\n", s:"\cfGrabbag \cbremixed by \cfThermometer10");
+            }
+        } else if (music == 2) {
+            SetMusic("D_GRAB2");
+            if (GetUserCVar(ConsolePlayerNumber(), "stronghold_cl_dukemusic") == 1)
+            {
+                Print(s:"\cbNow let's rock!\n", s:"\cfGrabbag \cbremixed by \cfJonny Death");
+            }
+        }
+    }
+}
+
+script "StrAnnouncerDeadlineSoundPlayer" (void)
+{
+    if (GameActive && (GameMode == GAME_DEADLINE || GameMode == GAME_MILESTONE || GameMode == GAME_LIMIT))
+    {
+        ACS_NamedExecuteWithResult("StrAnnouncerSoundPlayer", 37);
+        Delay(35*4);
+    }
+}
+
+script "StrAnnouncerSoundPlayer" (int sound, int soundfile) CLIENTSIDE
+{
+    if (GetUserCVar(ConsolePlayerNumber(), "stronghold_cl_announcer"))
+    {
+        if (sound == 1)
+        {
+            AmbientSound(soundfile, 127);
+        } else if (sound == 2) {
+            AmbientSound("T_WINNER", 127);
+        } else if (sound == 3) {
+            AmbientSound("T_TLVIC", 127);
+        } else if (sound == 4) {
+            AmbientSound("T_FAIL", 127);
+        } else if (sound == 5) {
+            AmbientSound("T_OVDES", 127);
+        } else if (sound == 6) {
+            AmbientSound("T_ALLCOR", 127);
+        } else if (sound == 7) {
+            AmbientSound("T_CORDES", 127);
+        } else if (sound == 8) {
+            AmbientSound("T_DLNEMX", 127);
+        } else if (sound == 9) {
+            AmbientSound("T_DLNE20", 127);
+        } else if (sound == 10) {
+            AmbientSound("T_DLNE40", 127);
+        } else if (sound == 11) {
+            AmbientSound("T_DLNE60", 127);
+        } else if (sound == 12) {
+            AmbientSound("T_DLNE80", 127);
+        } else if (sound == 13) {
+            AmbientSound("T_RGOAL", 127);
+        } else if (sound == 14) {
+            AmbientSound("T_OGOAL", 127);
+        } else if (sound == 15) {
+            AmbientSound("T_BGOAL", 127);
+        } else if (sound == 16) {
+            AmbientSound("T_GGOAL", 127);
+        } else if (sound == 17) {
+            AmbientSound("T_WGOAL", 127);
+        } else if (sound == 18) {
+            AmbientSound("T_CRATTK", 127);
+        } else if (sound == 19) {
+            AmbientSound("T_CRHEVY", 127);
+        } else if (sound == 20) {
+            AmbientSound("T_CRUNST", 127);
+        } else if (sound == 21) {
+            AmbientSound("T_CRDEST", 127);
+        } else if (sound == 22) {
+            AmbientSound("T_5MINS", 127);
+        } else if (sound == 23) {
+            AmbientSound("T_3MINS", 127);
+        } else if (sound == 24) {
+            AmbientSound("T_1MIN", 127);
+        } else if (sound == 25) {
+            AmbientSound("T_30SEC", 127);
+        } else if (sound == 26) {
+            AmbientSound("T_10SEC", 127);
+        } else if (sound == 27) {
+            AmbientSound("T_9SEC", 127);
+        } else if (sound == 28) {
+            AmbientSound("T_8SEC", 127);
+        } else if (sound == 29) {
+            AmbientSound("T_7SEC", 127);
+        } else if (sound == 30) {
+            AmbientSound("T_6SEC", 127);
+        } else if (sound == 31) {
+            AmbientSound("T_5SEC", 127);
+        } else if (sound == 32) {
+            AmbientSound("T_4SEC", 127);
+        } else if (sound == 33) {
+            AmbientSound("T_3SEC", 127);
+        } else if (sound == 34) {
+            AmbientSound("T_2SEC", 127);
+        } else if (sound == 35) {
+            AmbientSound("T_1SEC", 127);
+        } else if (sound == 36) {
+            AmbientSound("T_TLIMIT", 127);
+        } else if (sound == 37) {
+            AmbientSound("T_APPDED", 127);
+        }
+    }
+}
+
+script "StrAlarmSounding" (int alarm) CLIENTSIDE
+{
+    if (alarm == 1)
+    {
+        if (GetUserCVar(ConsolePlayerNumber(), "stronghold_cl_turnthatdamnalarmoff") == 0 || GetUserCVar(ConsolePlayerNumber(), "stronghold_cl_turnthatdamnalarmoff") == 2) { AmbientSound("overmind/coredestroyed", 127); }
+    } else if (alarm == 2) {
+        if (GetUserCVar(ConsolePlayerNumber(), "stronghold_cl_turnthatdamnalarmoff") == 0 || GetUserCVar(ConsolePlayerNumber(), "stronghold_cl_turnthatdamnalarmoff") == 1) { AmbientSound("alarm/missionstart", 127); }
+    }
 }

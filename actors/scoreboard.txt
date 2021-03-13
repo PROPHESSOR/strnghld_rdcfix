@@ -4,6 +4,7 @@
 
 actor ScoreboardToggle : CustomInventory
 {
+	inventory.maxamount 1
 	+INVENTORY.UNDROPPABLE
 	states
 	{
@@ -46,3 +47,4 @@ actor ScoreboardOff : ScoreboardToggle
 	}
 }
 */
+

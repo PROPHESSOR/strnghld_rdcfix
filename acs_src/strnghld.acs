@@ -147,7 +147,7 @@ int TeleporterOnLight;
 int TeleporterOffLight;
 int BreakTime = -1;	// Deadline default is 6*35. Can be overridden by map.
 int LimitMax = 100;	// Can be overridden by map
-int tics_between_monster_spawns = 5;	// Can be overridden, but highly not recommended to shorten this either.
+int tics_between_monster_spawns = 4;	// Can be overridden, but highly not recommended to shorten this either.
 bool GameActive = TRUE;	// When this is false, the player can't lose lives
 bool GameVictory = FALSE;
 bool TrainingMap = FALSE;
@@ -426,7 +426,7 @@ int PowerupSpotsUsed = 0;
 // Object spawn arrays
 
 // EnemyEntries[] format is {int wave, str actor, int number}
-#define MAX_ENEMY_ENTRIES	72
+#define MAX_ENEMY_ENTRIES	8192
 int EnemyEntries[MAX_ENEMY_ENTRIES][3];
 int EnemyEntriesUsed = 0;
 
@@ -477,7 +477,7 @@ int RadioMessagesUsed = 0;
 #define MAX_NORMAL_WAVES	40
 int WaveFinishCallback[MAX_NORMAL_WAVES];
 
-#define MAX_ENEMIES_PER_WAVE	512
+#define MAX_ENEMIES_PER_WAVE	1024
 
 // EnemySpawnCache[] format is {int loc, str actor}
 // ENEMY_SPAWN_CACHE_LEN is the limit of how many concurrent waves can be running at once.
@@ -1236,7 +1236,16 @@ function int SpawnAmmo (int wave)
 	{
 		if(AmmoEntries[i][0]==wave)
 		{
-			curAmmoQuota = Multiplier( M_AMMO, AmmoEntries[i][2] );
+			//curAmmoQuota = Multiplier( M_AMMO, AmmoEntries[i][2] ); 
+
+			if (PlayerCount() == 1)
+			{
+				curAmmoQuota = AmmoEntries[i][2];
+			}
+			else
+			{
+				curAmmoQuota = Multiplier( M_AMMO, AmmoEntries[i][2] );
+			}
 			curAmmoActorIndex = FindAmmoActor(AmmoEntries[i][1],curAmmoQuota);
 
 			// If we don't even have enough ammo quota in the first loop to spawn even one ammo item, spawn
@@ -1778,10 +1787,10 @@ function int RawMultiplier (int type)
 		break;
 	case M_MEDIC:
 	case M_AMMO:
-		result = 0.3 + 0.71*PlayerCount();	// Slightly above 1.0 for one player to account for rounding errors
+		result = 0.03 + 1.18*PlayerCount();	// Slightly above 1.0 for one player to account for rounding errors
 		break;
 	case M_ENEMIES:
-		result = FixedMul(0.5 + 0.51*PlayerCount(), SkillScaler[GameSkill()]);
+		result = FixedMul(0.05 + 0.96*PlayerCount(), SkillScaler[GameSkill()]);
 		break;
 	case M_BOSSHEALTH:
 		// 1 player	= 1x
@@ -2327,7 +2336,8 @@ script S_OVERMIND (void)
 {
 	// Set up boss monster
 	GameMode = GAME_OVERMIND;
-	int OriginalHealth = Multiplier( M_BOSSHEALTH, BossHealth );
+//	int OriginalHealth = Multiplier( M_BOSSHEALTH, BossHealth ); //
+	int OriginalHealth = BossHealth * PlayerCount(); //Decided to do this here, Multiplier messes up for some reason
 	SetActorProperty(BossMonster, APROP_Health, OriginalHealth);
 	Thing_Hate(BossMonster, BossTarget, 2);
 	Thing_Activate(BossMonster);
@@ -2830,7 +2840,7 @@ script S_ENTER ENTER
 
 			While(! Teleport_NoFog(PrisonSpot, true, 0))
 			{	delay(5);	}
-			GiveInventory("CoinItem", 1250);
+			GiveInventory("CoinItem", 50);
 			TakeInventory("LifeItem", 9);
 		}
 		else UpdateJailTrackers();

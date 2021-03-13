@@ -6,7 +6,7 @@ actor MarineItem : CustomInventory 25003
 {
 //$Category Stronghold_Items
   inventory.pickupmessage "Picked up some marine reinforcements."
-  inventory.maxamount 5
+  inventory.maxamount 10
   Tag "Marine Reinforcements"
   inventory.icon MARIA0
   +INVENTORY.INVBAR
@@ -219,7 +219,7 @@ actor SentryItem : CustomInventory 25004
 {
 //$Category Stronghold_Items
   inventory.pickupmessage "Picked up a deployable sentry turret."
-  inventory.maxamount 3
+  inventory.maxamount 5
   inventory.icon SENIA0
   Tag "Sentry Turret"
   +INVENTORY.INVBAR
@@ -496,7 +496,7 @@ actor TimeFreezerItem : PowerupGiver 12793
  scale 0.75
  inventory.pickupmessage "Picked up a time freeze sphere."
  inventory.icon "FRZIA0"
- inventory.maxamount 3
+ inventory.maxamount 1
  inventory.usesound "pickups/slowmo"
  powerup.color "00 33 FF" 0.10
  powerup.type "TimeFreezer"
@@ -596,7 +596,7 @@ actor InvulnerabilityItem : PowerupGiver 12795
  scale 0.75
  inventory.pickupmessage "Picked up an invulnerability sphere."
  inventory.icon "INVIA0"
- inventory.maxamount 3
+ inventory.maxamount 2
  inventory.usesound "pickups/slowmo"
  powerup.color InverseMap
  powerup.type "Invulnerable"
@@ -881,7 +881,7 @@ actor RandomWeaponItem : CustomInventory 25023
 {
 //$Category Stronghold_Items
   inventory.pickupmessage "Picked up a random weapon sphere."
-  inventory.maxamount 5
+  inventory.maxamount 3
   inventory.icon WEPIA0
   Tag "Random Weapon"
   +INVENTORY.INVBAR

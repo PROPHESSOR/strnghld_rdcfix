@@ -190,7 +190,7 @@ int ShopItemCosts[MAX_SHOPITEMS] =
     50, 150, 500,
     25, 25,
     500, 300,
-	1250,
+	50,
 	500, 300,
 	600, 1000,
 	5000,
@@ -199,13 +199,13 @@ int ShopItemCosts[MAX_SHOPITEMS] =
 
 int ShopItemMaxes[MAX_SHOPITEMS] =
   { 0,
-    5, 3, 3, 3, 3, 5, 5, 3,
+    3, 3, 3, 1, 5, 10, 10, 2,
     10, 10,
 	99, 99, 99,
 	40, 40,
 	1, 2,
-	9,
-	3, 3,
+	5,
+	3, 5,
 	3, 2,
 	1,
 	1

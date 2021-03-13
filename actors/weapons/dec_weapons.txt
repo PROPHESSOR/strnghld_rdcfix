@@ -1,8 +1,8 @@
 
 actor StrongholdPlayer : DoomPlayer replaces DoomPlayer
 {
-	Player.StartItem "LifeItem", 3   // starting lives
-	Player.StartItem "CoinItem", 300 // starting money
+	Player.StartItem "LifeItem", 5   // starting lives
+	Player.StartItem "CoinItem", 1200 // starting money
 	Player.StartItem "DEPistol", 1
 	Player.StartItem "DEFist"
 	Player.StartItem "Clip", 50

@@ -1,0 +1,9 @@
+v0.0
+
+- Compressed stronghold and all it's addons into one pk3
+  - strnghld_v1.pk3
+  - strnghld_violence_v4.pk3
+  - strongholdeditsnfixesv1.1patchv4.1.pk3
+  - strongholditemsv7.1.pk3
+  - strongholdrejuvenated-v6d.pk3
+  - strongholdrejuvenated-colouredobituaries-v2.pk3

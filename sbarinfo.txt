@@ -25,6 +25,13 @@ statusbar fullscreen, fullscreenoffsets
 		drawimage ammoicon1, -6+center, -7;
 		drawnumber 3, HUDFONT_DOOM, untranslated, ammo1, 49+center, -21;
 	}
+	IsSelected PowerAutoShotgun
+	{
+		drawimage ammoicon2, -6+center, -29;
+		drawnumber 3, HUDFONT_DOOM, untranslated, ammo2, 49+center, -42;
+		drawimage ammoicon1, -6+center, -7;
+		drawnumber 3, HUDFONT_DOOM, untranslated, ammo1, 49+center, -21;
+	}
 
 	drawnumber 3, HUDFONT_DOOM, untranslated, LifeItem, 85+center, -21;
 

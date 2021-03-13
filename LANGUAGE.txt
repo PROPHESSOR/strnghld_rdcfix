@@ -1,0 +1,51 @@
+[en enu default]
+
+// Monster obituaries
+
+STR_OB_AZAZEL = "\c[S3]%o \c[S3]was slaughtered by an Azazel.\c-";
+STR_OB_STBOSS = "\c[E7]%o \c[E7]couldn't evade the wrath of Mephistopheles.\c-";
+STR_OB_STBOSSATTACK4 = "\c[J8]%o \c[J8]was chewed up by a skull.\c-";
+STR_OB_STBOSSSKELETON = "\c[G9]%o \c[G9]got whalloped by a skeleton.\c-";
+STR_OB_STBOSSSKELETON2 = "\c[Q8]%o \c[Q8]got whalloped by a skeleton.\c-";
+STR_OB_SPIRITKNIGHT = "\c[G1]%o \c[G1]was wrung from existence by Mephistopheles' spirit minions.\c-";
+STR_OB_SPIRITKNIGHTHIT = "\c[G1]%o \c[G1]was wrung from existence by Mephistopheles' spirit minions.\c-";
+STR_OB_SPIRITBOSS = "\c[N0]%o\c[N0]'s existence was erased by the spirit of Mephistopheles.\c-";
+STR_OB_CYBERDEMONMK2 = "\c[V2]%o \c[V2]was destroyed by the Cyberdemon Mk. II!\c-";
+STR_OB_CHAOSCYBER = "\c[E9]%o \c[E9]met an irritating cyberdemon.\c-";
+STR_OB_INFERNODEMON = "\c[G5]%o \c[G5]was sent to burn in the fires of Hell for an eternity.\c-";
+STR_OB_MOLOCH = "\c[V4]%o \c[V4]was sacrificed to a Moloch.\c-";
+STR_OB_MOLOCHHIT = "\c[V4]%o \c[V4]got shredded by a Moloch's claws.\c-";
+STR_OB_OVERMIND = "\c[K9]%o \c[K9]was slaughtered by the Overmind.\c-";
+STR_OB_PYRODEMON = "\c[L6]%o \c[L6]was burnt to a crisp by a pyro demon.\c-";
+STR_OB_PYRODEMONHIT = "\c[L6]%o \c[L6]was melted by a pyro demon.\c-";
+STR_OB_PYRODEMONFIREBOMB = "\c[G5]%o \c[G5]was killed by a pyro demon's pyroblast explosion.\c-";
+STR_OB_TERMINATOR = "\c[D4]%o \c[D4]was liquidated by a terminator.\c-";
+STR_OB_TERMINATORGRENADE = "\c[I7]%o \c[I7]was torn apart by a terminator's decimation missile.\c-";
+STR_OB_APPRENTICE = "\c[U4]%o \c[U4]was spooked by an apprentice.\c-";
+STR_OB_MINISPIDER = "\c[K8]%o \c[K8]succumbed to the swarm.\c-";
+STR_OB_LARGESPIDER = "\c[Y3]%o \c[Y3]succumbed to the swarm.\c-";
+STR_OB_INCARNATE = "\c[U9]%o \c[U9]was killed by a death incarnate's glaring eyes.\c-";
+STR_OB_INCARNATEHIT = "\c[U0]%o \c[U0]was beaten to death by a death incarnate.\c-";
+STR_OB_HOTDOG = "\c[Q2]%o \c[Q2]was burned alive by a hellhound.\c-";
+STR_OB_HOTDOGHIT = "\c[Q3]A hellhound had \c[Q3]%o \c[Q3]for dinner.\c-";
+STR_OB_VULGAR = "\c[U1]%o \c[U1]was poisoned by a vulgar.\c-";
+STR_OB_VULGARHIT = "\c[G4]A vulgar had \c[G4]%o \c[G4]for lunch.\c-";
+STR_OB_ESOUL = "\c[J0]%o\c[J0]'s soul was leeched by an ethereal soul.\c-";
+STR_OB_WRAITH = "\c[D8]A wraith had its way with \c[D8]%o\c[D8].\c-";
+STR_OB_WRAITHHIT = "\c[K1]%o \c[K1]got bitten by a wraith too many times.\c-";
+STR_OB_FATTY = "\c[Q6]%o \c[Q6]couldn't evade a fat zombie's bile.\c-";
+STR_OB_FATTYHIT = "\c[Y8]%o \c[Y8]was punched by a fat zombie.\c-";
+STR_OB_ZOMBIE = "\c[U2]%o \c[U2]was axed by a zombie.\c-";
+STR_OB_QUEEN = "\c[M1]%o \c[M1]met an alien queen.\c-";
+STR_OB_CYCLOID = "\c[M1]%o \c[M1]tried to face a cycloid emperor.\c-";
+STR_OB_OVERLORD = "\c[M1]%o \c[M1]was blown apart by an overlord.\c-";
+STR_OB_ALIENDRONE = "\c[M1]%o \c[M1]was scratched by a protector drone.\c-";
+STR_OB_KAMIKAZESENTRY = "\c[M1]%o \c[M1]let a sentry drone get too close.\c-";
+STR_OB_COMMANDER = "\c[M1]%o \c[M1]sucked down a commander's rocket.\c-";
+STR_OB_BATTLELORD = "\c[M1]%o \c[M1]was stomped on by a battlelord.\c-";
+STR_OB_SUPERBATTLELORD = "\c[M1]%o \c[M1]was annihilated by a super battlelord.\c-";
+STR_OB_OCTABRAIN = "\c[M1]%o \c[M1]was killed by an octabrain.\c-";
+STR_OB_LIZARDCOMMANDO = "\c[M1]%o \c[M1]was rattled by an enforcer.\c-";
+STR_OB_PIGCOP = "\c[M1]%o \c[M1]was filled with lead by a pig cop.\c-";
+STR_OB_DUKEFODDER = "\c[M1]%o \c[M1]was taken down by an assault trooper.\c-";
+STR_OB_TELEFODDER = "\c[M1]%o \c[M1]didn't see an assault captain coming.\c-";

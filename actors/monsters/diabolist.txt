@@ -224,7 +224,6 @@ ACTOR DFlare
 
 ACTOR DMissile : CFlameMissile
 {
-+THRUGHOST
 }
 
 ACTOR DTracer
@@ -303,4 +302,3 @@ ACTOR DMissileTrail : CFlameFloor
 ACTOR DMissileCircle : CircleFlame
 {
 }
-

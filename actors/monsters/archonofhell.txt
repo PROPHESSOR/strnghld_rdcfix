@@ -110,7 +110,6 @@ ACTOR ArchonComet
    SpawnID 251
    PROJECTILE
    RENDERSTYLE Normal
-   +THRUGHOST
    SeeSound "weapons/firbfi"
    DeathSound "weapons/hellex"
    DONTHURTSHOOTER

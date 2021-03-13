@@ -154,13 +154,13 @@ ACTOR BruiserFireSpawner
 	+FLOORHUGGER
 	+BLOODLESSIMPACT
 	Projectile
-	MissileType BruiserFire
+	//MissileType BruiserFire
 	Missileheight 0
 	States
 	{
 	Spawn: 
 		TNT1 A 3 
-  		TNT1 A 3 Bright A_MissileAttack
+  		TNT1 A 3 Bright A_CustomMissile("BruiserFire", 32, 0, 0, 4)
   		TNT1 A 3
 		Loop
 	Death:	

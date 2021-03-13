@@ -1,0 +1,5 @@
+AddOptionMenu "OptionsMenu"
+{
+	StaticText " "
+	Option "Weather Effects","weatherfx","OnOff"
+}
